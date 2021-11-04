@@ -122,22 +122,22 @@ Vector Dot and Cross Tests
 '''
 
 
-def test_vector_dot_return_type(test_vector_1, test_vector_2):
+def test_vector_dot_vector_return_type(test_vector_1, test_vector_2):
     assert isinstance(test_vector_1.dot(test_vector_2), float)
     assert isinstance(test_vector_2.dot(test_vector_1), float)
 
 
-def test_vector_dot_arithmetic(test_vector_1, test_vector_2):
+def test_vector_dot_vector_arithmetic(test_vector_1, test_vector_2):
     assert test_vector_1.dot(test_vector_2) == 1.0
     assert test_vector_2.dot(test_vector_1) == 1.0
 
 
-def test_vector_cross_return_type(test_vector_1, test_vector_2):
+def test_vector_cross_vector_return_type(test_vector_1, test_vector_2):
     assert isinstance(test_vector_1.cross(test_vector_2), Vector2)
     assert isinstance(test_vector_2.cross(test_vector_1), Vector2)
 
 
-def test_vector_cross_arithmetic(test_vector_1, test_vector_2):
+def test_vector_cross_vector_arithmetic(test_vector_1, test_vector_2):
     assert test_vector_1.cross(test_vector_2) == Vector2(-1.0, 1.0)
     assert test_vector_2.cross(test_vector_1) == Vector2(1.0, -1.0)
 

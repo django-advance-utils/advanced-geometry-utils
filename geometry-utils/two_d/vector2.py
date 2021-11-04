@@ -61,4 +61,7 @@ class Vector2:
             return NotImplemented
 
     def cross(self, other):
-        return Vector2(self.x * other.y - self.y * other.x, self.y * other.x - self.x * other.y)
+        if isinstance(other, Vector2):
+            return Vector2(self.x * other.y - self.y * other.x, self.y * other.x - self.x * other.y)
+        else:
+            return NotImplemented
