@@ -104,3 +104,19 @@ def test_point_float_multiplication_return_type(test_point_1, test_point_2):
 
 def test_point_float_multiplication_arithmetic(test_point_1):
     assert test_point_1 * 2.0 == Point2(2.0, 2.0)
+
+
+'''
+Point Equality and Inequality Tests
+'''
+
+
+def test_point_to_point_equality(test_point_1, test_point_5):
+    assert test_point_1 == test_point_1
+    assert test_point_1 == test_point_5
+
+
+def test_point_to_point_inequality(test_point_1, test_point_2):
+    assert test_point_1 != test_point_2
+    assert not (test_point_1 == test_point_2)
+    assert not test_point_1 == 9.0
