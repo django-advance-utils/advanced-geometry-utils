@@ -9,48 +9,36 @@ class Vector3:
         self.w = w
 
     def __add__(self, other):
-        if isinstance(self, Vector3) and isinstance(other, Vector3):
+        if isinstance(other, Vector3):
             return Vector3(self.x + other.x, self.y + other.y, self.z + other.z)
-        elif isinstance(self, Vector3) and isinstance(other, float):
-            return Vector3(self.x + other, self.y + other, self.z + other)
-        elif isinstance(self, float) and isinstance(other, Vector3):
-            return Vector3(self + other.x, self + other.y, self + other.z)
         else:
             return NotImplemented
 
     def __sub__(self, other):
-        if isinstance(self, Vector3) and isinstance(other, Vector3):
+        if isinstance(other, Vector3):
             return Vector3(self.x - other.x, self.y - other.y, self.z - other.z)
-        elif isinstance(self, Vector3) and isinstance(other, float):
-            return Vector3(self.x - other, self.y - other, self.z - other)
-        elif isinstance(self, float) and isinstance(other, Vector3):
-            return Vector3(other.x - self, other.y - self, other.z - self)
         else:
             return NotImplemented
 
     def __mul__(self, other):
-        if isinstance(self, Vector3) and isinstance(other, Vector3):
-            return self.x * other.x + self.y * other.y + self.z * other.z
-        elif isinstance(self, Vector3) and isinstance(other, float):
+        if isinstance(other, float):
             return Vector3(self.x * other, self.y * other, self.z * other)
-        elif isinstance(self, float) and isinstance(other, Vector3):
-            return Vector3(self * other.x, self * other.y, self * other.z)
         else:
             return NotImplemented
 
     def __div__(self, other):
-        if isinstance(self, Vector3) and isinstance(other, float):
+        if isinstance(other, float):
             return Vector3(self.x / other, self.y / other, self.z / other)
-        elif isinstance(self, float) and isinstance(other, Vector3):
-            return Vector3(other.x / self, other.y / self, other.z / self)
         else:
             return NotImplemented
 
     def __eq__(self, other):
-        return bool(self.x == other.x and self.y == other.y and self.z == other.z)
+        if isinstance(other, Vector3):
+            return bool(self.x == other.x and self.y == other.y and self.z == other.z)
 
     def __ne__(self, other):
-        return bool(self.x != other.x or self.y != other.y or self.z != other.z)
+        if isinstance(other, Vector3):
+            return bool(self.x != other.x or self.y != other.y or self.z != other.z)
 
     def normalise(self):
         vector_length = self.length()

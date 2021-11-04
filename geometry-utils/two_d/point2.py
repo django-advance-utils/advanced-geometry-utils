@@ -8,17 +8,13 @@ class Point2:
         self.w = w
 
     def __add__(self, other):
-        if isinstance(other, Vector2):
-            return Point2(self.x + other.x, self.y + other.y)
-        elif isinstance(other, Point2):
+        if isinstance(other, Vector2) or isinstance(other, Point2):
             return Point2(self.x + other.x, self.y + other.y)
         else:
             return NotImplemented
 
     def __sub__(self, other):
-        if isinstance(other, Vector2):
-            return Point2(self.x - other.x, self.y - other.y)
-        elif isinstance(other, Point2):
+        if isinstance(other, Vector2) or isinstance(other, Point2):
             return Point2(self.x - other.x, self.y - other.y)
         else:
             return NotImplemented
