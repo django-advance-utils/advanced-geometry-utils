@@ -31,7 +31,7 @@ class Vector2:
         else:
             return NotImplemented
 
-    # division in Python 3x = division in Python 2x
+    # division in Python 3.x = division in Python 2.x
     __truediv__ = __div__
 
     def __eq__(self, other):
@@ -57,11 +57,7 @@ class Vector2:
     def dot(self, other):
         if isinstance(other, Vector2):
             return float(self.x * other.x + self.y * other.y)
-        else:
-            return NotImplemented
 
     def cross(self, other):
         if isinstance(other, Vector2):
             return Vector2(self.x * other.y - self.y * other.x, self.y * other.x - self.x * other.y)
-        else:
-            return NotImplemented
