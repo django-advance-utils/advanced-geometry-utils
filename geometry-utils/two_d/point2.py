@@ -32,3 +32,10 @@ class Point2:
     def __ne__(self, other):
         if isinstance(other, Point2):
             return self.x != other.x or self.y != other.y
+
+    def to_vector(self):
+        return Vector2(self.x, self.y)
+
+    def distance_to(self, point):
+        if isinstance(point, Point2):
+            return (self - point).to_vector().length()
