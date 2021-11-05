@@ -35,8 +35,4 @@ def test_make_translation(test_matrix_1, test_vector):
                                                [0.0, 0.0, 1.0]])
 
 
-def test_make_rotation(test_matrix_1):
-    test_rotation_matrix = test_matrix_1.make_translation(0.0)
-    assert test_rotation_matrix == Matrix3([[1.0, 0.0, 0.0],
-                                            [0.0, 1.0, 0.0],
-                                            [0.0, 0.0, 1.0]])
+
