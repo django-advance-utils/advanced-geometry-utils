@@ -3,6 +3,7 @@ import pytest
 from two_d.point2 import Point2
 from two_d.vector2 import Vector2
 
+from math import sqrt
 
 @pytest.fixture
 def test_point_1():
@@ -129,3 +130,20 @@ To_Vector Tests
 
 def test_point_to_vector_return_type(test_point_1):
     assert isinstance(test_point_1.to_vector(), Vector2)
+
+
+def test_point_to_vector_arithmetic(test_point_1):
+    assert test_point_1.to_vector() == Vector2(1.0, 1.0)
+
+
+'''
+Distance_To Tests
+'''
+
+
+def test_distance_to_point_return_type(test_point_1, test_point_2):
+    assert isinstance(test_point_1.distance_to(test_point_1), float)
+
+
+def test_distance_to_point_arithmetic(test_point_1, test_point_2):
+    assert test_point_1.distance_to(test_point_2) == 1.0
