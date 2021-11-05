@@ -3,7 +3,7 @@ from two_d.vector2 import Vector2
 
 
 class AxisAlignedBox2:
-    def __init__(self, minimum, maximum):
+    def __init__(self, minimum=Point2(0.0, 0.0), maximum=Point2(0.0, 0.0)):
         if isinstance(minimum, Point2) and isinstance(maximum, Point2):
             self.min = minimum
             self.max = maximum
