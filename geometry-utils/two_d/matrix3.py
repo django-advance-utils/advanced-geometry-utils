@@ -1,4 +1,4 @@
-import math
+from math import cos, sin
 
 from two_d.vector2 import Vector2
 
@@ -11,22 +11,8 @@ class Matrix3:
             if len(vals) == 3 and len(vals[0]) == 3 and isinstance(vals, list):
                 self.vals = vals
 
-    def make_translation(self, other):
-        if isinstance(other, Vector2):
-            self.set_identity()
-            self.vals[0][2] = other.x
-            self.vals[1][2] = other.y
-
     def set_identity(self):
         self.vals = [[1 if i == j else 0 for i in range(3)] for j in range(3)]
-
-    def make_rotation(self, other):
-        if isinstance(other, float):
-            self.set_identity()
-            self.vals[0][0] = math.cos(other)
-            self.vals[0][1] = -math.sin(other)
-            self.vals[1][0] = math.sin(other)
-            self.vals[1][1] = math.cos(other)
 
     def __mul__(self, other):
         result = Matrix3()
@@ -38,3 +24,26 @@ class Matrix3:
                         result.vals[i][j] += self.vals[i][k] * other.vals[k][j]
 
         return result
+
+    def __eq__(self, other):
+        return [[True if i == j else False for i in self.vals] for j in other.vals]
+
+    @classmethod
+    def make_translation(cls, other):
+        mat = cls
+        if isinstance(other, Vector2):
+            mat.vals = [[1.0, 0.0, other.x],
+                        [0.0, 1.0, other.y],
+                        [0.0, 0.0, 1.0]]
+
+            return mat
+
+    @classmethod
+    def make_rotation(cls, theta):
+        mat = cls
+        if isinstance(theta, float):
+            cos_theta = cos(theta)
+            sin_theta = sin(theta)
+            mat.vals = [[cos_theta, -sin_theta, 0.0],
+                        [sin_theta,  cos_theta, 0.0],
+                        [0.0,        0.0,       1.0]]
