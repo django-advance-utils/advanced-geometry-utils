@@ -98,7 +98,7 @@ def test_point_point_multiplication(test_point_1, test_point_2):
         test_point_1 * test_point_2
 
 
-def test_point_float_multiplication_return_type(test_point_1, test_point_2):
+def test_point_float_multiplication_return_type(test_point_1):
     assert isinstance(test_point_1 * 9.0, Point2)
 
 
@@ -120,3 +120,10 @@ def test_point_to_point_inequality(test_point_1, test_point_2):
     assert test_point_1 != test_point_2
     assert not (test_point_1 == test_point_2)
     assert not test_point_1 == 9.0
+
+'''
+To_Vector Tests
+'''
+
+def test_point_to_vector_return_type(test_point_1):
+    assert isinstance(test_point_1.to_vector(), Vector2)
