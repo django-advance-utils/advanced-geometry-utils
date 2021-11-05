@@ -40,10 +40,12 @@ class Matrix3:
 
     @classmethod
     def make_rotation(cls, theta):
-        mat = cls
         if isinstance(theta, float):
+            mat = cls
             cos_theta = cos(theta)
             sin_theta = sin(theta)
             mat.vals = [[cos_theta, -sin_theta, 0.0],
                         [sin_theta,  cos_theta, 0.0],
                         [0.0,        0.0,       1.0]]
+
+            return mat
