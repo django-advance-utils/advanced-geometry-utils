@@ -35,4 +35,7 @@ def test_make_translation(test_matrix_1, test_vector):
                                                [0.0, 0.0, 1.0]])
 
 
-
+def test_matrix_to_matrix_multiplication(test_matrix_1, test_matrix_2):
+    assert test_matrix_1 * test_matrix_2 == Matrix3([[1.0, 1.0, 1.0],
+                                                     [1.0, 1.0, 1.0],
+                                                     [1.0, 1.0, 1.0]])
