@@ -2,7 +2,9 @@ import pytest
 
 from two_d.edge2 import Edge2
 from two_d.point2 import Point2
+from two_d.vector2 import Vector2
 
+from math import sqrt
 
 @pytest.fixture()
 def test_edge2_1():
@@ -21,3 +23,7 @@ def test_edge2_2():
 def test_edge_point_parametric(test_edge2_2):
     assert test_edge2_2.point_parametric(0.0) == test_edge2_2.p1
     assert test_edge2_2.point_parametric(1.0) == test_edge2_2.p2
+
+
+def test_get_tangent(test_edge2_2):
+    assert test_edge2_2.get_tangent() == Vector2(2.0/sqrt(8.0), 2.0/sqrt(8.0))
