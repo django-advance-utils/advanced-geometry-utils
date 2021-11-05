@@ -36,3 +36,7 @@ class Point3:
 
     def to_vector(self):
         return Vector3(self.x, self.y, self.z)
+
+    def distance_to(self, point):
+        if isinstance(point, Point3):
+            return (self - point).to_vector().length()
