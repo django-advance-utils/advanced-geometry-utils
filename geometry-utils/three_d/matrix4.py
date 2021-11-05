@@ -15,43 +15,6 @@ class Matrix4:
     def set_identity(self):
         self.vals = [[1.0 if i == j else 0.0 for i in range(4)] for j in range(4)]
 
-    def make_translation(self, other):
-        if isinstance(other, Vector3):
-            self.set_identity()
-            self.vals[0][3] = other.x
-            self.vals[1][3] = other.y
-            self.vals[2][3] = other.z
-
-    def make_x_rotation(self, theta):
-        if isinstance(theta, float):
-            cos_theta = cos(theta)
-            sin_theta = sin(theta)
-            self.set_identity()
-            self.vals[1][1] = cos_theta
-            self.vals[1][2] = sin_theta
-            self.vals[2][1] = -sin_theta
-            self.vals[2][2] = cos_theta
-
-    def make_y_rotation(self, theta):
-        if isinstance(theta, float):
-            cos_theta = cos(theta)
-            sin_theta = sin(theta)
-            self.set_identity()
-            self.vals[0][0] = cos_theta
-            self.vals[0][2] = -sin_theta
-            self.vals[2][0] = sin_theta
-            self.vals[2][2] = cos_theta
-
-    def make_z_rotation(self, theta):
-        if isinstance(theta, float):
-            cos_theta = cos(theta)
-            sin_theta = sin(theta)
-            self.set_identity()
-            self.vals[0][0] = cos_theta
-            self.vals[0][1] = -sin_theta
-            self.vals[1][0] = sin_theta
-            self.vals[1][1] = cos_theta
-
     def __mul__(self, other):
         result = Matrix4()
 
@@ -63,3 +26,55 @@ class Matrix4:
 
         return result
 
+    def __eq__(self, other):
+        return [[True if i == j else False for i in self.vals] for j in other.vals]
+
+    @classmethod
+    def make_translation(cls, other):
+        mat = cls
+        if isinstance(other, Vector3):
+            mat.vals = [[1.0, 0.0, 0.0, other.x],
+                        [0.0, 1.0, 0.0, other.y],
+                        [0.0, 0.0, 1.0, other.z],
+                        [0.0, 0.0, 0.0, 1.0]]
+
+            return mat
+
+    @classmethod
+    def make_x_rotation(cls, theta):
+        if isinstance(theta, float):
+            mat = cls
+            cos_theta = cos(theta)
+            sin_theta = sin(theta)
+            mat.vals = [[1.0,  0.0,       0.0,       0.0],
+                        [0.0,  cos_theta, sin_theta, 0.0],
+                        [0.0, -sin_theta, cos_theta, 0.0],
+                        [0.0,  0.0,       0.0,       1.0]]
+
+            return mat
+
+    @classmethod
+    def make_y_rotation(cls, theta):
+        if isinstance(theta, float):
+            mat = cls
+            cos_theta = cos(theta)
+            sin_theta = sin(theta)
+            mat.vals = [[cos_theta, 0.0, -sin_theta, 0.0],
+                        [0.0,       1.0,  0.0,       0.0],
+                        [sin_theta, 0.0,  cos_theta, 0.0],
+                        [0.0,       0.0,  0.0,       1.0]]
+
+            return mat
+
+    @classmethod
+    def make_z_rotation(cls, theta):
+        if isinstance(theta, float):
+            mat = cls
+            cos_theta = cos(theta)
+            sin_theta = sin(theta)
+            mat.vals = [[cos_theta, -sin_theta, 0.0, 0.0],
+                        [sin_theta,  cos_theta, 0.0, 0.0],
+                        [0.0,        0.0,       1.0, 0.0],
+                        [0.0,        0.0,       0.0, 1.0]]
+
+            return mat
