@@ -31,8 +31,8 @@ class Matrix4:
 
     @classmethod
     def make_translation(cls, other):
-        mat = cls
         if isinstance(other, Vector3):
+            mat = cls
             mat.vals = [[1.0, 0.0, 0.0, other.x],
                         [0.0, 1.0, 0.0, other.y],
                         [0.0, 0.0, 1.0, other.z],
