@@ -32,6 +32,9 @@ class Vector3:
         else:
             return NotImplemented
 
+    # division in Python 3.x = division in Python 2.x
+    __truediv__ = __div__
+
     def __eq__(self, other):
         if isinstance(other, Vector3):
             return bool(self.x == other.x and self.y == other.y and self.z == other.z)
@@ -50,12 +53,12 @@ class Vector3:
         return Vector3(self.x * -1, self.y * -1, self.z * -1)
 
     def length(self):
-        return float(math.sqrt(self * self))
+        return float(math.sqrt(self.dot(self)))
 
     def dot(self, other):
         return float(self.x * other.x + self.y * other.y + self.z * other.z)
 
     def cross(self, other):
         return Vector3(self.y * other.z - self.z * other.y,
-                       self.z * other.x - other.x * self.z,
-                       self.x * other.y - other.y * self.x)
+                       self.z * other.x - self.x * other.z,
+                       self.x * other.y - self.y * other.x)
