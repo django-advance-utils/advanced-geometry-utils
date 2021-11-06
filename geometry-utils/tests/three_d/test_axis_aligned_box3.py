@@ -22,6 +22,7 @@ def box3():
 
 @pytest.fixture()
 def box4():
+    print(box4.max.x)
     return AxisAlignedBox3()
 
 
@@ -78,8 +79,10 @@ def test_box_equals_box(box1):
 def test_box_not_equals_box(box1, box2):
     assert box1 != box2
 
+
 '''
 def test_box_is_empty(box4):
     # assert box2.empty()
-    print(box4.max.x)
+    print(box4.max.z)
+
 '''
