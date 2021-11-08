@@ -2,5 +2,21 @@ def m_pi():
     return 3.14159265358
 
 
+def double_epsilon():
+    return 0.0001
+
+
 def floats_are_close(a, b, rel_tol=1e-09, abs_tol=0.0):
     return abs(a-b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
+
+
+def is_in_range(value, minimum_value_in_range, maximum_value_in_range):
+    return (value >= (minimum_value_in_range - double_epsilon())) and \
+           (value <= (maximum_value_in_range + double_epsilon()))
+
+
+def ranges_overlap(range1_minimum, range1_maximum, range2_minimum, range2_maximum):
+    return (is_in_range(range1_minimum, range2_minimum, range2_maximum)) or \
+           (is_in_range(range1_maximum, range2_minimum, range2_maximum)) or \
+           (is_in_range(range2_minimum, range1_minimum, range1_maximum)) or \
+           (is_in_range(range2_maximum, range1_minimum, range1_maximum))
