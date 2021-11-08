@@ -1,10 +1,15 @@
-from three_d.axis_aligned_box3 import AxisAlignedBox3
-from two_d.axis_aligned_box2 import AxisAlignedBox2
+from two_d.edge2 import Edge2
+from two_d.path2 import Path2
+from two_d.point2 import Point2
 
 if __name__ == '__main__':
-    def box4():
-        return AxisAlignedBox2()
 
-    box = AxisAlignedBox2()
+    first_edge = Edge2(Point2(0.0, 0.0), Point2(1.0, 1.0))
+    second_edge = Edge2(Point2(1.0, 1.0), Point2(2.0, 2.0))
+    third_edge = Edge2(Point2(2.0, 2.0), Point2(0.0, 0.0))
 
-    print(box4().max.x)
+    list_of_edges = [first_edge, second_edge, third_edge]
+    path = Path2(list_of_edges)
+    print(path.is_continuous())
+    print(path.is_closed())
+
