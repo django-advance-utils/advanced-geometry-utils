@@ -86,8 +86,9 @@ def test_box_centre(box1):
     assert box1.centre() == Vector2(1.0, 1.0)
 
 
-def test_box_equals_box(box1):
+def test_box_equals_box(box1, box2, box4):
     assert box1 == box1
+    assert box2 == box4
 
 
 def test_box_not_equals_box(box1, box2):
