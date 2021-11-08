@@ -1,3 +1,4 @@
+from maths_utility import floats_are_close
 from two_d.axis_aligned_box2 import AxisAlignedBox2
 from two_d.point2 import Point2
 from two_d.intersection import Intersection
@@ -36,7 +37,7 @@ class Edge2:
             return distance / self.p1.distance_to(self.p2)
 
     def get_arc_centre(self):
-        if self.radius == 0.0:
+        if floats_are_close(self.radius, 0.0):
             return (self.p1 + self.p2) * 0.5
 
     def get_tangent(self):
@@ -44,7 +45,7 @@ class Edge2:
         p2_vector = self.p2.to_vector()
         return (p2_vector - p1_vector).normalise()
 
-    def get_bounds(self):
+    def get_edge_bounds(self):
         bounds = AxisAlignedBox2()
         bounds.include(self.p1)
         bounds.include(self.p2)
