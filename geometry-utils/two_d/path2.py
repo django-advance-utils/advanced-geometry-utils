@@ -1,3 +1,4 @@
+from two_d.axis_aligned_box2 import AxisAlignedBox2
 from two_d.edge2 import Edge2
 
 
@@ -17,3 +18,10 @@ class Path2:
 
     def is_closed(self):
         return self.last_edge.p2 == self.first_edge.p1 and self.is_continuous()
+
+    def get_path_bounds(self):
+        path_bounds = AxisAlignedBox2()
+        for edge in self.list_of_edges:
+            path_bounds.include(edge.get_edge_bounds())
+        return path_bounds
+
