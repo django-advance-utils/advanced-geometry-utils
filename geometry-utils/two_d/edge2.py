@@ -1,4 +1,6 @@
+from two_d.axis_aligned_box2 import AxisAlignedBox2
 from two_d.point2 import Point2
+from two_d.intersection import Intersection
 
 
 class Edge2:
@@ -8,13 +10,13 @@ class Edge2:
                  radius=0.0,
                  clockwise=False,
                  large=False):
-
-        self.p1 = p1
-        self.p2 = p2
-        self.radius = radius
-        self.clockwise = clockwise
-        self.large = large
-        self.arc_centre = self.get_arc_centre()
+        if isinstance(p1, Point2) and isinstance(p2, Point2):
+            self.p1 = p1
+            self.p2 = p2
+            self.radius = radius
+            self.clockwise = clockwise
+            self.large = large
+            self.arc_centre = self.get_arc_centre()
 
     def point_parametric(self, s):
         if isinstance(s, float):
@@ -41,3 +43,14 @@ class Edge2:
         p1_vector = self.p1.to_vector()
         p2_vector = self.p2.to_vector()
         return (p2_vector - p1_vector).normalise()
+
+    def get_bounds(self):
+        bounds = AxisAlignedBox2()
+        bounds.include(self.p1)
+        bounds.include(self.p2)
+        return bounds
+
+    def intersect(self, other_edge):
+        if isinstance(other_edge, Edge2):
+            intersect_test = Intersection()
+            intersect_test.intersect_lines(self.p1, self.p2, other_edge.p1, other_edge.p2)
