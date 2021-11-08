@@ -17,13 +17,12 @@ def box2():
 
 @pytest.fixture()
 def box3():
-    return AxisAlignedBox3()
+    return AxisAlignedBox3(Point3(0.0, 0.0, 0.0), Point3(0.0, 0.0, 0.0))
 
 
 @pytest.fixture()
 def box4():
-    print(box4.max.x)
-    return AxisAlignedBox3()
+    return AxisAlignedBox3(Point3(0.0, 0.0, 0.0), Point3(0.0, 0.0, 0.0))
 
 
 @pytest.fixture()
@@ -80,9 +79,5 @@ def test_box_not_equals_box(box1, box2):
     assert box1 != box2
 
 
-'''
 def test_box_is_empty(box4):
-    # assert box2.empty()
-    print(box4.max.z)
-
-'''
+    assert box4.empty()
