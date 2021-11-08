@@ -56,7 +56,8 @@ class Vector3:
         return float(math.sqrt(self.dot(self)))
 
     def dot(self, other):
-        return float(self.x * other.x + self.y * other.y + self.z * other.z)
+        if isinstance(other, Vector3):
+            return float(self.x * other.x + self.y * other.y + self.z * other.z)
 
     def cross(self, other):
         return Vector3(self.y * other.z - self.z * other.y,
