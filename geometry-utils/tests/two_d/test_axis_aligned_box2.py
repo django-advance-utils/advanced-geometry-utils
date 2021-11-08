@@ -54,6 +54,21 @@ def test_box_includes_point(box3, test_point2_2):
     assert box3.min == Point2(0.0, 0.0) and box3.max == Point2(1.0, 1.0)
 
 
+def test_box_contains_box(box1, box3):
+    assert box3 in box1
+    assert box3 in box1
+
+
+def test_box_does_not_contain_box(box1, box3):
+    assert box1 not in box3
+    assert box1 not in box3
+
+
+def test_box_includes_box(box1, box3):
+    box3.include(box1)
+    assert box3.min == Point2(0.0, 0.0) and box3.max == Point2(2.0, 2.0)
+
+
 def test_box_intersects_box(box1, box2, box3):
     assert box1.intersects(box2)
     assert box1.intersects(box3)
