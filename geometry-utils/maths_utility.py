@@ -6,7 +6,7 @@ def double_epsilon():
     return 0.0001
 
 
-def floats_are_close(a, b, rel_tol=1e-09, abs_tol=0.0):
+def floats_are_close(a, b, rel_tol=1e-9, abs_tol=0.0005):
     return abs(a-b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
 
 
