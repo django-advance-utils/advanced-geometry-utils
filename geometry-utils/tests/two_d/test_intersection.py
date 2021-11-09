@@ -26,3 +26,12 @@ def test_intersection_on_non_collinear_lines(intersection1):
     assert not intersection1.on_first_segment
     assert not intersection1.on_second_segment
     assert not intersection1.end_of_line
+
+
+def test_intersection_on_non_collinear_lines(intersection1):
+    intersection1.intersect_lines(Point2(1.0, 3.0), Point2(5.0, 7.0), Point2(9.0, 9.0), Point2(1.0, 3.0))
+    assert floats_are_close(intersection1.point.x, 1.0) and floats_are_close(intersection1.point.y, 3.0)
+    assert intersection1.vectors_intersect
+    assert intersection1.on_first_segment
+    assert intersection1.on_second_segment
+    assert intersection1.end_of_line
