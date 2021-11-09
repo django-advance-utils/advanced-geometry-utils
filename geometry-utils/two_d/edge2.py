@@ -51,7 +51,10 @@ class Edge2:
         bounds.include(self.p2)
         return bounds
 
+
+'''
     def intersect(self, other_edge):
         if isinstance(other_edge, Edge2):
             intersect_test = Intersection()
             intersect_test.intersect_lines(self.p1, self.p2, other_edge.p1, other_edge.p2)
+'''
