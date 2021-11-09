@@ -1,7 +1,7 @@
 from maths_utility import floats_are_close
 from two_d.axis_aligned_box2 import AxisAlignedBox2
-from two_d.point2 import Point2
 from two_d.intersection import Intersection
+from two_d.point2 import Point2
 
 
 class Edge2:
@@ -51,10 +51,7 @@ class Edge2:
         bounds.include(self.p2)
         return bounds
 
-
-'''
     def intersect(self, other_edge):
         if isinstance(other_edge, Edge2):
             intersect_test = Intersection()
             intersect_test.intersect_lines(self.p1, self.p2, other_edge.p1, other_edge.p2)
-'''
