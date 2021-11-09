@@ -1,7 +1,3 @@
-def m_pi():
-    return 3.14159265358
-
-
 def double_epsilon():
     return 0.0001
 
