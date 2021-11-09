@@ -17,14 +17,6 @@ def test_matrix4_2():
 
 
 @pytest.fixture()
-def test_matrix4_3():
-    return Matrix4([[1.0, 0.0, 0.0, 0.0],
-                    [0.0, 1.0, 0.0, 0.0],
-                    [0.0, 0.0, 1.0, 0.0],
-                    [0.0, 0.0, 0.0, 1.0]])
-
-
-@pytest.fixture()
 def test_vector3():
     return Vector3(2.0, 2.0, 2.0)
 

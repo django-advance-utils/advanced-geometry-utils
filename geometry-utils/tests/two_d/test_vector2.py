@@ -15,11 +15,6 @@ def test_vector_2():
 
 
 @pytest.fixture()
-def test_vector_3():
-    return Vector2(0.0, 1.0)
-
-
-@pytest.fixture()
 def test_vector_4():
     return Vector2(0.0, 0.0)
 

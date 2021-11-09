@@ -22,14 +22,6 @@ def test_edge2_2():
     return Edge3(p1, p2)
 
 
-@pytest.fixture()
-def test_edge2_3():
-    p1 = Point3(2.0, 2.0, 2.0)
-    p2 = Point3(4.0, 4.0, 4.0)
-
-    return Edge3(p1, p2)
-
-
 def test_edge_point_parametric(test_edge2_1, test_edge2_2):
     assert test_edge2_2.point_parametric(0.0) == test_edge2_2.p1
     assert test_edge2_2.point_parametric(1.0) == test_edge2_2.p2

@@ -15,16 +15,6 @@ def test_point_2():
 
 
 @pytest.fixture
-def test_point_3():
-    return Point2(0.0, 1.0)
-
-
-@pytest.fixture
-def test_point_4():
-    return Point2(0.0, 0.0)
-
-
-@pytest.fixture
 def test_point_5():
     return Point2(1.0, 1.0)
 
