@@ -9,15 +9,15 @@ class Path3:
             self.first_edge = self.list_of_edges[0]
             self.last_edge = self.list_of_edges[-1]
 
+    def is_closed(self):
+        return self.last_edge.p2 == self.first_edge.p1 and self.is_continuous()
+
     def is_continuous(self):
         continuity = True
         for edge, next_edge in zip(self.list_of_edges, self.list_of_edges[1:]):
             if edge.p2 != next_edge.p1:
                 continuity = False
         return continuity
-
-    def is_closed(self):
-        return self.last_edge.p2 == self.first_edge.p1 and self.is_continuous()
 
     def get_path_bounds(self):
         path_bounds = AxisAlignedBox3()

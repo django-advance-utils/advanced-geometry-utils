@@ -21,26 +21,29 @@ class AxisAlignedBox2:
 
     def __contains__(self, item):
         if isinstance(item, Point2):
-            return self.min.x <= item.x <= self.max.x and self.min.y <= item.y <= self.max.y
+            return self.min <= item <= self.max
 
         if isinstance(item, AxisAlignedBox2):
             return self.__contains__(item.min) and self.__contains__(item.max)
 
     def intersects(self, item):
         if isinstance(item, AxisAlignedBox2):
-            return item.min.x >= self.min.x and item.max.x <= self.max.x and \
-                   item.min.y >= self.min.y and item.max.y <= self.max.y
+            return item.min >= self.min and item.max <= self.max
 
     def size(self):
-        return Vector2(self.max.x - self.min.x, self.max.y - self.min.y)
+        return (self.max - self.min).to_vector()
 
     def offset(self, offset_vector):
         if isinstance(offset_vector, Vector2):
-            new_box = AxisAlignedBox2(self.min + offset_vector, self.max + offset_vector)
-            return new_box
+            return self + offset_vector
 
     def centre(self):
-        return Vector2((self.min.x + self.max.x) / 2.0, (self.min.y + self.max.y) / 2.0)
+        return ((self.min + self.max).to_vector())/2.0
+
+    def __add__(self, vector):
+        if isinstance(vector, Vector2):
+            return AxisAlignedBox2(self.min + vector, self.max + vector)
+        return NotImplemented
 
     def __eq__(self, box):
         if isinstance(box, AxisAlignedBox2):

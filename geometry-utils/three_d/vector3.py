@@ -1,36 +1,33 @@
-import math
+from math import sqrt
 
 
 class Vector3:
     def __init__(self, x, y, z, w=0):
-        self.x = x
-        self.y = y
-        self.z = z
-        self.w = w
+        if isinstance(x, float) and isinstance(y, float) and isinstance(z, float) and isinstance(w, int):
+            self.x = x
+            self.y = y
+            self.z = z
+            self.w = w
 
     def __add__(self, other):
         if isinstance(other, Vector3):
             return Vector3(self.x + other.x, self.y + other.y, self.z + other.z)
-        else:
-            return NotImplemented
+        return NotImplemented
 
     def __sub__(self, other):
         if isinstance(other, Vector3):
             return Vector3(self.x - other.x, self.y - other.y, self.z - other.z)
-        else:
-            return NotImplemented
+        return NotImplemented
 
     def __mul__(self, other):
         if isinstance(other, float):
             return Vector3(self.x * other, self.y * other, self.z * other)
-        else:
-            return NotImplemented
+        return NotImplemented
 
     def __div__(self, other):
         if isinstance(other, float):
             return Vector3(self.x / other, self.y / other, self.z / other)
-        else:
-            return NotImplemented
+        return NotImplemented
 
     # division in Python 3.x = division in Python 2.x
     __truediv__ = __div__
@@ -43,17 +40,17 @@ class Vector3:
         if isinstance(other, Vector3):
             return bool(self.x != other.x or self.y != other.y or self.z != other.z)
 
+    def reverse(self):
+        return Vector3(self.x * -1, self.y * -1, self.z * -1)
+
     def normalise(self):
         vector_length = self.length()
         if vector_length == 0:
             return self
         return self / vector_length
 
-    def reverse(self):
-        return Vector3(self.x * -1, self.y * -1, self.z * -1)
-
     def length(self):
-        return float(math.sqrt(self.dot(self)))
+        return float(sqrt(self.dot(self)))
 
     def dot(self, other):
         if isinstance(other, Vector3):

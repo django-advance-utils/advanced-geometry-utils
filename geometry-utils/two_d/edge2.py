@@ -11,13 +11,17 @@ class Edge2:
                  radius=0.0,
                  clockwise=False,
                  large=False):
-        if isinstance(p1, Point2) and isinstance(p2, Point2):
+        if isinstance(p1, Point2) and isinstance(p2, Point2) and isinstance(radius, float):
             self.p1 = p1
             self.p2 = p2
             self.radius = radius
             self.clockwise = clockwise
             self.large = large
             self.arc_centre = self.get_arc_centre()
+
+    def get_arc_centre(self):
+        if floats_are_close(self.radius, 0.0):
+            return (self.p1 + self.p2) * 0.5
 
     def point_parametric(self, s):
         if isinstance(s, float):
@@ -33,12 +37,9 @@ class Edge2:
         if isinstance(point, Point2):
             tangent = self.get_tangent()  # vector
             point_p1_difference = (point - self.p1).to_vector()  # vector
+            p1_p2_distance = self.p1.distance_to(self.p2)
             distance = tangent.dot(point_p1_difference)
-            return distance / self.p1.distance_to(self.p2)
-
-    def get_arc_centre(self):
-        if floats_are_close(self.radius, 0.0):
-            return (self.p1 + self.p2) * 0.5
+            return distance / p1_p2_distance
 
     def get_tangent(self):
         p1_vector = self.p1.to_vector()
@@ -53,6 +54,6 @@ class Edge2:
 
     def intersect(self, other_edge, list_of_intersections):
         if isinstance(other_edge, Edge2) and isinstance(list_of_intersections, list):
-            intersect_test = Intersection()
-            intersect_test.intersect_lines(self.p1, self.p2, other_edge.p1, other_edge.p2)
-            list_of_intersections.append(intersect_test)
+            edges_intersection = Intersection()
+            edges_intersection.intersect_lines(self.p1, self.p2, other_edge.p1, other_edge.p2)
+            list_of_intersections.append(edges_intersection)

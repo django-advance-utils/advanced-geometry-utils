@@ -1,3 +1,4 @@
+from maths_utility import floats_are_close
 from three_d.axis_aligned_box3 import AxisAlignedBox3
 from three_d.point3 import Point3
 
@@ -10,7 +11,7 @@ class Edge3:
                  radius=0.0,
                  clockwise=False,
                  large=False):
-        if isinstance(p1, Point3) and isinstance(p2, Point3):
+        if isinstance(p1, Point3) and isinstance(p2, Point3) and isinstance(via, Point3) and isinstance(radius, float):
             self.p1 = p1
             self.p2 = p2
             self.via = via
@@ -18,6 +19,10 @@ class Edge3:
             self.clockwise = clockwise
             self.large = large
             self.arc_centre = self.get_arc_centre()
+
+    def get_arc_centre(self):
+        if floats_are_close(self.radius, 0.0):
+            return (self.p1 + self.p2) * 0.5
 
     def point_parametric(self, s):
         if isinstance(s, float):
@@ -35,10 +40,6 @@ class Edge3:
             point_p1_difference = (point - self.p1).to_vector()  # vector
             distance = tangent.dot(point_p1_difference)
             return distance / self.p1.distance_to(self.p2)
-
-    def get_arc_centre(self):
-        if self.radius == 0.0:
-            return (self.p1 + self.p2) * 0.5
 
     def get_tangent(self):
         p1_vector = self.p1.to_vector()
