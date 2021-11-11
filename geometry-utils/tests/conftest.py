@@ -54,11 +54,6 @@ def test_point3_3():
     return Point3(1.0, 1.0, 1.0)
 
 
-@pytest.fixture(scope="session")
-def test_point3_4():
-    return Point3(0.0, 0.0, 0.0)
-
-
 '''
 Vector2
 '''
