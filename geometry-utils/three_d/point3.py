@@ -36,12 +36,12 @@ class Point3:
 
     def __le__(self, other_point):
         if isinstance(other_point, Point3):
-            return self.x <= other_point.x or self.y <= other_point.y or self.z <= other_point.z
+            return self.x <= other_point.x and self.y <= other_point.y and self.z <= other_point.z
         return NotImplemented
 
     def __ge__(self, other_point):
         if isinstance(other_point, Point3):
-            return self.x >= other_point.x or self.y >= other_point.y or self.z >= other_point.z
+            return self.x >= other_point.x and self.y >= other_point.y and self.z >= other_point.z
         return NotImplemented
 
     def to_vector(self):

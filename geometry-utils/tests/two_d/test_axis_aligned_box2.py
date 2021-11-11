@@ -1,99 +1,62 @@
-import pytest
-
 from two_d.axis_aligned_box2 import AxisAlignedBox2
 from two_d.point2 import Point2
 from two_d.vector2 import Vector2
 
 
-@pytest.fixture()
-def box1():
-    return AxisAlignedBox2(Point2(0.0, 0.0), Point2(2.0, 2.0))
+def test_box_contains_point(box2_1, test_point2_1, test_point2_2):
+    assert test_point2_1 in box2_1
+    assert test_point2_2 in box2_1
 
 
-@pytest.fixture()
-def box2():
-    return AxisAlignedBox2()
+def test_box_does_not_contain_point(box2_2, test_point2_2):
+    assert test_point2_2 not in box2_2
 
 
-@pytest.fixture()
-def box3():
-    return AxisAlignedBox2(Point2(0.0, 0.0), Point2(0.0, 0.0))
+def test_box_includes_point(box2_3, test_point2_3):
+    box2_3.include(test_point2_3)
+    assert box2_3.min == Point2(0.0, 0.0) and box2_3.max == Point2(1.0, 1.0)
 
 
-@pytest.fixture()
-def box4():
-    return AxisAlignedBox2(Point2(0.0, 0.0), Point2(0.0, 0.0))
+def test_box_contains_box(box2_1, box2_3):
+    assert box2_3 in box2_1
+    assert box2_3 in box2_1
 
 
-@pytest.fixture()
-def test_point2_1():
-    return Point2(0.0, 0.0)
+def test_box_does_not_contain_box(box2_1, box2_3):
+    assert box2_1 not in box2_3
+    assert box2_1 not in box2_3
 
 
-@pytest.fixture()
-def test_point2_2():
-    return Point2(1.0, 1.0)
+def test_box_includes_box(box2_1, box2_3):
+    box2_3.include(box2_1)
+    assert box2_3.min == Point2(0.0, 0.0) and box2_3.max == Point2(2.0, 2.0)
 
 
-@pytest.fixture()
-def test_vector2():
-    return Vector2(1.0, 1.0)
+def test_box_intersects_box(box2_1, box2_2, box2_3):
+    assert box2_1.intersects(box2_2)
+    assert box2_1.intersects(box2_3)
 
 
-def test_box_contains_point(box1, test_point2_1, test_point2_2):
-    assert test_point2_1 in box1
-    assert test_point2_2 in box1
+def test_box_size(box2_1):
+    assert box2_1.size() == Vector2(2.0, 2.0)
 
 
-def test_box_does_not_contain_point(box2, test_point2_2):
-    assert test_point2_2 not in box2
+def test_box_offset(box2_1, test_vector2_1):
+    assert box2_1.offset(test_vector2_1) == AxisAlignedBox2(Point2(1.0, 1.0), Point2(3.0, 3.0))
 
 
-def test_box_includes_point(box3, test_point2_2):
-    box3.include(test_point2_2)
-    assert box3.min == Point2(0.0, 0.0) and box3.max == Point2(1.0, 1.0)
+def test_box_centre(box2_1):
+    assert box2_1.centre() == Vector2(1.0, 1.0)
 
 
-def test_box_contains_box(box1, box3):
-    assert box3 in box1
-    assert box3 in box1
+def test_box_equals_box(box2_1, box2_2, box2_4):
+    assert box2_1 == box2_1
+    assert box2_2 == box2_4
 
 
-def test_box_does_not_contain_box(box1, box3):
-    assert box1 not in box3
-    assert box1 not in box3
+def test_box_not_equals_box(box2_1, box2_2):
+    assert box2_1 != box2_2
 
 
-def test_box_includes_box(box1, box3):
-    box3.include(box1)
-    assert box3.min == Point2(0.0, 0.0) and box3.max == Point2(2.0, 2.0)
-
-
-def test_box_intersects_box(box1, box2, box3):
-    assert box1.intersects(box2)
-    assert box1.intersects(box3)
-
-
-def test_box_size(box1):
-    assert box1.size() == Vector2(2.0, 2.0)
-
-
-def test_box_offset(box1, test_vector2):
-    assert box1.offset(test_vector2) == AxisAlignedBox2(Point2(1.0, 1.0), Point2(3.0, 3.0))
-
-
-def test_box_centre(box1):
-    assert box1.centre() == Vector2(1.0, 1.0)
-
-
-def test_box_equals_box(box1, box2, box4):
-    assert box1 == box1
-    assert box2 == box4
-
-
-def test_box_not_equals_box(box1, box2):
-    assert box1 != box2
-
-
-def test_box_is_empty(box4):
-    assert box4.empty()
+def test_box_is_empty(box2_4):
+    assert box2_4.empty()

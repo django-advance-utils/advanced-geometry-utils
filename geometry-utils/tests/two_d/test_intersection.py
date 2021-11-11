@@ -1,13 +1,5 @@
-import pytest
-
 from maths_utility import floats_are_close
-from two_d.intersection import Intersection
 from two_d.point2 import Point2
-
-
-@pytest.fixture()
-def intersection1():
-    return Intersection()
 
 
 def test_intersection_on_collinear_lines(intersection1):
