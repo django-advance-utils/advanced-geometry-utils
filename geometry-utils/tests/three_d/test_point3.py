@@ -147,9 +147,9 @@ Distance_To Tests
 '''
 
 
-def test_distance_to_point3_return_type(test_point3_1, test_point3_2):
+def test_point3_distance_to_point3_return_type(test_point3_1, test_point3_2):
     assert isinstance(test_point3_1.distance_to(test_point3_1), float)
 
 
-def test_distance_to_point3_arithmetic(test_point3_1, test_point3_2):
+def test_point3_distance_to_point3_arithmetic(test_point3_1, test_point3_2):
     assert test_point3_1.distance_to(test_point3_2) == sqrt(2)

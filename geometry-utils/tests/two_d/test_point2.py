@@ -145,9 +145,9 @@ Distance_To Tests
 '''
 
 
-def test_distance_to_point2_return_type(test_point2_1, test_point2_2):
+def test_point2_distance_to_point2_return_type(test_point2_1, test_point2_2):
     assert isinstance(test_point2_1.distance_to(test_point2_2), float)
 
 
-def test_distance_to_point2_arithmetic(test_point2_1, test_point2_2):
+def test_point2_distance_to_point2_arithmetic(test_point2_1, test_point2_2):
     assert test_point2_1.distance_to(test_point2_2) == 1.0
