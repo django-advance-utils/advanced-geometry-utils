@@ -186,22 +186,22 @@ AxisAlignedBox2
 
 
 @pytest.fixture(scope="session")
-def box2_1():
+def test_box2_1():
     return AxisAlignedBox2(Point2(0.0, 0.0), Point2(2.0, 2.0))
 
 
 @pytest.fixture(scope="session")
-def box2_2():
+def test_box2_2():
     return AxisAlignedBox2()
 
 
 @pytest.fixture(scope="session")
-def box2_3():
+def test_box2_3():
     return AxisAlignedBox2(Point2(0.0, 0.0), Point2(0.0, 0.0))
 
 
 @pytest.fixture(scope="session")
-def box2_4():
+def test_box2_4():
     return AxisAlignedBox2(Point2(0.0, 0.0), Point2(0.0, 0.0))
 
 
@@ -211,22 +211,22 @@ AxisAlignedBox3
 
 
 @pytest.fixture(scope="session")
-def box3_1():
+def test_box3_1():
     return AxisAlignedBox3(Point3(0.0, 0.0, 0.0), Point3(2.0, 2.0, 2.0))
 
 
 @pytest.fixture(scope="session")
-def box3_2():
+def test_box3_2():
     return AxisAlignedBox3()
 
 
 @pytest.fixture(scope="session")
-def box3_3():
+def test_box3_3():
     return AxisAlignedBox3(Point3(0.0, 0.0, 0.0), Point3(0.0, 0.0, 0.0))
 
 
 @pytest.fixture(scope="session")
-def box3_4():
+def test_box3_4():
     return AxisAlignedBox3(Point3(0.0, 0.0, 0.0), Point3(0.0, 0.0, 0.0))
 
 
