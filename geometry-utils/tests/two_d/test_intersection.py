@@ -7,7 +7,7 @@ from two_d.point2 import Point2
 
 def test_intersection_with_edge2(intersection1, test_vector3_1):
     with pytest.raises(TypeError):
-        return intersection1.intersect_lines(test_vector3_1)
+        return intersection1.intersect_lines(test_vector3_1, test_vector3_1, test_vector3_1, test_vector3_1)
 
 
 def test_intersection_on_collinear_lines(intersection1):
