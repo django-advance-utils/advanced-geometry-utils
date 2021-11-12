@@ -1,3 +1,5 @@
+import math
+
 import pytest
 
 from three_d.axis_aligned_box3 import AxisAlignedBox3
@@ -127,6 +129,18 @@ def test_edge2_3():
     p2 = Point2(4.0, 4.0)
     return Edge2(p1, p2)
 
+
+@pytest.fixture(scope="session")
+def test_circle_points_1():
+    # this just generates a list of points in a circle at 1 degree increments at a radius of 600
+    radius = 600.0
+
+    circle = []
+    for i in range(360):
+        t = (math.pi / 360.0) * float(i)
+        circle.append(Point2((math.sin(t) * radius),
+                             (math.cos(t) * radius)))
+    return circle
 
 '''
 Edge3

@@ -3,6 +3,9 @@ from math import sqrt
 
 class Vector2:
     def __init__(self, x, y, w=0):
+        self.x = 0
+        self.y = 0
+        self.w = 0
         if isinstance(x, float) and isinstance(y, float) and isinstance(w, int):
             self.x = x
             self.y = y
