@@ -17,7 +17,7 @@ def test_edge2_parametric_point_arcs(test_circle_points_1):
     # anticlockwise 10 deg
     e1 = Edge2(test_circle_points_1[10], test_circle_points_1[0], 600.0, False, False)
 
-    # endpoints and centrepoint
+    # endpoints and centre point
     assert floats_are_close(e1.parametric_point(test_circle_points_1[355]), 1.5)
     assert floats_are_close(e1.parametric_point(test_circle_points_1[0]), 1.0)
     assert floats_are_close(e1.parametric_point(test_circle_points_1[5]), 0.5)
@@ -26,7 +26,7 @@ def test_edge2_parametric_point_arcs(test_circle_points_1):
 
     e2 = Edge2(test_circle_points_1[36], test_circle_points_1[202], 600.0, True, False)
 
-    # endpoints and centrepoint
+    # endpoints and centre point
     assert floats_are_close(e2.parametric_point(test_circle_points_1[285]), 1.5)
     assert floats_are_close(e2.parametric_point(test_circle_points_1[202]), 1.0)
     assert floats_are_close(e2.parametric_point(test_circle_points_1[119]), 0.5)
@@ -78,8 +78,8 @@ def test_edge2_get_tangent(test_edge2_2):
     assert test_edge2_2.get_tangent() == Vector2(2.0/sqrt(8.0), 2.0/sqrt(8.0))
 
 
-def test_edge2_get_arc_centre(test_edge2_2):
-    assert test_edge2_2.get_arc_centre() == Point2(1.0, 1.0)
+def test_edge2_calculate_arc_centre(test_edge2_2):
+    assert test_edge2_2.calculate_arc_centre() == Point2(1.0, 1.0)
 
 
 def test_edge2_get_edge_bounds(test_edge2_2):
