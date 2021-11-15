@@ -1,8 +1,34 @@
+def pi():
+    return 3.14159265358
+
+
+def double_pi():
+    return pi() * 2
+
+
 def double_epsilon():
     return 0.0001
 
 
-def floats_are_close(a, b, rel_tol=1e-9, abs_tol=0.0005):
+def deg_to_rad():
+    return pi() / 180.0
+
+
+def rad_to_deg():
+    return 180.0/pi()
+
+
+def degrees_to_radians(theta_in_degrees):
+    if isinstance(theta_in_degrees, float):
+        return theta_in_degrees * deg_to_rad()
+
+
+def radians_to_degrees(theta_in_rad):
+    if isinstance(theta_in_rad, float):
+        return theta_in_rad * rad_to_deg()
+
+
+def floats_are_close(a, b, rel_tol=1e-9, abs_tol=double_epsilon()):
     return abs(a-b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
 
 
