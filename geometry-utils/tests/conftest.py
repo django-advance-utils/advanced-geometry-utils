@@ -142,6 +142,7 @@ def test_circle_points_1():
                              (math.cos(t) * radius)))
     return circle
 
+
 '''
 Edge3
 '''
