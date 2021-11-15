@@ -1,7 +1,11 @@
-from maths_utility import floats_are_close
+from math import atan2
+
+from maths_utility import floats_are_close, double_epsilon, pi, double_pi
 from two_d.axis_aligned_box2 import AxisAlignedBox2
+from two_d.ellipse import Ellipse
 from two_d.intersection import Intersection
 from two_d.point2 import Point2
+from two_d.vector2 import Vector2
 
 
 class Edge2:
@@ -17,17 +21,32 @@ class Edge2:
             self.radius = radius
             self.clockwise = clockwise
             self.large = large
-            self.arc_centre = self.get_arc_centre()
+            self.arc_centre = self.calculate_arc_centre()
 
-    def get_arc_centre(self):
+    def calculate_arc_centre(self):
         if floats_are_close(self.radius, 0.0):
             return (self.p1 + self.p2) * 0.5
+
+        ellipse = Ellipse()
+        ellipse.initialise_from_points_and_radii(self.p1, self.p2, self.radius, self.radius, self.large, self.clockwise,
+                                                 0.0)
+        return ellipse.centre
+
+    def is_arc(self):
+        return self.radius > double_epsilon()
 
     def point_parametric(self, s):
         if isinstance(s, float):
             if self.p1 == self.p2:
                 return self.p1
 
+            if self.is_arc():
+                t = self.get_sweep() * s
+                if self.clockwise:
+                    t *= -1
+                p1_vector = self.p1.to_vector()
+                arc_centre_vector = self.arc_centre.to_vector()
+                return p1_vector.rotate(arc_centre_vector, t)
             tangent = self.get_tangent()  # vector
             p1_p2_distance = self.p1.distance_to(self.p2)  # vector
             vector = tangent * (s * p1_p2_distance)  # vector
@@ -35,16 +54,50 @@ class Edge2:
 
     def parametric_point(self, point):
         if isinstance(point, Point2):
+            if self.p1 == self.p2:
+                return 0.5
+
+            if self.is_arc():
+                point_to_centre_distance = (point - self.arc_centre).to_vector()
+                centre_to_arc_centre_distance = (((self.p2 + self.p1).to_vector()/2.0) - self.arc_centre.to_vector())
+                if centre_to_arc_centre_distance == Vector2(0.0, 0.0):
+                    centre_to_arc_centre_distance = (self.p2 - self.p1).to_vector().get_perpendicular()
+                    if not self.clockwise:
+                        centre_to_arc_centre_distance.invert()
+                else:
+                    if self.large:
+                        centre_to_arc_centre_distance.invert()
+
+                point_to_centre_distance = point_to_centre_distance.normalise()
+                centre_to_arc_centre_distance = centre_to_arc_centre_distance.normalise()
+
+                dot_product = centre_to_arc_centre_distance.dot(point_to_centre_distance)
+                determinant = (centre_to_arc_centre_distance.x * point_to_centre_distance.y) - \
+                              (centre_to_arc_centre_distance.y * point_to_centre_distance.x)
+                point_to_arc_centre_point_angle = atan2(determinant, dot_product)
+                if self.clockwise:
+                    point_to_arc_centre_point_angle *= -1
+                if point_to_arc_centre_point_angle > pi():
+                    point_to_arc_centre_point_angle -= double_pi()
+                point_to_arc_centre_point_angle /= self.get_sweep()
+                return point_to_arc_centre_point_angle + 0.5
+
             tangent = self.get_tangent()  # vector
             point_p1_difference = (point - self.p1).to_vector()  # vector
-            p1_p2_distance = self.p1.distance_to(self.p2)
+            p1_to_p2_distance = self.p1.distance_to(self.p2)
             distance = tangent.dot(point_p1_difference)
-            return distance / p1_p2_distance
+            return distance / p1_to_p2_distance
 
     def get_tangent(self):
         p1_vector = self.p1.to_vector()
         p2_vector = self.p2.to_vector()
         return (p2_vector - p1_vector).normalise()
+
+    def get_sweep(self):
+        if not self.is_arc():
+            return 0.0
+        ellipse = Ellipse(self.arc_centre, self.radius, self.radius, 0.0)
+        return ellipse.get_arc_sweep(self.p1, self.p2, self.clockwise)
 
     def get_edge_bounds(self):
         bounds = AxisAlignedBox2()
