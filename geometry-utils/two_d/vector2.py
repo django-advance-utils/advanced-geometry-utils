@@ -1,11 +1,8 @@
-from math import sqrt
+from math import sqrt, cos, sin
 
 
 class Vector2:
-    def __init__(self, x, y, w=0):
-        self.x = 0
-        self.y = 0
-        self.w = 0
+    def __init__(self, x=0.0, y=0.0, w=0):
         if isinstance(x, float) and isinstance(y, float) and isinstance(w, int):
             self.x = x
             self.y = y
@@ -61,3 +58,22 @@ class Vector2:
     def cross(self, other):
         if isinstance(other, Vector2):
             return Vector2(self.x * other.y - self.y * other.x, self.y * other.x - self.x * other.y)
+
+    def get_perpendicular(self):
+        return Vector2(-self.y, self.x)
+
+    def invert(self):
+        return Vector2(-self.x, -self.y)
+
+    def rotate(self, origin, theta):
+        if isinstance(origin, Vector2) and isinstance(theta, float):
+            cos_theta = cos(theta)
+            sin_theta = sin(theta)
+
+            self_origin_difference = self - origin
+            result = Vector2()
+
+            result.x = (self_origin_difference.x * cos_theta) - (self_origin_difference.y * sin_theta)
+            result.y = (self_origin_difference.x * sin_theta) + (self_origin_difference.y * cos_theta)
+
+            return result + origin
