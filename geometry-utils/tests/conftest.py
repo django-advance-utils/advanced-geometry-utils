@@ -137,9 +137,10 @@ def test_circle_points_1():
 
     circle = []
     for i in range(360):
-        t = (math.pi / 360.0) * float(i)
+        t = ((math.pi * 2) / 360.0) * float(i)
         circle.append(Point2((math.sin(t) * radius),
                              (math.cos(t) * radius)))
+
     return circle
 
 
