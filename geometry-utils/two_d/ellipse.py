@@ -7,7 +7,7 @@ from two_d.point2 import Point2
 class Ellipse:
     def __init__(self, centre=Point2(0.0, 0.0), radius_x=0.0, radius_y=0.0, angle=0.0):
         if isinstance(centre, Point2) and isinstance(radius_x, float) and \
-           isinstance(radius_y, float) and isinstance(angle, float):
+                isinstance(radius_y, float) and isinstance(angle, float):
             self.centre = centre
             self.major_radius = radius_x
             self.minor_radius = radius_y
@@ -19,23 +19,23 @@ class Ellipse:
                                          end=Point2(0.0, 0.0),
                                          major_radius=0.0,
                                          minor_radius=0.0,
-                                         large_arc=False,
                                          clockwise=False,
+                                         large_arc=False,
                                          angle=0.0):
         if isinstance(start, Point2) and isinstance(end, Point2) and \
                 isinstance(major_radius, float) and isinstance(minor_radius, float) and isinstance(angle, float):
             self.major_radius = major_radius
             self.minor_radius = minor_radius
             self.angle = angle
-            self.valid = self.calculate_centre(start, end, major_radius, minor_radius, large_arc, clockwise, angle)
+            self.valid = self.calculate_centre(start, end, major_radius, minor_radius, clockwise, large_arc, angle)
 
     def calculate_centre(self,
                          start=Point2(0.0, 0.0),
                          end=Point2(0.0, 0.0),
                          major_radius=0.0,
                          minor_radius=0.0,
-                         large_arc=False,
                          clockwise=False,
+                         large_arc=False,
                          angle=0.0):
         if isinstance(start, Point2) and isinstance(end, Point2) and \
                 isinstance(major_radius, float) and isinstance(minor_radius, float) and isinstance(angle, float):
@@ -45,8 +45,8 @@ class Ellipse:
             sin_phi = sin(angle_in_radians)
             cos_phi = cos(angle_in_radians)
 
-            x_dash = (cos_phi * ((start.x - end.x)/2.0)) + (sin_phi * ((start.y - end.y)/2.0))
-            y_dash = (-sin_phi * ((start.x - end.x)/2.0)) + (cos_phi * ((start.y - end.y)/2.0))
+            x_dash = (cos_phi * ((start.x - end.x) / 2.0)) + (sin_phi * ((start.y - end.y) / 2.0))
+            y_dash = (-sin_phi * ((start.x - end.x) / 2.0)) + (cos_phi * ((start.y - end.y) / 2.0))
 
             rx = fabs(major_radius)
             ry = fabs(minor_radius)
@@ -62,10 +62,11 @@ class Ellipse:
 
             numerator = ((rx * rx) * (ry * ry)) - ((rx * rx) * (y_dash * y_dash)) - ((ry * ry) * (x_dash * x_dash))
             denominator = ((rx * rx) * (y_dash * y_dash)) + ((ry * ry) * (x_dash * x_dash))
-            root_part = sqrt(numerator / denominator)
 
             if numerator < 0:
                 root_part = 0
+            else:
+                root_part = sqrt(numerator / denominator)
 
             if large_arc != clockwise:
                 root_part *= -1
