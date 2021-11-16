@@ -5,7 +5,6 @@ from two_d.axis_aligned_box2 import AxisAlignedBox2
 from two_d.ellipse import Ellipse
 from two_d.intersection import Intersection
 from two_d.point2 import Point2
-from two_d.vector2 import Vector2
 
 
 class Edge2:
@@ -28,8 +27,9 @@ class Edge2:
             return (self.p1 + self.p2) * 0.5
 
         ellipse = Ellipse()
-        ellipse.initialise_from_points_and_radii(self.p1, self.p2, self.radius, self.radius, self.large, self.clockwise,
+        ellipse.initialise_from_points_and_radii(self.p1, self.p2, self.radius, self.radius, self.clockwise, self.large,
                                                  0.0)
+
         return ellipse.centre
 
     def is_arc(self):
@@ -60,13 +60,18 @@ class Edge2:
             if self.is_arc():
                 point_to_centre_distance = (point - self.arc_centre).to_vector()
                 centre_to_arc_centre_distance = (((self.p2 + self.p1).to_vector()/2.0) - self.arc_centre.to_vector())
-                if centre_to_arc_centre_distance == Vector2(0.0, 0.0):
+
+                if floats_are_close(centre_to_arc_centre_distance.x, 0.0) and \
+                        floats_are_close(centre_to_arc_centre_distance.y, 0.0):
                     centre_to_arc_centre_distance = (self.p2 - self.p1).to_vector().get_perpendicular()
+
                     if not self.clockwise:
-                        centre_to_arc_centre_distance.invert()
+                        centre_to_arc_centre_distance = centre_to_arc_centre_distance.invert()
+
                 else:
                     if self.large:
-                        centre_to_arc_centre_distance.invert()
+                        centre_to_arc_centre_distance = centre_to_arc_centre_distance.invert()
+                        # print(centre_to_arc_centre_distance.y)
 
                 point_to_centre_distance = point_to_centre_distance.normalise()
                 centre_to_arc_centre_distance = centre_to_arc_centre_distance.normalise()
@@ -75,11 +80,15 @@ class Edge2:
                 determinant = (centre_to_arc_centre_distance.x * point_to_centre_distance.y) - \
                               (centre_to_arc_centre_distance.y * point_to_centre_distance.x)
                 point_to_arc_centre_point_angle = atan2(determinant, dot_product)
+
                 if self.clockwise:
-                    point_to_arc_centre_point_angle *= -1
+
+                    point_to_arc_centre_point_angle = -point_to_arc_centre_point_angle
+
                 if point_to_arc_centre_point_angle > pi():
                     point_to_arc_centre_point_angle -= double_pi()
                 point_to_arc_centre_point_angle /= self.get_sweep()
+
                 return point_to_arc_centre_point_angle + 0.5
 
             tangent = self.get_tangent()  # vector
