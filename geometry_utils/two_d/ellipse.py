@@ -117,9 +117,9 @@ class Ellipse:
                  large_arc=False,
                  angle=0.0):
 
-        if is_point2(start) and is_point2(centre) and is_point2(end) and is_float(major_radius) and \
-                is_float(minor_radius) and is_float(angle):
-            
+        if (is_point2(start) and is_point2(centre) and is_point2(end) and is_float(major_radius) and
+                is_float(minor_radius) and is_float(angle)):
+
             self.start = start
             if centre:
                 self.centre = centre
