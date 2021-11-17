@@ -52,13 +52,35 @@ class Vector3:
         return self / vector_length
 
     def length(self):
+        """
+        Calculates the length of the vector.
+
+        :rtype: float
+        :return: length
+        """
         return float(sqrt(self.dot(self)))
 
     def dot(self, other):
+        """
+        Calculates the dot product of self and other vector.
+
+        :param other: the other vector
+        :type other: Vector3
+        :rtype: float
+        :return: the dot product.
+        """
         if is_vector3(other):
             return float(self.x * other.x + self.y * other.y + self.z * other.z)
 
     def cross(self, other):
+        """
+        Calculates the cross product of self and other vector.
+
+        :param other: the other vector
+        :type other: Vector3
+        :rtype: Vector3
+        :return: the cross product.
+        """
         return Vector3(self.y * other.z - self.z * other.y,
                        self.z * other.x - self.x * other.z,
                        self.x * other.y - self.y * other.x)
