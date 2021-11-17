@@ -1,6 +1,6 @@
-from maths_utility import floats_are_close
+from maths_utility import floats_are_close, is_float
 from three_d.axis_aligned_box3 import AxisAlignedBox3
-from three_d.point3 import Point3
+from three_d.point3 import Point3, is_point3
 
 
 class Edge3:
@@ -11,7 +11,7 @@ class Edge3:
                  radius=0.0,
                  clockwise=False,
                  large=False):
-        if isinstance(p1, Point3) and isinstance(p2, Point3) and isinstance(via, Point3) and isinstance(radius, float):
+        if is_point3(p1) and is_point3(p2) and is_point3(via) and is_float(radius):
             self.p1 = p1
             self.p2 = p2
             self.via = via
@@ -25,7 +25,7 @@ class Edge3:
             return (self.p1 + self.p2) * 0.5
 
     def point_parametric(self, s):
-        if isinstance(s, float):
+        if is_float(s):
             if self.p1 == self.p2:
                 return self.p1
 
@@ -35,7 +35,7 @@ class Edge3:
             return self.p1 + vector  # point
 
     def parametric_point(self, point):
-        if isinstance(point, Point3):
+        if is_point3(point):
             tangent = self.get_tangent()  # vector
             point_p1_difference = (point - self.p1).to_vector()  # vector
             distance = tangent.dot(point_p1_difference)
@@ -51,3 +51,7 @@ class Edge3:
         bounds.include(self.p1)
         bounds.include(self.p2)
         return bounds
+
+
+def is_edge3(input_variable):
+    return isinstance(input_variable, Edge3)

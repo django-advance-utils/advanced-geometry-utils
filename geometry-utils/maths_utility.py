@@ -14,18 +14,21 @@ def deg_to_rad():
     return pi() / 180.0
 
 
-def rad_to_deg():
-    return 180.0/pi()
-
-
 def degrees_to_radians(theta_in_degrees):
     if isinstance(theta_in_degrees, float):
         return theta_in_degrees * deg_to_rad()
 
 
-def radians_to_degrees(theta_in_rad):
-    if isinstance(theta_in_rad, float):
-        return theta_in_rad * rad_to_deg()
+def is_float(input_variable):
+    return isinstance(input_variable, float)
+
+
+def is_int(input_variable):
+    return isinstance(input_variable, int)
+
+
+def is_list(input_variable):
+    return isinstance(input_variable, list)
 
 
 def floats_are_close(a, b, rel_tol=1e-9, abs_tol=double_epsilon()):

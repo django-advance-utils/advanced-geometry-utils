@@ -1,10 +1,11 @@
+from maths_utility import is_list
 from three_d.axis_aligned_box3 import AxisAlignedBox3
-from three_d.edge3 import Edge3
+from three_d.edge3 import is_edge3
 
 
 class Path3:
     def __init__(self, list_of_edges):
-        if isinstance(list_of_edges, list) and all(isinstance(edge, Edge3) for edge in list_of_edges):
+        if is_list(list_of_edges) and all(is_edge3(edge) for edge in list_of_edges):
             self.list_of_edges = list_of_edges
             self.first_edge = self.list_of_edges[0]
             self.last_edge = self.list_of_edges[-1]

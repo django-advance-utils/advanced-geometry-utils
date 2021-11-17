@@ -1,20 +1,21 @@
 from math import cos, sin
 
-from two_d.vector2 import Vector2
+from maths_utility import is_list, is_float
+from two_d.vector2 import is_vector2
 
 
 class Matrix3:
     def __init__(self, vals=None):
         if vals is None:
             self.set_identity()
-        if isinstance(vals, list) and len(vals) == 3 and len(vals[0]) == 3:
+        if is_list(vals) and len(vals) == 3 and len(vals[0]) == 3:
             self.vals = vals
 
     def set_identity(self):
         self.vals = [[1 if i == j else 0 for i in range(3)] for j in range(3)]
 
     def __mul__(self, other):
-        if isinstance(other, Matrix3):
+        if is_matrix3(other):
             result = Matrix3()
             for i in range(3):
                 for j in range(3):
@@ -27,7 +28,7 @@ class Matrix3:
 
     @classmethod
     def make_translation(cls, vector):
-        if isinstance(vector, Vector2):
+        if is_vector2(vector):
             mat = cls
             mat.vals = [[1.0, 0.0, vector.x],
                         [0.0, 1.0, vector.y],
@@ -37,7 +38,7 @@ class Matrix3:
 
     @classmethod
     def make_rotation(cls, theta):
-        if isinstance(theta, float):
+        if is_float(theta):
             mat = cls
             cos_theta = cos(theta)
             sin_theta = sin(theta)
@@ -46,3 +47,7 @@ class Matrix3:
                         [0.0,        0.0,       1.0]]
 
             return mat
+
+
+def is_matrix3(input_variable):
+    return isinstance(input_variable, Matrix3)

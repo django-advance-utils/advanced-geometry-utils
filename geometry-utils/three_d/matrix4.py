@@ -1,20 +1,21 @@
 from math import cos, sin
 
-from three_d.vector3 import Vector3
+from maths_utility import is_list, is_float
+from three_d.vector3 import is_vector3
 
 
 class Matrix4:
     def __init__(self, vals=None):
         if vals is None:
             self.set_identity()
-        if isinstance(vals, list) and len(vals) == 4 and len(vals[0]) == 4:
+        if is_list(vals) and len(vals) == 4 and len(vals[0]) == 4:
             self.vals = vals
 
     def set_identity(self):
         self.vals = [[1.0 if i == j else 0.0 for i in range(4)] for j in range(4)]
 
     def __mul__(self, other):
-        if isinstance(other, Matrix4):
+        if is_matrix4(other):
             result = Matrix4()
             for i in range(4):
                 for j in range(4):
@@ -27,7 +28,7 @@ class Matrix4:
 
     @classmethod
     def make_translation(cls, vector):
-        if isinstance(vector, Vector3):
+        if is_vector3(vector):
             mat = cls
             mat.vals = [[1.0, 0.0, 0.0, vector.x],
                         [0.0, 1.0, 0.0, vector.y],
@@ -38,7 +39,7 @@ class Matrix4:
 
     @classmethod
     def make_x_rotation(cls, theta):
-        if isinstance(theta, float):
+        if is_float(theta):
             mat = cls
             cos_theta = cos(theta)
             sin_theta = sin(theta)
@@ -51,7 +52,7 @@ class Matrix4:
 
     @classmethod
     def make_y_rotation(cls, theta):
-        if isinstance(theta, float):
+        if is_float(theta):
             mat = cls
             cos_theta = cos(theta)
             sin_theta = sin(theta)
@@ -64,7 +65,7 @@ class Matrix4:
 
     @classmethod
     def make_z_rotation(cls, theta):
-        if isinstance(theta, float):
+        if is_float(theta):
             mat = cls
             cos_theta = cos(theta)
             sin_theta = sin(theta)
@@ -74,3 +75,7 @@ class Matrix4:
                         [0.0,        0.0,       0.0, 1.0]]
 
             return mat
+
+
+def is_matrix4(input_variable):
+    return isinstance(input_variable, Matrix4)
