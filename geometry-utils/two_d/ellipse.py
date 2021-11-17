@@ -119,7 +119,7 @@ class Ellipse:
 
         if is_point2(start) and is_point2(centre) and is_point2(end) and is_float(major_radius) and \
                 is_float(minor_radius) and is_float(angle):
-
+            # test
             self.start = start
             if centre:
                 self.centre = centre
