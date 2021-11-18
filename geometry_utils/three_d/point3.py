@@ -1,34 +1,36 @@
-from maths_utility import is_float, is_int
+from maths_utility import is_float, is_int, are_ints_or_floats
 from three_d.vector3 import Vector3, is_vector3
 
 
 class Point3:
-    def __init__(self, x, y, z, w=1):
-        if is_float(x) and is_float(y) and is_float(z) and is_int(w):
+    def __init__(self, x=0, y=0, z=0, w=1):
+        if are_ints_or_floats([x, y, z, w]):
             self.x = x
             self.y = y
             self.z = z
             self.w = w
+        else:
+            raise TypeError("Point3 argument must be an int or float")
 
     def __add__(self, other):
         if is_point3(other) or is_vector3(other):
             return Point3(self.x + other.x, self.y + other.y, self.z + other.z)
-        return NotImplemented
+        raise TypeError("Addition must be done with an object of Vector3 or Point3")
 
     def __sub__(self, other):
         if is_point3(other) or is_vector3(other):
             return Point3(self.x - other.x, self.y - other.y, self.z - other.z)
-        return NotImplemented
+        raise TypeError("Subtraction must be done with an object of Vector3 or Point3")
 
     def __mul__(self, other):
         if is_float(other):
             return Point3(self.x * other, self.y * other, self.z * other)
-        return NotImplemented
+        raise TypeError("Multiplication must be done by a float")
 
     def __eq__(self, other):
         if is_point3(other):
             return bool(self.x == other.x and self.y == other.y and self.z == other.z)
-        return NotImplemented
+        raise TypeError("Comparison must be done with another object of Point3")
 
     def __ne__(self, other):
         if is_point3(other):

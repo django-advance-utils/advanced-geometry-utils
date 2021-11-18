@@ -88,7 +88,6 @@ def test_vector2_vector2_equality(test_vector2_1, test_vector2_3):
 def test_vector2_vector2_inequality(test_vector2_1, test_vector2_2):
     assert test_vector2_1 != test_vector2_2
     assert not (test_vector2_1 == test_vector2_2)
-    assert not test_vector2_1 == 9.0
 
 
 '''

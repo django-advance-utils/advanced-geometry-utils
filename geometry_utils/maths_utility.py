@@ -31,6 +31,18 @@ def is_list(input_variable):
     return isinstance(input_variable, list)
 
 
+def is_int_or_float(input_variable):
+    return is_float(input_variable) or is_int(input_variable)
+
+
+def are_ints_or_floats(input_list):
+    if isinstance(input_list, list):
+        for input_variable in input_list:
+            return is_int_or_float(input_variable)
+    else:
+        raise TypeError("Input argument must be a list")
+
+
 def floats_are_close(a, b, rel_tol=1e-9, abs_tol=double_epsilon()):
     return abs(a-b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
 
