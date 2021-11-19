@@ -1,4 +1,4 @@
-from maths_utility import floats_are_close, is_float
+from maths_utility import floats_are_close, is_float, is_int_or_float
 from three_d.axis_aligned_box3 import AxisAlignedBox3
 from three_d.point3 import Point3, is_point3
 
@@ -19,6 +19,11 @@ class Edge3:
             self.clockwise = clockwise
             self.large = large
             self.arc_centre = self.get_arc_centre()
+        else:
+            if not is_point3(p1) or not is_point3(p2) or not is_point3(via):
+                raise TypeError("First, second and third arguments must be objects of Point2")
+            if not is_int_or_float(radius):
+                raise TypeError("Fourth argument must be an int or float")
 
     def get_arc_centre(self):
         if floats_are_close(self.radius, 0.0):
@@ -40,6 +45,7 @@ class Edge3:
             point_p1_difference = (point - self.p1).to_vector()  # vector
             distance = tangent.dot(point_p1_difference)
             return distance / self.p1.distance_to(self.p2)
+        raise TypeError("Argument must be an object of Point3")
 
     def get_tangent(self):
         p1_vector = self.p1.to_vector()

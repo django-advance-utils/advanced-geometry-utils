@@ -1,6 +1,6 @@
 from maths_utility import is_list
 from two_d.axis_aligned_box2 import AxisAlignedBox2
-from two_d.edge2 import Edge2, is_edge2
+from two_d.edge2 import is_edge2
 
 
 class Path2:
@@ -9,6 +9,8 @@ class Path2:
             self.list_of_edges = list_of_edges
             self.first_edge = self.list_of_edges[0]
             self.last_edge = self.list_of_edges[-1]
+        else:
+            raise TypeError("Path2 argument must be a list of objects of Edge2")
 
     def is_closed(self):
         return self.last_edge.p2 == self.first_edge.p1 and self.is_continuous()

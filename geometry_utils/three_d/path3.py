@@ -9,6 +9,8 @@ class Path3:
             self.list_of_edges = list_of_edges
             self.first_edge = self.list_of_edges[0]
             self.last_edge = self.list_of_edges[-1]
+        else:
+            raise TypeError("Path3 argument must be a list of objects of Edge3")
 
     def is_closed(self):
         return self.last_edge.p2 == self.first_edge.p1 and self.is_continuous()

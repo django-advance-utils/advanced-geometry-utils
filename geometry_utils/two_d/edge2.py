@@ -123,7 +123,7 @@ class Edge2:
 '''
 from math import atan2
 
-from maths_utility import floats_are_close, double_epsilon, pi, double_pi, is_list, is_float
+from maths_utility import floats_are_close, double_epsilon, pi, double_pi, is_list, is_float, is_int_or_float
 from two_d.axis_aligned_box2 import AxisAlignedBox2
 from two_d.ellipse import Ellipse
 from two_d.intersection import Intersection
@@ -137,13 +137,18 @@ class Edge2:
                  radius=0.0,
                  clockwise=False,
                  large=False):
-        if is_point2(p1) and is_point2(p2) and is_float(radius):
+        if is_point2(p1) and is_point2(p2) and is_int_or_float(radius):
             self.p1 = p1
             self.p2 = p2
             self.radius = radius
             self.clockwise = clockwise
             self.large = large
             self.arc_centre = self.calculate_arc_centre()
+        else:
+            if not is_point2(p1) or not is_point2(p2):
+                raise TypeError("First and second arguments must be objects of Point2")
+            if not is_int_or_float(radius):
+                raise TypeError("Radius must be an int or float")
 
     def calculate_arc_centre(self):
         if floats_are_close(self.radius, 0.0):
@@ -157,7 +162,7 @@ class Edge2:
         return self.radius > double_epsilon()
 
     def point_parametric(self, s):
-        if is_float(s):
+        if is_int_or_float(s):
             if self.p1 == self.p2:
                 return self.p1
 
@@ -172,6 +177,7 @@ class Edge2:
             p1_p2_distance = self.p1.distance_to(self.p2)
             vector = tangent * (s * p1_p2_distance)
             return self.p1 + vector
+        raise TypeError("Input variable must be an int or float")
 
     def parametric_point(self, point):
         if is_point2(point):
@@ -216,6 +222,7 @@ class Edge2:
             p1_to_p2_distance = self.p1.distance_to(self.p2)
             distance = tangent.dot(point_p1_difference)
             return distance / p1_to_p2_distance
+        raise TypeError("Argument must be an object of Point2")
 
     def get_tangent(self):
         p1_vector = self.p1.to_vector()
@@ -239,7 +246,12 @@ class Edge2:
         if is_edge2(other_edge) and is_list(list_of_intersections):
             edges_intersection = Intersection()
             edges_intersection.intersect_lines(self.p1, self.p2, other_edge.p1, other_edge.p2)
-            list_of_intersections.append(edges_intersection) 
+            list_of_intersections.append(edges_intersection)
+        else:
+            if not is_edge2(other_edge):
+                raise TypeError("First argument must be an object of Edge2")
+            if not is_list(list_of_intersections):
+                raise TypeError("Second argument must be a list")
 
 
 def is_edge2(input_variable):

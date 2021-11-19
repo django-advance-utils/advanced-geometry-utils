@@ -1,4 +1,4 @@
-from maths_utility import is_float, is_int, are_ints_or_floats
+from maths_utility import is_float, are_ints_or_floats
 from three_d.vector3 import Vector3, is_vector3
 
 
@@ -35,17 +35,17 @@ class Point3:
     def __ne__(self, other):
         if is_point3(other):
             return bool(self.x != other.x or self.y != other.y or self.z != other.z)
-        return NotImplemented
+        raise TypeError("Comparison must be done with another object of Point3")
 
     def __le__(self, other_point):
         if is_point3(other_point):
             return self.x <= other_point.x and self.y <= other_point.y and self.z <= other_point.z
-        return NotImplemented
+        raise TypeError("Comparison must be done with another object of Point3")
 
     def __ge__(self, other_point):
         if is_point3(other_point):
             return self.x >= other_point.x and self.y >= other_point.y and self.z >= other_point.z
-        return NotImplemented
+        raise TypeError("Comparison must be done with another object of Point3")
 
     def to_vector(self):
         return Vector3(self.x, self.y, self.z)
@@ -53,6 +53,7 @@ class Point3:
     def distance_to(self, point):
         if is_point3(point):
             return (self - point).to_vector().length()
+        raise TypeError("Argument must be an object of Point3")
 
 
 def is_point3(input_variable):

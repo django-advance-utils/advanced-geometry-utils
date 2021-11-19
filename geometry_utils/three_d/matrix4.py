@@ -1,3 +1,4 @@
+import inspect
 from math import cos, sin
 
 from maths_utility import is_list, is_float
@@ -8,8 +9,13 @@ class Matrix4:
     def __init__(self, vals=None):
         if vals is None:
             self.set_identity()
-        if is_list(vals) and len(vals) == 4 and len(vals[0]) == 4:
+        elif is_list(vals) and len(vals) == 4 and len(vals[0]) == 4:
             self.vals = vals
+        else:
+            if not is_list(vals):
+                raise TypeError("Matrix4 argument must be a list")
+            if not len(vals) == 4 or not len(vals[0]) == 4:
+                raise AttributeError("Input Matrix must be 4 x 4")
 
     def set_identity(self):
         self.vals = [[1.0 if i == j else 0.0 for i in range(4)] for j in range(4)]
@@ -22,9 +28,12 @@ class Matrix4:
                     for k in range(4):
                         result.vals[i][j] += self.vals[i][k] * other.vals[k][j]
             return result
+        raise TypeError("Multiplication must be done with an object of Matrix4")
 
     def __eq__(self, other):
-        return [[True if i == j else False for i in self.vals] for j in other.vals]
+        if is_matrix4(other) or inspect.isclass(other):  # revisit
+            return [[True if i == j else False for i in self.vals] for j in other.vals]
+        raise TypeError("Comparison must be with another object of Matrix4")
 
     @classmethod
     def make_translation(cls, vector):
@@ -36,6 +45,7 @@ class Matrix4:
                         [0.0, 0.0, 0.0, 1.0]]
 
             return mat
+        raise TypeError("Translation must be with an object of Vector3")
 
     @classmethod
     def make_x_rotation(cls, theta):
@@ -49,6 +59,7 @@ class Matrix4:
                         [0.0,  0.0,       0.0,       1.0]]
 
             return mat
+        raise TypeError("X rotation must be with a float")
 
     @classmethod
     def make_y_rotation(cls, theta):
@@ -62,6 +73,7 @@ class Matrix4:
                         [0.0,       0.0,  0.0,       1.0]]
 
             return mat
+        raise TypeError("Y rotation must be with a float")
 
     @classmethod
     def make_z_rotation(cls, theta):
@@ -75,6 +87,7 @@ class Matrix4:
                         [0.0,        0.0,       0.0, 1.0]]
 
             return mat
+        raise TypeError("Z rotation must be with a float")
 
 
 def is_matrix4(input_variable):

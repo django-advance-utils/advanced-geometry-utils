@@ -20,6 +20,8 @@ class Intersection:
             self.end_of_line = end_of_line
             self.point = point
             self.do_collinear_test = do_collinear_test
+        else:
+            raise TypeError("First argument must be an object of Point2")
 
     def intersect_lines(self, p1, p2, p3, p4):
         if is_point2(p1) and is_point2(p2) and is_point2(p3) and is_point2(p4):
@@ -81,4 +83,4 @@ class Intersection:
                 self.on_second_segment = floats_are_close(intersect_point_to_point3_distance +
                                                           intersect_point_to_point4_distance, length_of_side2)
         else:
-            raise TypeError
+            raise TypeError("Arguments must be objects of Point2")

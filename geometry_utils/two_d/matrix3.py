@@ -1,3 +1,4 @@
+import inspect
 from math import cos, sin
 
 from maths_utility import is_list, is_float
@@ -8,8 +9,13 @@ class Matrix3:
     def __init__(self, vals=None):
         if vals is None:
             self.set_identity()
-        if is_list(vals) and len(vals) == 3 and len(vals[0]) == 3:
+        elif is_list(vals) and len(vals) == 3 and len(vals[0]) == 3:
             self.vals = vals
+        else:
+            if not is_list(vals):
+                raise TypeError("Matrix3 argument must be a list")
+            if not len(vals) == 3 or not len(vals[0]) == 3:
+                raise AttributeError("Input Matrix must be 3 x 3")
 
     def set_identity(self):
         self.vals = [[1 if i == j else 0 for i in range(3)] for j in range(3)]
@@ -22,9 +28,12 @@ class Matrix3:
                     for k in range(3):
                         result.vals[i][j] += self.vals[i][k] * other.vals[k][j]
             return result
+        raise TypeError("Multiplication must be done with an object of Matrix3")
 
     def __eq__(self, other):
-        return [[True if i == j else False for i in self.vals] for j in other.vals]
+        if is_matrix3(other) or inspect.isclass(other):  # revisit
+            return [[True if i == j else False for i in self.vals] for j in other.vals]
+        raise TypeError("Comparison must be with another object of Matrix3")
 
     @classmethod
     def make_translation(cls, vector):
@@ -35,6 +44,7 @@ class Matrix3:
                         [0.0, 0.0, 1.0]]
 
             return mat
+        raise TypeError("Translation must be with an object of Vector2")
 
     @classmethod
     def make_rotation(cls, theta):
@@ -47,6 +57,7 @@ class Matrix3:
                         [0.0,        0.0,       1.0]]
 
             return mat
+        raise TypeError("Rotation must be with a float")
 
 
 def is_matrix3(input_variable):

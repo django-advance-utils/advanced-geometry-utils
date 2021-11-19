@@ -1,16 +1,16 @@
 from math import sqrt, cos, sin
 
-from maths_utility import is_float, is_int, are_ints_or_floats, is_int_or_float
+from maths_utility import is_float, are_ints_or_floats, is_int_or_float
 
 
 class Vector2:
-    def __init__(self, x, y, w=0):
+    def __init__(self, x=0, y=0, w=0):
         if are_ints_or_floats([x, y, w]):
             self.x = x
             self.y = y
             self.w = w
         else:
-            raise TypeError("Vector2 argument must be an int or float")
+            raise TypeError("Arguments must be ints or floats")
 
     def __add__(self, other_vector):
         if is_vector2(other_vector):

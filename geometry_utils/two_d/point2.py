@@ -1,9 +1,9 @@
-from maths_utility import is_float, is_int, are_ints_or_floats
+from maths_utility import is_float, are_ints_or_floats
 from two_d.vector2 import Vector2, is_vector2
 
 
 class Point2:
-    def __init__(self, x, y, w=1):
+    def __init__(self, x=0, y=0, w=1):
         if are_ints_or_floats([x, y, w]):
             self.x = x
             self.y = y

@@ -1,10 +1,10 @@
 from math import sqrt
 
-from maths_utility import is_float, is_int, are_ints_or_floats
+from maths_utility import is_float, are_ints_or_floats
 
 
 class Vector3:
-    def __init__(self, x, y, z, w=0):
+    def __init__(self, x=0, y=0, z=0, w=0):
         if are_ints_or_floats([x, y, z, w]):
             self.x = x
             self.y = y
@@ -50,6 +50,10 @@ class Vector3:
         return Vector3(self.x * -1, self.y * -1, self.z * -1)
 
     def normalise(self):
+        """
+        Derives the normal of the vector
+
+        :return: .         """
         vector_length = self.length()
         if vector_length == 0:
             return self
