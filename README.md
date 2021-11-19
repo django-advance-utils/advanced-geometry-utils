@@ -1,6 +1,6 @@
 =======
 
-[![codecov](https://codecov.io/gh/django-advance-utils/geometry-utils/branch/main/graph/badge.svg?token=BF9hnkXKp3)](https://codecov.io/gh/django-advance-utils/geometry-utils)
+[![codecov](https://codecov.io/gh/django-advance-utils/geometry-utils/branch/main/graph/badge.svg?token=BF9hnkXKp3)](https://codecov.io/gh/django-advance-utils/geometry_utils)
 
 
 
