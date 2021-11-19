@@ -87,7 +87,7 @@ def test_point3_to_point3_equality(test_point3_1, test_point3_3):
 
 
 def test_point3_to_matrix4_equality(test_point3_1, test_matrix4_2):
-    with pytest.raises(AttributeError):
+    with pytest.raises(TypeError):
         return test_point3_1 == test_matrix4_2
 
 
@@ -97,7 +97,7 @@ def test_point3_to_point3_inequality(test_point3_1, test_point3_2):
 
 
 def test_point3_to_matrix4_inequality(test_point3_1, test_matrix4_2):
-    with pytest.raises(AttributeError):
+    with pytest.raises(TypeError):
         return test_point3_1 != test_matrix4_2
 
 
