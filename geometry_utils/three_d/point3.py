@@ -1,8 +1,45 @@
-from maths_utility import is_float, are_ints_or_floats
+from maths_utility import is_int_or_float, are_ints_or_floats
 from three_d.vector3 import Vector3, is_vector3
 
 
 class Point3:
+    """
+    A class to create a 3D point
+
+    Attributes:
+    ___________
+    x: int or float
+        the x-coordinate of the point
+    y: int or float
+        the y-coordinate of the point
+    z: int or float
+        the z-coordinate of the point
+    w: int or float
+        the w-coordinate of the vector
+        w=1 allows the point to be translated when multiplied by a translation matrix
+
+    Methods:
+    ________
+    __add__(other): Point3
+        Returns the addition of the point with another 3D point or a 3D vector
+    __sub__(other): Point3
+        Returns the subtraction of another 3D point or a 3D vector from the point
+    __mul__(scalar): Point3
+        Returns the multiplication of the point with an int or float scalar
+    __eq__(Point3): bool
+        Returns the equality comparison of the point with another 3D point
+    __ne__(Point3): bool
+        Returns the inequality comparison of the vector with another 3D point
+    __le__(Point3): bool
+        Returns the less than or equal to comparison of the point with another 3D point
+    __ge__(Point3): bool
+        Returns the greater than or equal to comparison of the point with another 3D point
+    to_vector(): Vector2
+        Returns the vector of the point
+    distance_to(other_point): float
+        Returns the pythagorean length of the difference between the point and another 3D point
+    """
+
     def __init__(self, x=0, y=0, z=0, w=1):
         if are_ints_or_floats([x, y, z, w]):
             self.x = x
@@ -13,46 +50,124 @@ class Point3:
             raise TypeError("Point3 argument must be an int or float")
 
     def __add__(self, other):
+        """
+        Calculates the addition of self with other point or vector
+
+        :param  other: the other 3D point or 3D vector
+        :type   other: Point3/Vector3
+        :return:the resulting added point
+        :rtype: Point3
+        :raises:TypeError: wrong argument type
+        """
         if is_point3(other) or is_vector3(other):
             return Point3(self.x + other.x, self.y + other.y, self.z + other.z)
         raise TypeError("Addition must be done with an object of Vector3 or Point3")
 
     def __sub__(self, other):
+        """
+        Calculates the subtraction of other point or vector from self
+
+        :param  other: the other 3D point or 3D vector
+        :type   other: Point3/Vector3
+        :return:the resulting subtracted point
+        :rtype: Point3
+        :raises:TypeError: wrong argument type
+        """
         if is_point3(other) or is_vector3(other):
             return Point3(self.x - other.x, self.y - other.y, self.z - other.z)
         raise TypeError("Subtraction must be done with an object of Vector3 or Point3")
 
-    def __mul__(self, other):
-        if is_float(other):
-            return Point3(self.x * other, self.y * other, self.z * other)
+    def __mul__(self, scalar):
+        """
+        Calculates the multiplication of self with a scalar.
+
+        :param  scalar: the multiplication scalar
+        :type   scalar: int/float
+        :return:the resulting multiplied point
+        :rtype: Point3
+        :raises:TypeError: wrong argument type
+        """
+        if is_int_or_float(scalar):
+            return Point3(self.x * scalar, self.y * scalar, self.z * scalar)
         raise TypeError("Multiplication must be done by a float")
 
-    def __eq__(self, other):
-        if is_point3(other):
-            return bool(self.x == other.x and self.y == other.y and self.z == other.z)
+    def __eq__(self, other_point):
+        """
+        Compares the equality of self and other point.
+
+        :param  other_point: the other vector
+        :type   other_point: Point3
+        :return:the point equality
+        :rtype: bool
+        :raises:TypeError: Wrong argument type
+        """
+        if is_point3(other_point):
+            return bool(self.x == other_point.x and self.y == other_point.y and self.z == other_point.z)
         raise TypeError("Comparison must be done with another object of Point3")
 
-    def __ne__(self, other):
-        if is_point3(other):
-            return bool(self.x != other.x or self.y != other.y or self.z != other.z)
+    def __ne__(self, other_point):
+        """
+        Compares the inequality of self with another vector.
+
+        :param  other_point: the other vector
+        :type   other_point: Point3
+        :return:the point inequality
+        :rtype: bool
+        :raises:TypeError: Wrong argument type
+        """
+        if is_point3(other_point):
+            return bool(self.x != other_point.x or self.y != other_point.y or self.z != other_point.z)
         raise TypeError("Comparison must be done with another object of Point3")
 
     def __le__(self, other_point):
+        """
+        Tests if self is less than or equal to the other vector.
+
+        :param  other_point: the other point
+        :type   other_point: Point3
+        :return:the vector less than or equality
+        :rtype: bool
+        :raises:TypeError: Wrong argument type
+        """
         if is_point3(other_point):
             return self.x <= other_point.x and self.y <= other_point.y and self.z <= other_point.z
         raise TypeError("Comparison must be done with another object of Point3")
 
     def __ge__(self, other_point):
+        """
+        Tests if self is greater than or equal to the other vector.
+
+        :param  other_point: the other point
+        :type   other_point: Point3
+        :return:the vector less than or equal to comparison
+        :rtype: bool
+        :raises:TypeError: Wrong argument type
+        """
         if is_point3(other_point):
             return self.x >= other_point.x and self.y >= other_point.y and self.z >= other_point.z
         raise TypeError("Comparison must be done with another object of Point3")
 
     def to_vector(self):
+        """
+        Converts the point to a vector
+
+        :return:the vector representation of the point
+        :rtype: Vector3
+        """
         return Vector3(self.x, self.y, self.z)
 
-    def distance_to(self, point):
-        if is_point3(point):
-            return (self - point).to_vector().length()
+    def distance_to(self, other_point):
+        """
+        Calculates the pythagorean distance of the difference of the point to another point
+
+        :param  other_point: the other point
+        :type   other_point: Point2
+        :return:length of the point subtractions
+        :rtype: float
+        :raises:TypeError: Wrong argument type
+        """
+        if is_point3(other_point):
+            return (self - other_point).to_vector().length()
         raise TypeError("Argument must be an object of Point3")
 
 
