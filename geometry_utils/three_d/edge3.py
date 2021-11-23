@@ -71,7 +71,7 @@ class Edge3:
         :rtype: Point3
         """
         if floats_are_close(self.radius, 0.0):
-            return (self.p1 + self.p2) * 0.5
+            return Point3((self.p1.x + self.p2.x) * 0.5, (self.p1.y + self.p2.y) * 0.5, (self.p1.z + self.p2.z) * 0.5)
 
     def point_parametric(self, s):
         """
@@ -105,7 +105,7 @@ class Edge3:
         """
         if is_point3(point):
             tangent = self.get_tangent()  # vector
-            point_p1_difference = (point - self.p1).to_vector()  # vector
+            point_p1_difference = (point - self.p1)  # vector
             distance = tangent.dot(point_p1_difference)
             return distance / self.p1.distance_to(self.p2)
         raise TypeError("Argument must be an object of Point3")
@@ -117,8 +117,8 @@ class Edge3:
         :return:the resulting tangent of the edge
         :rtype: int/float
         """
-        p1_vector = self.p1.to_vector()
-        p2_vector = self.p2.to_vector()
+        p1_vector = self.p1.to_vector3()
+        p2_vector = self.p2.to_vector3()
         return (p2_vector - p1_vector).normalise()
 
     def get_edge_bounds(self):

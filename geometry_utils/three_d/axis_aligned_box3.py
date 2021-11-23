@@ -95,7 +95,7 @@ class AxisAlignedBox3:
         :return:the 3D box size
         :rtype: Vector3
         """
-        return (self.max - self.min).to_vector()
+        return self.max - self.min
 
     def offset(self, offset_vector):
         """
@@ -118,7 +118,7 @@ class AxisAlignedBox3:
         :return:the box centre
         :rtype: Vector3
         """
-        return ((self.min + self.max).to_vector())/2.0
+        return Point3((self.min.x + self.max.x) * 0.5, (self.min.y + self.max.y) * 0.5, (self.min.z + self.max.z) * 0.5)
 
     def __add__(self, vector):
         """

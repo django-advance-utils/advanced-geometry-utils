@@ -11,12 +11,9 @@ Point Addition Tests
 '''
 
 
-def test_point3_point3_addition_return_type(test_point3_1, test_point3_2):
-    assert isinstance(test_point3_1 + test_point3_2, Point3)
-
-
-def test_point3_point3_addition_arithmetic(test_point3_1, test_point3_2):
-    assert test_point3_1 + test_point3_2 == Point3(2.0, 1.0, 1.0)
+def test_point3_point3_addition(test_point3_1, test_point3_2):
+    with pytest.raises(TypeError):
+        return test_point3_1 + test_point3_2
 
 
 def test_point3_vector3_addition_return_type(test_point3_1, test_vector3_1):
@@ -38,11 +35,11 @@ Point Subtraction Tests
 
 
 def test_point3_point3_subtraction_return_type(test_point3_1, test_point3_2):
-    assert isinstance(test_point3_1 - test_point3_2, Point3)
+    assert isinstance(test_point3_1 - test_point3_2, Vector3)
 
 
 def test_point3_point3_subtraction_arithmetic(test_point3_1, test_point3_2):
-    assert test_point3_1 - test_point3_2 == Point3(0.0, 1.0, 1.0)
+    assert test_point3_1 - test_point3_2 == Vector3(0.0, 1.0, 1.0)
 
 
 def test_point3_vector3_subtraction_solution_type(test_point3_1, test_vector3_1):
@@ -66,14 +63,6 @@ Point Multiplication Tests
 def test_point3_point3_multiplication(test_point3_1, test_point3_2):
     with pytest.raises(TypeError):
         return test_point3_1 * test_point3_2
-
-
-def test_point3_float_multiplication_return_type(test_point3_1):
-    assert isinstance(test_point3_1 * 9.0, Point3)
-
-
-def test_point3_float_multiplication_arithmetic(test_point3_1):
-    assert test_point3_1 * 2.0 == Point3(2.0, 2.0, 2.0)
 
 
 '''
@@ -135,11 +124,11 @@ To_Vector Tests
 
 
 def test_point3_to_vector_return_type(test_point3_1):
-    assert isinstance(test_point3_1.to_vector(), Vector3)
+    assert isinstance(test_point3_1.to_vector3(), Vector3)
 
 
 def test_point3_to_vector_arithmetic(test_point3_1):
-    assert test_point3_1.to_vector() == Vector3(1.0, 1.0, 1.0)
+    assert test_point3_1.to_vector3() == Vector3(1.0, 1.0, 1.0)
 
 
 '''

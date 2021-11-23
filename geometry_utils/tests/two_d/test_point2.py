@@ -122,11 +122,11 @@ To_Vector Tests
 
 
 def test_point2_to_vector_return_type(test_point2_1):
-    assert isinstance(test_point2_1.to_vector(), Vector2)
+    assert isinstance(test_point2_1.to_vector2(), Vector2)
 
 
 def test_point2_to_vector_arithmetic(test_point2_1):
-    assert test_point2_1.to_vector() == Vector2(1.0, 1.0)
+    assert test_point2_1.to_vector2() == Vector2(1.0, 1.0)
 
 
 '''
