@@ -4,6 +4,44 @@ from three_d.point3 import Point3, is_point3
 
 
 class Edge3:
+    """
+    A class to create a 3D edge
+
+    Attributes:
+    ___________
+    p1: Point3
+        initial 3D point of the edge
+    via:Point3
+        a 3D point along the edge
+    p2: Point3
+        final 3D point of the edge
+    radius: int or float
+        the radius of the edge
+    clockwise: bool
+        check if the edge direction is clockwise
+    large:
+        check if the edge is large
+    arc_centre:
+        the calculated centre of the edge
+
+    Methods:
+    ________
+    calculate_arc_centre(): Point3
+        returns the calculated centre of the edge
+    is_arc(): bool
+        returns True if the edge is an arc
+    point_parametric(int or float): Point2
+        returns the point along the edge from 0 (p1) to 1 (p2) -
+    parametric_point(Point2): int or float
+        returns the number along the edge from p1 (0) to p2(1)
+    get_tangent(): int or float
+        returns the tangent of the edge
+    get_sweep(): int or float
+        returns the sweep of the edge
+    get_edge_bounds(): AxisAlignedBox3
+        returns the bounds of the edge in 2D points
+    """
+
     def __init__(self,
                  p1=Point3(0.0, 0.0, 0.0),
                  p2=Point3(0.0, 0.0, 0.0),
@@ -26,10 +64,26 @@ class Edge3:
                 raise TypeError("Fourth argument must be an int or float")
 
     def get_arc_centre(self):
+        """
+        Calculates the centre of the arc
+
+        :return:the 3D point of the arc centre
+        :rtype: Point3
+        """
         if floats_are_close(self.radius, 0.0):
             return (self.p1 + self.p2) * 0.5
 
     def point_parametric(self, s):
+        """
+        Calculates the point on the edge from 0 to 1
+
+        :param  s: the number between 0 and 1 along the edge
+        :type   s: int/float
+        :return:the resulting point along the edge
+        :rtype: Point3
+        :raises:TypeError: wrong argument type
+        """
+
         if is_float(s):
             if self.p1 == self.p2:
                 return self.p1
@@ -40,6 +94,15 @@ class Edge3:
             return self.p1 + vector  # point
 
     def parametric_point(self, point):
+        """
+        Calculates the number on the edge from p1 to p2
+
+        :param  point: the 3D point between along the edge
+        :type   point: Point3
+        :return:the resulting number along the edge
+        :rtype: int/float
+        :raises:TypeError: wrong argument type
+        """
         if is_point3(point):
             tangent = self.get_tangent()  # vector
             point_p1_difference = (point - self.p1).to_vector()  # vector
@@ -48,11 +111,23 @@ class Edge3:
         raise TypeError("Argument must be an object of Point3")
 
     def get_tangent(self):
+        """
+        Calculates the tangent of the edge
+
+        :return:the resulting tangent of the edge
+        :rtype: int/float
+        """
         p1_vector = self.p1.to_vector()
         p2_vector = self.p2.to_vector()
         return (p2_vector - p1_vector).normalise()
 
     def get_edge_bounds(self):
+        """
+        Creates a 3D AxisAlignedBox of the edge
+
+        :return:the resulting 3D box of the edge
+        :rtype: AxisAlignedBox3
+        """
         bounds = AxisAlignedBox3()
         bounds.include(self.p1)
         bounds.include(self.p2)
