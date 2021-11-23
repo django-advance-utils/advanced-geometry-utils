@@ -61,7 +61,7 @@ def test_box2_offset_by_vector2(test_box2_1, test_vector2_1):
 
 
 def test_box2_centre(test_box2_1):
-    assert test_box2_1.centre() == Vector2(1.0, 1.0)
+    assert test_box2_1.centre() == Point2(1.0, 1.0)
 
 
 def test_box2_equals_box2(test_box2_1, test_box2_2, test_box2_4):

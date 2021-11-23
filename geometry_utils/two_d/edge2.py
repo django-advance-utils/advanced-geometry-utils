@@ -1,6 +1,6 @@
 from math import atan2
 
-from maths_utility import floats_are_close, double_epsilon, pi, double_pi, is_list, is_float, is_int_or_float
+from maths_utility import floats_are_close, double_epsilon, pi, double_pi, is_list, is_int_or_float
 from two_d.axis_aligned_box2 import AxisAlignedBox2
 from two_d.ellipse import Ellipse
 from two_d.intersection import Intersection
@@ -73,7 +73,7 @@ class Edge2:
         :rtype: Point2
         """
         if floats_are_close(self.radius, 0.0):
-            return (self.p1 + self.p2) * 0.5
+            return Point2((self.p1.x + self.p2.x) * 0.5, (self.p1.y + self.p2.y) * 0.5)
 
         ellipse = Ellipse(start=self.p1, end=self.p2, major_radius=self.radius, minor_radius=self.radius,
                           clockwise=self.clockwise, large_arc=self.large, angle=0.0)
@@ -130,12 +130,15 @@ class Edge2:
                 return 0.5
 
             if self.is_arc():
-                point_to_centre_distance = (point - self.arc_centre).to_vector()
-                centre_to_arc_centre_distance = (((self.p2 + self.p1).to_vector()/2.0) - self.arc_centre.to_vector())
+                p1_vector = self.p1.to_vector()
+                p2_vector = self.p2.to_vector()
+
+                point_to_centre_distance = (point - self.arc_centre)
+                centre_to_arc_centre_distance = (((p1_vector + p2_vector)/2.0) - self.arc_centre.to_vector())
 
                 if floats_are_close(centre_to_arc_centre_distance.x, 0.0) and \
                         floats_are_close(centre_to_arc_centre_distance.y, 0.0):
-                    centre_to_arc_centre_distance = (self.p2 - self.p1).to_vector().get_perpendicular()
+                    centre_to_arc_centre_distance = (self.p2 - self.p1).get_perpendicular()
 
                     if not self.clockwise:
                         centre_to_arc_centre_distance = centre_to_arc_centre_distance.invert()
@@ -163,7 +166,7 @@ class Edge2:
                 return point_to_arc_centre_point_angle + 0.5
 
             tangent = self.get_tangent()
-            point_p1_difference = (point - self.p1).to_vector()
+            point_p1_difference = (point - self.p1)
             p1_to_p2_distance = self.p1.distance_to(self.p2)
             distance = tangent.dot(point_p1_difference)
             return distance / p1_to_p2_distance

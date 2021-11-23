@@ -137,8 +137,8 @@ class Ellipse:
         if self.start == self.end:
             return 0.0
 
-        first_point_to_centre_distance = (self.start - self.centre).to_vector()
-        second_point_to_centre_distance = (self.end - self.centre).to_vector()
+        first_point_to_centre_distance = (self.start - self.centre)
+        second_point_to_centre_distance = (self.end - self.centre)
         if self.clockwise:
             first_point_to_centre_distance.y *= -1
             second_point_to_centre_distance.y *= -1

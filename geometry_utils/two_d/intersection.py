@@ -52,6 +52,22 @@ class Intersection:
             raise TypeError("First argument must be an object of Point2")
 
     def intersect_lines(self, p1, p2, p3, p4):
+        """
+        Creates an intersection between two edges
+
+        :param: p1: first point of the first edge
+                p2: second point of the first edge
+                p3: first point of the second edge
+                p4: second point of the second edge
+        :type:  p1: Point2
+                p2: Point2
+                p3: Point2
+                p4: Point2
+        :return:the resulting intersection
+        :rtype: Intersection
+        :raises:TypeError: wrong argument type
+        """
+
         if is_point2(p1) and is_point2(p2) and is_point2(p3) and is_point2(p4):
             u = p2 - p1
             v = p4 - p3
@@ -67,8 +83,8 @@ class Intersection:
                 self.do_collinear_test = True
 
                 if self.do_collinear_test:
-                    w_normalised = w.to_vector().normalise()
-                    u_normalised = u.to_vector().normalise()
+                    w_normalised = w.normalise()
+                    u_normalised = u.normalise()
                     det = (w_normalised.x * u_normalised.y) - (w_normalised.y * u_normalised.x)
 
                     if floats_are_close(det, 0.0):

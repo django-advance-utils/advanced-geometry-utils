@@ -45,7 +45,7 @@ class Vector2:
         Returns the perpendicular of the vector
     invert(): Vector2
         Returns the inverse of the vector
-    rotate(origin, theta): Vector2
+    rotate(Vector2, int or float): Vector2
         Returns the rotation of the vector at angle theta with respect to 2D vector origin
     """
     def __init__(self, x=0, y=0, w=0):

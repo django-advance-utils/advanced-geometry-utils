@@ -22,7 +22,7 @@ class Point2:
         Returns the addition of the point with another 2D point or a 2D vector
     __sub__(Point2): Point2
         Returns the subtraction of another 2D point or a 2D vector from the point
-    __mul__(int or float  ): Point2
+    __mul__(int or float): Point2
         Returns the multiplication of the point with an int or float scalar
     __eq__(Point2): bool
         Returns the equality comparison of the point with another 2D point
@@ -45,57 +45,45 @@ class Point2:
         else:
             raise TypeError("Point2 argument must be an int or float")
 
-    def __add__(self, other):
+    def __add__(self, vector):
         """
-        Calculates the addition of self with other vector
+        Translates point by addition with 2D point or 2D vector
 
-        :param  other: the other point or vector
-        :type   other: Point2/Vector2
-        :return:the resulting added point
-        :rtype: Point2
-        :raises:TypeError: wrong argument type
+        :param   vector: the other 2D point or 2D vector
+        :type    vector: Vector2
+        :return: the resulting translated point
+        :rtype:  Point2
+        :raises: TypeError: wrong argument type
         """
-        if is_vector2(other) or is_point2(other):
-            return Point2(self.x + other.x, self.y + other.y)
-        raise TypeError("Addition must be done with an object of Vector2 or Point2")
+        if is_vector2(vector):
+            return Point2(self.x + vector.x, self.y + vector.y)
+        raise TypeError("Addition must be done with an object of Vector2")
 
     def __sub__(self, other):
         """
-        Calculates the subtraction of other vector from self
+        Translates point by subtraction of a 2D vector or derives the 2D vector of subtracting a 2D point from the point
 
-        :param  other: the other point or vector
-        :type   other: Point2/Vector2
-        :return:the resulting subtracted vector
-        :rtype: Point2
-        :raises:TypeError: wrong argument type
+        :param   other: the other 2D point or 2D vector
+        :type    other: Vector2/Point2
+        :return: the resulting translated vector
+        :rtype:  Point2/Vector2
+        :raises: TypeError: wrong argument type
         """
-        if is_vector2(other) or is_point2(other):
+        if is_vector2(other):
             return Point2(self.x - other.x, self.y - other.y)
-        raise TypeError("Subtraction must be done with an object of Vector2 or Point2")
-
-    def __mul__(self, scalar):
-        """
-        Calculates the multiplication of self with a scalar.
-
-        :param  scalar: the multiplication scalar
-        :type   scalar: int/float
-        :return:the resulting multiplied point
-        :rtype: Point2
-        :raises:TypeError: wrong argument type
-        """
-        if is_int_or_float(scalar):
-            return Point2(self.x * scalar, self.y * scalar)
-        raise TypeError("Multiplication must be done by a float")
+        if is_point2(other):
+            return Vector2(self.x - other.x, self.y - other.y)
+        raise TypeError("Subtraction must be done with an object of Vector2")
 
     def __eq__(self, other_point):
         """
-        Compares the equality of self and other point.
+        Compares the equality of the point and another 2D point
 
-        :param  other_point: the other vector
-        :type   other_point: Point2
-        :return:the point equality
-        :rtype: bool
-        :raises:TypeError: Wrong argument type
+        :param   other_point: the other 2D point
+        :type    other_point: Point2
+        :return: the point equality
+        :rtype:  bool
+        :raises: TypeError: Wrong argument type
         """
         if is_point2(other_point):
             return self.x == other_point.x and self.y == other_point.y
@@ -103,13 +91,13 @@ class Point2:
 
     def __ne__(self, other_point):
         """
-        Compares the inequality of self with another vector.
+        Compares the inequality of the point with another 2D point
 
-        :param  other_point: the other vector
-        :type   other_point: Point2
-        :return:the point inequality
-        :rtype: bool
-        :raises:TypeError: Wrong argument type
+        :param   other_point: the other 2D point
+        :type    other_point: Point2
+        :return: the point inequality
+        :rtype:  bool
+        :raises: TypeError: Wrong argument type
         """
         if is_point2(other_point):
             return self.x != other_point.x or self.y != other_point.y
@@ -117,13 +105,13 @@ class Point2:
 
     def __le__(self, other_point):
         """
-        Tests if self is less than or equal to the other vector.
+        Compares if the point is less than or equal to another 2D point
 
-        :param  other_point: the other point
-        :type   other_point: Point2
-        :return:the vector less than or equality
-        :rtype: bool
-        :raises:TypeError: Wrong argument type
+        :param   other_point: the other 2D point
+        :type    other_point: Point2
+        :return: the point less than or equality comparison
+        :rtype:  bool
+        :raises: TypeError: Wrong argument type
         """
         if is_point2(other_point):
             return self.x <= other_point.x and self.y <= other_point.y
@@ -131,13 +119,13 @@ class Point2:
 
     def __ge__(self, other_point):
         """
-        Tests if self is greater than or equal to the other vector.
+        Compares if the point is greater than or equal to another 2D point
 
-        :param  other_point: the other point
-        :type   other_point: Point2
-        :return:the vector less than or equal to comparison
-        :rtype: bool
-        :raises:TypeError: Wrong argument type
+        :param   other_point: the other 2D point
+        :type    other_point: Point2
+        :return: the point greater than or equal to comparison
+        :rtype:  bool
+        :raises: TypeError: Wrong argument type
         """
         if is_point2(other_point):
             return self.x >= other_point.x and self.y >= other_point.y
@@ -163,7 +151,7 @@ class Point2:
         :raises:TypeError: Wrong argument type
         """
         if is_point2(other_point):
-            return (self - other_point).to_vector().length()
+            return (self - other_point).length()
         raise TypeError("Argument must be an object of Point2")
 
 
