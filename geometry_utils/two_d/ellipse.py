@@ -5,6 +5,42 @@ from two_d.point2 import Point2, is_point2
 
 
 class Ellipse:
+    """
+    A class to create a 2D ellipse
+
+    Attributes:
+    ___________
+    start: Point2
+        the 2D point of the ellipse start
+    centre: Point2
+        the 2D point of the ellipse centre
+    end: Point2
+        the 2D point of the ellipse end
+    major_radius: int or float
+        the major radius of the ellipse
+    minor_radius: int or float
+        the minor radius of the ellipse
+    clockwise: bool
+        check if the ellipse direction is clockwise
+    large_arc: bool
+        check if the ellipse is large
+    angle: int or float
+        the angle of inclination of the ellipse
+    delta: int or float
+
+    valid:
+        check if the ellipse is a valid one
+
+    Methods:
+    ________
+    calculate_centre():
+        Calculates the centre of the ellipse
+    test_validity(Point2): Point2
+        Tests if the ellipse has attributes that make it valid
+    get_arc_sweep(): float
+        Returns the sweep of the ellipse
+    """
+
     def __init__(self,
                  start=Point2(0.0, 0.0),
                  centre=Point2(0.0, 0.0),
@@ -39,6 +75,10 @@ class Ellipse:
                 raise TypeError("Fourth and fifth arguments must be ints or floats")
 
     def calculate_centre(self):
+        """
+        Calculates the centre of self
+
+        """
         angle_in_radians = degrees_to_radians(self.angle)
         sin_phi = sin(angle_in_radians)
         cos_phi = cos(angle_in_radians)
@@ -74,12 +114,26 @@ class Ellipse:
         self.centre.y = sin_phi * cx_dash + cos_phi * cy_dash + ((self.start.y + self.end.y) / 2.0)
 
     def test_validity(self):
+        """
+        Checks the validity of self
+
+        :return:the self validity
+        :rtype: bool
+        """
+
         ellipse_validity = False
         if self.delta <= 1.0:
             ellipse_validity = True
         return ellipse_validity
 
     def get_arc_sweep(self):
+        """
+        Calculates the sweep of self
+
+        :return:the resulting arc sweep
+        :rtype: int or float
+        """
+
         if self.start == self.end:
             return 0.0
 
