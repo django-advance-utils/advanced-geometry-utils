@@ -3,6 +3,34 @@ from maths_utility import floats_are_close, ranges_overlap
 
 
 class Intersection:
+    """
+    A class to create a 2D intersection
+
+    Attributes:
+    ___________
+    point: Point2
+        the intersection point
+    vectors_intersect: bool
+        check if edges intersect
+    on_first_segment: bool
+        check if the edges intersect on first segment
+    on_second_segment: bool
+        check if the edges intersect on the second segment
+    minor_radius: int or float
+        the minor radius of the ellipse
+    collinear: bool
+        check if the edges are collinear
+    end_of_line: bool
+        check if the end of the edge has been reached
+    do_collinear_test: bool
+        check if collinear test is to be done
+
+    Methods:
+    ________
+    intersect_lines(Point2, Point2, Point2, Point2):
+        perform intersection of two edges   
+    """
+
     def __init__(self,
                  point=Point2(0.0, 0.0),
                  vectors_intersect=False,
