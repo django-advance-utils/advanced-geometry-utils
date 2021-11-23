@@ -1,4 +1,4 @@
-from maths_utility import is_int_or_float, are_ints_or_floats
+from maths_utility import are_ints_or_floats
 from two_d.vector2 import Vector2, is_vector2
 
 
@@ -18,12 +18,10 @@ class Point2:
 
     Methods:
     ________
-    __add__(Point2): Point2
-        Returns the addition of the point with another 2D point or a 2D vector
-    __sub__(Point2): Point2
+    __add__(Vector2): Point2
+        Returns the addition of the point with a 2D vector
+    __sub__(Vector2/Point2): Point2/Vector2
         Returns the subtraction of another 2D point or a 2D vector from the point
-    __mul__(int or float): Point2
-        Returns the multiplication of the point with an int or float scalar
     __eq__(Point2): bool
         Returns the equality comparison of the point with another 2D point
     __ne__(Point2): bool
@@ -33,7 +31,7 @@ class Point2:
     __ge__(Point2): bool
         Returns the greater than or equal to comparison of the point with another 2D point
     to_vector(): Vector2
-        Returns the vector of the point
+        Returns the vector representation of the point
     distance_to(other_point): float
         Returns the pythagorean length of the difference between the point and another 2D point
     """
@@ -47,9 +45,9 @@ class Point2:
 
     def __add__(self, vector):
         """
-        Translates point by addition with 2D point or 2D vector
+        Translates point by the 2D vector value
 
-        :param   vector: the other 2D point or 2D vector
+        :param   vector: the translation 2D vector
         :type    vector: Vector2
         :return: the resulting translated point
         :rtype:  Point2
@@ -61,11 +59,11 @@ class Point2:
 
     def __sub__(self, other):
         """
-        Translates point by subtraction of a 2D vector or derives the 2D vector of subtracting a 2D point from the point
+        Translates point by the inverse of the 2D vector or derives the 2D vector difference with another 2D point
 
         :param   other: the other 2D point or 2D vector
         :type    other: Vector2/Point2
-        :return: the resulting translated vector
+        :return: the resulting translated point or vector difference
         :rtype:  Point2/Vector2
         :raises: TypeError: wrong argument type
         """
@@ -73,7 +71,7 @@ class Point2:
             return Point2(self.x - other.x, self.y - other.y)
         if is_point2(other):
             return Vector2(self.x - other.x, self.y - other.y)
-        raise TypeError("Subtraction must be done with an object of Vector2")
+        raise TypeError("Subtraction must be done with an object of Vector2 or Point2")
 
     def __eq__(self, other_point):
         """
@@ -105,7 +103,7 @@ class Point2:
 
     def __le__(self, other_point):
         """
-        Compares if the point is less than or equal to another 2D point
+        Compares if the point is less than or equal to another 2D point in a 2D space
 
         :param   other_point: the other 2D point
         :type    other_point: Point2
@@ -119,7 +117,7 @@ class Point2:
 
     def __ge__(self, other_point):
         """
-        Compares if the point is greater than or equal to another 2D point
+        Compares if the point is greater than or equal to another 2D point in a 2D space
 
         :param   other_point: the other 2D point
         :type    other_point: Point2
@@ -131,12 +129,12 @@ class Point2:
             return self.x >= other_point.x and self.y >= other_point.y
         raise TypeError("Comparison must be done with another object of Point2")
 
-    def to_vector(self):
+    def to_vector2(self):
         """
         Converts the point to a vector
 
-        :return:the vector representation of the point
-        :rtype: Vector2
+        :return: the vector representation of the point
+        :rtype:  Vector2
         """
         return Vector2(self.x, self.y)
 
@@ -144,11 +142,11 @@ class Point2:
         """
         Calculates the pythagorean distance of the difference of the point to another point
 
-        :param  other_point: the other point
-        :type   other_point: Point2
-        :return:length of the point subtractions
-        :rtype: float
-        :raises:TypeError: Wrong argument type
+        :param   other_point: the other point
+        :type    other_point: Point2
+        :return: length of the point subtractions
+        :rtype:  int/float
+        :raises: TypeError: Wrong argument type
         """
         if is_point2(other_point):
             return (self - other_point).length()

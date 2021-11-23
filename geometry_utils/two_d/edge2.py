@@ -106,8 +106,8 @@ class Edge2:
                 t = self.get_sweep() * s
                 if self.clockwise:
                     t *= -1
-                p1_vector = self.p1.to_vector()
-                arc_centre_vector = self.arc_centre.to_vector()
+                p1_vector = self.p1.to_vector2()
+                arc_centre_vector = self.arc_centre.to_vector2()
                 return p1_vector.rotate(arc_centre_vector, t)
             tangent = self.get_tangent()
             p1_p2_distance = self.p1.distance_to(self.p2)
@@ -130,11 +130,11 @@ class Edge2:
                 return 0.5
 
             if self.is_arc():
-                p1_vector = self.p1.to_vector()
-                p2_vector = self.p2.to_vector()
+                p1_vector = self.p1.to_vector2()
+                p2_vector = self.p2.to_vector2()
 
                 point_to_centre_distance = (point - self.arc_centre)
-                centre_to_arc_centre_distance = (((p1_vector + p2_vector)/2.0) - self.arc_centre.to_vector())
+                centre_to_arc_centre_distance = (((p1_vector + p2_vector)/2.0) - self.arc_centre.to_vector2())
 
                 if floats_are_close(centre_to_arc_centre_distance.x, 0.0) and \
                         floats_are_close(centre_to_arc_centre_distance.y, 0.0):
@@ -179,8 +179,8 @@ class Edge2:
         :return:the resulting tangent of the edge
         :rtype: int/float
         """
-        p1_vector = self.p1.to_vector()
-        p2_vector = self.p2.to_vector()
+        p1_vector = self.p1.to_vector2()
+        p2_vector = self.p2.to_vector2()
         return (p2_vector - p1_vector).normalise()
 
     def get_sweep(self):
