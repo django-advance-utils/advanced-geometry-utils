@@ -1,6 +1,6 @@
 from math import atan2, sin, cos, fabs, sqrt
 
-from maths_utility import double_epsilon, double_pi, degrees_to_radians, is_float, is_int_or_float, are_ints_or_floats
+from maths_utility import double_epsilon, double_pi, degrees_to_radians, are_ints_or_floats
 from two_d.point2 import Point2, is_point2
 
 
@@ -16,17 +16,17 @@ class Ellipse:
         the 2D point of the ellipse centre
     end: Point2
         the 2D point of the ellipse end
-    major_radius: int or float
+    major_radius: int/float
         the major radius of the ellipse
-    minor_radius: int or float
+    minor_radius: int/float
         the minor radius of the ellipse
     clockwise: bool
         check if the ellipse direction is clockwise
     large_arc: bool
         check if the ellipse is large
-    angle: int or float
+    angle: int/float
         the angle of inclination of the ellipse
-    delta: int or float
+    delta: int/float
 
     valid:
         check if the ellipse is a valid one
@@ -35,7 +35,7 @@ class Ellipse:
     ________
     calculate_centre():
         Calculates the centre of the ellipse
-    test_validity(Point2): Point2
+    test_validity(): Point2
         Tests if the ellipse has attributes that make it valid
     get_arc_sweep(): float
         Returns the sweep of the ellipse
@@ -58,7 +58,7 @@ class Ellipse:
             if centre:
                 self.centre = centre
             else:
-                self.calculate_centre()
+                self.centre = self.calculate_centre()
             self.end = end
             self.major_radius = major_radius
             self.minor_radius = minor_radius
@@ -71,7 +71,7 @@ class Ellipse:
         else:
             if not is_point2(start) or not is_point2(centre) or not is_point2(end):
                 raise TypeError("First, second and third arguments must be objects of Point2")
-            if not are_ints_or_floats(major_radius, minor_radius):
+            if not are_ints_or_floats([major_radius, minor_radius]):
                 raise TypeError("Fourth and fifth arguments must be ints or floats")
 
     def calculate_centre(self):
@@ -109,9 +109,10 @@ class Ellipse:
 
         cx_dash = root_part * ((rx * y_dash) / ry)
         cy_dash = root_part * -((ry * x_dash) / rx)
-
-        self.centre.x = cos_phi * cx_dash - sin_phi * cy_dash + ((self.start.x + self.end.x) / 2.0)
-        self.centre.y = sin_phi * cx_dash + cos_phi * cy_dash + ((self.start.y + self.end.y) / 2.0)
+        centre = Point2()
+        centre.x = cos_phi * cx_dash - sin_phi * cy_dash + ((self.start.x + self.end.x) / 2.0)
+        centre.y = sin_phi * cx_dash + cos_phi * cy_dash + ((self.start.y + self.end.y) / 2.0)
+        return centre
 
     def test_validity(self):
         """
