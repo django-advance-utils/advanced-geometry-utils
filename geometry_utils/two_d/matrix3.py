@@ -2,7 +2,7 @@ import inspect
 from math import cos, sin
 
 from maths_utility import is_list, is_int_or_float
-from two_d.vector2 import is_vector2
+from two_d.vector2 import Vector2, is_vector2
 
 
 class Matrix3:
@@ -18,25 +18,27 @@ class Matrix3:
     ________
     set_identity(): Matrix3
         Returns a 3 x 3 identity matrix
-    __mul__(Matrix3): Matrix3
-        Returns the multiplication of the matrix with another 3 x 3 matrix
+    __mul__(Matrix3/Vector2): Matrix3/Vector2
+        Returns the multiplication of the matrix with another 3 x 3 matrix or 2D vector
     __eq__(Matrix3): bool
         Returns the equality comparison of the matrix with another 3 x 3 matrix
     make_translation(Vector2): Matrix3
         Creates a 3 x 3 translation matrix
-    make_rotation(int or float): Matrix3
+    make_rotation(int/float): Matrix3
         Creates a 3 x 3 rotation matrix
     """
     def __init__(self, vals=None):
         if vals is None:
             self.set_identity()
-        elif is_list(vals) and len(vals) == 3 and len(vals[0]) == 3:
+        elif is_list(vals) and len(vals) == 3 and len(vals[0]) == 3 and is_int_or_float(vals[0]):
             self.vals = vals
         else:
             if not is_list(vals):
                 raise TypeError("Matrix3 argument must be a list")
             if not len(vals) == 3 or not len(vals[0]) == 3:
                 raise AttributeError("Input Matrix must be 3 x 3")
+            if not is_int_or_float(vals[0]):
+                raise TypeError("Matrix3 argument list must contain int or float")
 
     def set_identity(self):
         """
@@ -49,12 +51,12 @@ class Matrix3:
 
     def __mul__(self, other):
         """
-        Calculates the matrix multiplication of self with another 3 x 3 matrix
+        Calculates the multiplication of the matrix with another 3 x 3 matrix or a 2D vector
 
-        :param  other: the right hand side matrix
-        :type   other: Matrix3
-        :return:the resulting multiplied matrix
-        :rtype: Matrix3
+        :param  other: the right hand side 3 x 3 matrix or 2D vector
+        :type   other: Matrix3/Vector2
+        :return:the resulting multiplied matrix or vector
+        :rtype: Matrix3/Vector2
         :raises:TypeError: wrong argument type
         """
         if is_matrix3(other):
@@ -63,6 +65,14 @@ class Matrix3:
                 for j in range(3):
                     for k in range(3):
                         result.vals[i][j] += self.vals[i][k] * other.vals[k][j]
+            return result
+
+        if is_vector2(other):
+            result = Vector2()
+            result.x = self.vals[0][0] * other.x + self.vals[0][1] * other.y + self.vals[0][2] * other.w
+            result.y = self.vals[1][0] * other.x + self.vals[1][1] * other.y + self.vals[1][2] * other.w
+            result.w = self.vals[2][0] * other.x + self.vals[2][1] * other.y + self.vals[2][2] * other.w
+
             return result
         raise TypeError("Multiplication must be done with an object of Matrix3")
 
