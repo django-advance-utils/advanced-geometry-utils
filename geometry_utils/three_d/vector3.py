@@ -9,25 +9,25 @@ class Vector3:
 
     Attributes:
     ___________
-    x: int or float
+    x: int/float
         the x-coordinate of the vector
-    y: int or float
+    y: int/float
         the y-coordinate of the vector
-    z: int or float
+    z: int/float
         the z-coordinate of the vector
-    w: int or float
+    w: int/float
         the w-coordinate of the vector
         w=0 leave the vector unchanged when multiplied by a translation matrix
 
     Methods:
     ________
-    __add__(other_vector): Vector3
+    __add__(Vector3): Vector3
         Returns the addition of the vector with another 3D vector
-    __sub__(other_Vector): Vector3
+    __sub__(Vector3): Vector3
         Returns the subtraction of another 3D vector from the vector
-    __mul__(scalar): Vector3
+    __mul__(int/float): Vector3
         Returns the multiplication of the vector with an int or float scalar
-    __div__(scalar): Vector3
+    __div__(int/float): Vector3
         Returns the division of the vector by an int or float scalar
     __eq__(Vector2): bool
         Returns the equality comparison of the vector with another 3D vector
@@ -37,9 +37,9 @@ class Vector3:
         Returns the reverse of the vector
     normalise(): Vector3
         Returns the normal of the vector
-    length(): int or float
+    length(): int/float
         Returns the pythagorean length of the vector
-    dot(Vector3): int or float
+    dot(Vector3): int/float
         Returns the dot product of vector with another 3D vector
     cross(Vector3): Vector3
         Returns the cross product of vector with another 3D vector
@@ -55,13 +55,13 @@ class Vector3:
 
     def __add__(self, other_vector):
         """
-        Calculates the addition of self with other vector
+        Calculates the addition of vector with another 3D vector
 
-        :param  other_vector: the other vector
-        :type   other_vector: Vector3
-        :return:the resulting added vector
-        :rtype: Vector3
-        :raises:TypeError: wrong argument type
+        :param   other_vector: the addition 3D vector
+        :type    other_vector: Vector3
+        :return: the resulting added vector
+        :rtype:  Vector3
+        :raises: TypeError: wrong argument type
         """
         if is_vector3(other_vector):
             return Vector3(self.x + other_vector.x, self.y + other_vector.y, self.z + other_vector.z)
@@ -69,13 +69,13 @@ class Vector3:
 
     def __sub__(self, other_vector):
         """
-        Calculates the subtraction of other vector from self
+        Calculates the subtraction of another 3D vector from the vector
 
-        :param  other_vector: the other vector
-        :type   other_vector: Vector3
-        :return:the resulting subtracted vector
-        :rtype: Vector3
-        :raises:TypeError: wrong argument type
+        :param   other_vector: the subtraction 3D vector
+        :type    other_vector: Vector3
+        :return: the resulting subtracted vector
+        :rtype:  Vector3
+        :raises: TypeError: wrong argument type
         """
         if is_vector3(other_vector):
             return Vector3(self.x - other_vector.x, self.y - other_vector.y, self.z - other_vector.z)
@@ -86,14 +86,14 @@ class Vector3:
         Calculates the multiplication of self with a scalar.
 
         :param  scalar: the multiplication scalar
-        :type   scalar: int or float
+        :type   scalar: int/float
         :return:the resulting multiplied vector
         :rtype: Vector3
         :raises:TypeError: wrong argument type
         """
         if is_int_or_float(scalar):
             return Vector3(self.x * scalar, self.y * scalar, self.z * scalar)
-        raise TypeError("Multiplication must be done by a float")
+        raise TypeError("Multiplication must be by a scalar of type int or float")
 
     def __div__(self, scalar):
         """
@@ -107,16 +107,16 @@ class Vector3:
         """
         if is_int_or_float(scalar):
             return Vector3(self.x / scalar, self.y / scalar, self.z / scalar)
-        raise TypeError("Division must be done by a float")
+        raise TypeError("Division must be by a scalar of type int or float")
 
     # division in Python 3.x = division in Python 2.x
     __truediv__ = __div__
 
     def __eq__(self, other_vector):
         """
-        Compares the equality of self and other vector.
+        Compares the equality of the vector and another 3D vector.
 
-        :param  other_vector: the other vector
+        :param  other_vector: the other 3D vector
         :type   other_vector: Vector3
         :return:the vector equality
         :rtype: bool
@@ -128,9 +128,9 @@ class Vector3:
 
     def __ne__(self, other_vector):
         """
-        Compares the inequality of self and other vector.
+        Compares the inequality of the vector and another 3D vector.
 
-        :param  other_vector: the other vector
+        :param  other_vector: the other 3D vector
         :type   other_vector: Vector3
         :return:the vector inequality
         :rtype: bool
@@ -166,7 +166,7 @@ class Vector3:
         Calculates the pythagorean length of the vector.
 
         :return: length
-        :rtype: float
+        :rtype: int/float
         """
         return sqrt(self.dot(self))
 
