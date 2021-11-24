@@ -11,7 +11,7 @@ class Matrix4:
 
     Attributes:
     ___________
-    vals:   int or float
+    vals:   int/float
             the elements of the matrix
 
     Methods:
@@ -24,28 +24,32 @@ class Matrix4:
         Returns the equality comparison of the matrix with another 4 x 4 matrix
     make_translation(Vector2): Matrix4
         Creates a 4 x 4 translation matrix
-    make_rotation(int or float): Matrix4
-        Creates a 4 x 4 rotation matrix
+    make_x_rotation(int/float): Matrix4
+        Creates a 4 x 4 rotation matrix around x-axis
+    make_y_rotation(int/float): Matrix4
+        Creates a 4 x 4 rotation matrix around y-axis
+    make_z_rotation(int/float): Matrix4
+        Creates a 4 x 4 rotation matrix around z-axis
     """
     def __init__(self, vals=None):
         if vals is None:
             self.set_identity()
-        elif is_list(vals) and len(vals) == 4 and len(vals[0]) == 4 and is_int_or_float(vals[0]):
+        elif is_list(vals) and len(vals) == 4 and len(vals[0]) == 4 and is_int_or_float(vals[0][0]):
             self.vals = vals
         else:
             if not is_list(vals):
                 raise TypeError("Matrix4 argument must be a list")
             if not len(vals) == 4 or not len(vals[0]) == 4:
                 raise AttributeError("Input Matrix must be 4 x 4")
-            if not is_int_or_float(vals[0]):
+            if not is_int_or_float(vals[0][0]):
                 raise TypeError("Matrix4 argument list must contain int or float")
 
     def set_identity(self):
         """
         Converts the matrix to an identity matrix
 
-        :return:the identity matrix
-        :rtype: Matrix4
+        :return: the identity matrix
+        :rtype:  Matrix4
         """
         self.vals = [[1.0 if i == j else 0.0 for i in range(4)] for j in range(4)]
 
@@ -53,11 +57,11 @@ class Matrix4:
         """
         Calculates the multiplication of the matrix with another 4 x 4 matrix or a 3D vector
 
-        :param  other: the right hand side 4 x 4 matrix or 3D vector
-        :type   other: Matrix4/Vector3
-        :return:the resulting multiplied matrix or vector
-        :rtype: Matrix4/Vector3
-        :raises:TypeError: wrong argument type
+        :param   other: the right hand side 4 x 4 matrix or 3D vector
+        :type    other: Matrix4/Vector3
+        :return: the resulting multiplied matrix or vector
+        :rtype:  Matrix4/Vector3
+        :raises: TypeError: wrong argument type
         """
         if is_matrix4(other):
             result = Matrix4()
@@ -79,17 +83,17 @@ class Matrix4:
                         self.vals[3][2] * other.z + self.vals[3][3] * other.w)
 
             return result
-        raise TypeError("Multiplication must be done with an object of Matrix4")
+        raise TypeError("Multiplication must be done with a 4 x 4 matrix or 3D vector")
 
     def __eq__(self, other):
         """
         Compares the equality of self and other 4 x 4 matrix.
 
-        :param  other: the other matrix
-        :type   other: Matrix4
-        :return:the point equality
-        :rtype: bool
-        :raises:TypeError: Wrong argument type
+        :param   other: the other matrix
+        :type    other: Matrix4
+        :return: the point equality
+        :rtype:  bool
+        :raises: TypeError: Wrong argument type
         """
         if is_matrix4(other) or inspect.isclass(other):  # revisit
             return [[True if i == j else False for i in self.vals] for j in other.vals]
@@ -100,11 +104,11 @@ class Matrix4:
         """
         Creates a translation matrix using the 3D vector
 
-        :param  vector: the translation vector
-        :type   vector: Vector3
-        :return:translation matrix
-        :rtype: Matrix4
-        :raises:TypeError: Wrong argument type
+        :param   vector: the translation vector
+        :type    vector: Vector3
+        :return: translation matrix
+        :rtype:  Matrix4
+        :raises: TypeError: Wrong argument type
         """
         if is_vector3(vector):
             mat = cls
@@ -121,11 +125,11 @@ class Matrix4:
         """
         Creates an x-axis rotation matrix using an angle
 
-        :param  theta: the angle of rotation
-        :type   theta: int/float
-        :return:x-axis rotation matrix
-        :rtype: Matrix4
-        :raises:TypeError: Wrong argument type
+        :param   theta: the angle of rotation
+        :type    theta: int/float
+        :return: x-axis rotation matrix
+        :rtype:  Matrix4
+        :raises: TypeError: Wrong argument type
         """
         if is_int_or_float(theta):
             mat = cls
@@ -144,11 +148,11 @@ class Matrix4:
         """
         Creates a y-axis rotation matrix using an angle
 
-        :param  theta: the angle of rotation
-        :type   theta: int/float
-        :return:y-axis rotation matrix
-        :rtype: Matrix4
-        :raises:TypeError: Wrong argument type
+        :param   theta: the angle of rotation
+        :type    theta: int/float
+        :return: y-axis rotation matrix
+        :rtype:  Matrix4
+        :raises: TypeError: Wrong argument type
         """
         if is_int_or_float(theta):
             mat = cls
@@ -167,11 +171,11 @@ class Matrix4:
         """
         Creates a z-axis rotation matrix using an angle
 
-        :param  theta: the angle of rotation
-        :type   theta: int/float
-        :return:z-axis rotation matrix
-        :rtype: Matrix4
-        :raises:TypeError: Wrong argument type
+        :param   theta: the angle of rotation
+        :type    theta: int/float
+        :return: z-axis rotation matrix
+        :rtype:  Matrix4
+        :raises: TypeError: Wrong argument type
         """
         if is_int_or_float(theta):
             mat = cls
