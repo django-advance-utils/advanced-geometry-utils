@@ -16,7 +16,7 @@ class Intersection:
         check if the edges intersect on first segment
     on_second_segment: bool
         check if the edges intersect on the second segment
-    minor_radius: int or float
+    minor_radius: int/float
         the minor radius of the ellipse
     collinear: bool
         check if the edges are collinear
