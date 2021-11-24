@@ -11,7 +11,7 @@ class Matrix3:
 
     Attributes:
     ___________
-    vals:   int or float
+    vals:   int/float
             the elements of the matrix
 
     Methods:
@@ -30,22 +30,22 @@ class Matrix3:
     def __init__(self, vals=None):
         if vals is None:
             self.set_identity()
-        elif is_list(vals) and len(vals) == 3 and len(vals[0]) == 3 and is_int_or_float(vals[0]):
+        elif is_list(vals) and len(vals) == 3 and len(vals[0]) == 3 and is_int_or_float(vals[0][0]):
             self.vals = vals
         else:
             if not is_list(vals):
                 raise TypeError("Matrix3 argument must be a list")
             if not len(vals) == 3 or not len(vals[0]) == 3:
                 raise AttributeError("Input Matrix must be 3 x 3")
-            if not is_int_or_float(vals[0]):
+            if not is_int_or_float(vals[0][0]):
                 raise TypeError("Matrix3 argument list must contain int or float")
 
     def set_identity(self):
         """
         Converts the matrix to an identity matrix
 
-        :return:the identity matrix
-        :rtype: Matrix3
+        :return: the identity matrix
+        :rtype:  Matrix3
         """
         self.vals = [[1 if i == j else 0 for i in range(3)] for j in range(3)]
 
@@ -53,11 +53,11 @@ class Matrix3:
         """
         Calculates the multiplication of the matrix with another 3 x 3 matrix or a 2D vector
 
-        :param  other: the right hand side 3 x 3 matrix or 2D vector
-        :type   other: Matrix3/Vector2
-        :return:the resulting multiplied matrix or vector
-        :rtype: Matrix3/Vector2
-        :raises:TypeError: wrong argument type
+        :param   other: the right hand side 3 x 3 matrix or 2D vector
+        :type    other: Matrix3/Vector2
+        :return: the resulting multiplied matrix or vector
+        :rtype:  Matrix3/Vector2
+        :raises: TypeError: wrong argument type
         """
         if is_matrix3(other):
             result = Matrix3()
@@ -74,17 +74,17 @@ class Matrix3:
             result.w = self.vals[2][0] * other.x + self.vals[2][1] * other.y + self.vals[2][2] * other.w
 
             return result
-        raise TypeError("Multiplication must be done with an object of Matrix3")
+        raise TypeError("Multiplication must be done with a 3 x 3 matrix or 2D vector")
 
     def __eq__(self, other):
         """
         Compares the equality of self and other 3 x 3 matrix.
 
-        :param  other: the other matrix
-        :type   other: Matrix3
-        :return:the point equality
-        :rtype: bool
-        :raises:TypeError: Wrong argument type
+        :param   other: the other matrix
+        :type    other: Matrix3
+        :return: the point equality
+        :rtype:  bool
+        :raises: TypeError: Wrong argument type
         """
         if is_matrix3(other) or inspect.isclass(other):  # revisit
             return [[True if i == j else False for i in self.vals] for j in other.vals]
@@ -95,11 +95,11 @@ class Matrix3:
         """
         Creates a translation matrix using the 2D vector
 
-        :param  vector: the translation vector
-        :type   vector: Vector2
-        :return:translation matrix
-        :rtype: Matrix3
-        :raises:TypeError: Wrong argument type
+        :param   vector: the translation vector
+        :type    vector: Vector2
+        :return: translation matrix
+        :rtype:  Matrix3
+        :raises: TypeError: Wrong argument type
         """
         if is_vector2(vector):
             mat = cls
@@ -115,11 +115,11 @@ class Matrix3:
         """
         Creates a rotation matrix using an angle
 
-        :param  theta: the angle of rotation
-        :type   theta: int/float
-        :return:rotation matrix
-        :rtype: Matrix3
-        :raises:TypeError: Wrong argument type
+        :param   theta: the angle of rotation
+        :type    theta: int/float
+        :return: rotation matrix
+        :rtype:  Matrix3
+        :raises: TypeError: Wrong argument type
         """
 
         if is_int_or_float(theta):

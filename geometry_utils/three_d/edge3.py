@@ -15,7 +15,7 @@ class Edge3:
         a 3D point along the edge
     p2: Point3
         final 3D point of the edge
-    radius: int or float
+    radius: int/float
         the radius of the edge
     clockwise: bool
         check if the edge direction is clockwise
@@ -30,13 +30,13 @@ class Edge3:
         returns the calculated centre of the edge
     is_arc(): bool
         returns True if the edge is an arc
-    point_parametric(int or float): Point2
-        returns the point along the edge from 0 (p1) to 1 (p2) -
-    parametric_point(Point2): int or float
-        returns the number along the edge from p1 (0) to p2(1)
-    get_tangent(): int or float
+    point_parametric(int/float): Point2
+        returns the point along the edge from 0 = p1 to 1 = p2
+    parametric_point(Point2): int/float
+        returns the number along the edge from p1 = 0 to p2 = 1
+    get_tangent(): int/float
         returns the tangent of the edge
-    get_sweep(): int or float
+    get_sweep(): int/float
         returns the sweep of the edge
     get_edge_bounds(): AxisAlignedBox3
         returns the bounds of the edge in 2D points
@@ -73,6 +73,9 @@ class Edge3:
         if floats_are_close(self.radius, 0.0):
             return Point3((self.p1.x + self.p2.x) * 0.5, (self.p1.y + self.p2.y) * 0.5, (self.p1.z + self.p2.z) * 0.5)
 
+    def midpoint(self):
+        return self.point_parametric(0.5)
+
     def point_parametric(self, s):
         """
         Calculates the point on the edge from 0 to 1
@@ -84,7 +87,7 @@ class Edge3:
         :raises:TypeError: wrong argument type
         """
 
-        if is_float(s):
+        if is_int_or_float(s):
             if self.p1 == self.p2:
                 return self.p1
 
@@ -92,6 +95,9 @@ class Edge3:
             p1_p2_distance = self.p1.distance_to(self.p2)  # vector
             vector = tangent * (s * p1_p2_distance)  # vector
             return self.p1 + vector  # point
+
+        else:
+            raise TypeError("Point parametric must be with an int or float")
 
     def parametric_point(self, point):
         """
