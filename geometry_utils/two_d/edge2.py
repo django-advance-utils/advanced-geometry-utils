@@ -17,7 +17,7 @@ class Edge2:
         initial 2D point of the edge
     p2: Point2
         final 2D point of the edge
-    radius: int or float
+    radius: int/float
         the radius of the edge
     clockwise: bool
         check if the edge direction is clockwise
@@ -32,13 +32,13 @@ class Edge2:
         returns the calculated centre of the edge
     is_arc(): bool
         returns True if the edge is an arc
-    point_parametric(int or float): Point2
-        returns the point along the edge from 0 (p1) to 1 (p2) -
-    parametric_point(Point2): int or float
-        returns the number along the edge from p1 (0) to p2(1)
-    get_tangent(): int or float
+    point_parametric(int/float): Point2
+        returns the point along the edge from 0 = p1 to 1 = p2
+    parametric_point(Point2): int/float
+        returns the number along the edge from p1 = 0 to p2 = 1
+    get_tangent(): int/float
         returns the tangent of the edge
-    get_sweep(): int or float
+    get_sweep(): int/float
         returns the sweep of the edge
     get_edge_bounds(): AxisAlignedBox2
         returns the bounds of the edge in 2D points
@@ -192,6 +192,7 @@ class Edge2:
         """
         if not self.is_arc():
             return 0.0
+
         ellipse = Ellipse(start=self.p1, centre=self.arc_centre, end=self.p2, major_radius=self.radius,
                           minor_radius=self.radius, clockwise=self.clockwise, angle=0.0)
         return ellipse.get_arc_sweep()
