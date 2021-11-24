@@ -2,7 +2,7 @@ import inspect
 from math import cos, sin
 
 from maths_utility import is_list, is_int_or_float
-from three_d.vector3 import is_vector3
+from three_d.vector3 import Vector3, is_vector3
 
 
 class Matrix4:
@@ -18,8 +18,8 @@ class Matrix4:
     ________
     set_identity(): Matrix4
         Returns a 4 x 4 identity matrix
-    __mul__(Matrix4): Matrix4
-        Returns the multiplication of the matrix with another 4 x 4 matrix
+    __mul__(Matrix4/Vector3): Matrix4/Vector3
+        Returns the multiplication of the matrix with another 4 x 4 matrix or 3D vector
     __eq__(Matrix4): bool
         Returns the equality comparison of the matrix with another 4 x 4 matrix
     make_translation(Vector2): Matrix4
@@ -30,13 +30,15 @@ class Matrix4:
     def __init__(self, vals=None):
         if vals is None:
             self.set_identity()
-        elif is_list(vals) and len(vals) == 4 and len(vals[0]) == 4:
+        elif is_list(vals) and len(vals) == 4 and len(vals[0]) == 4 and is_int_or_float(vals[0]):
             self.vals = vals
         else:
             if not is_list(vals):
                 raise TypeError("Matrix4 argument must be a list")
             if not len(vals) == 4 or not len(vals[0]) == 4:
                 raise AttributeError("Input Matrix must be 4 x 4")
+            if not is_int_or_float(vals[0]):
+                raise TypeError("Matrix4 argument list must contain int or float")
 
     def set_identity(self):
         """
@@ -49,12 +51,12 @@ class Matrix4:
 
     def __mul__(self, other):
         """
-        Calculates the matrix multiplication of self with another 4 x 4 matrix
+        Calculates the multiplication of the matrix with another 4 x 4 matrix or a 3D vector
 
-        :param  other: the right hand side matrix
-        :type   other: Matrix4
-        :return:the resulting multiplied matrix
-        :rtype: Matrix4
+        :param  other: the right hand side 4 x 4 matrix or 3D vector
+        :type   other: Matrix4/Vector3
+        :return:the resulting multiplied matrix or vector
+        :rtype: Matrix4/Vector3
         :raises:TypeError: wrong argument type
         """
         if is_matrix4(other):
@@ -63,6 +65,19 @@ class Matrix4:
                 for j in range(4):
                     for k in range(4):
                         result.vals[i][j] += self.vals[i][k] * other.vals[k][j]
+            return result
+
+        if is_vector3(other):
+            result = Vector3()
+            result.x = (self.vals[0][0] * other.x + self.vals[0][1] * other.y +
+                        self.vals[0][2] * other.z + self.vals[0][3] * other.w)
+            result.y = (self.vals[1][0] * other.x + self.vals[1][1] * other.y +
+                        self.vals[1][2] * other.z + self.vals[1][3] * other.w)
+            result.z = (self.vals[2][0] * other.x + self.vals[2][1] * other.y +
+                        self.vals[2][2] * other.z + self.vals[2][3] * other.w)
+            result.w = (self.vals[3][0] * other.x + self.vals[3][1] * other.y +
+                        self.vals[3][2] * other.z + self.vals[3][3] * other.w)
+
             return result
         raise TypeError("Multiplication must be done with an object of Matrix4")
 
