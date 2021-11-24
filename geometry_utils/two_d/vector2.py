@@ -9,23 +9,23 @@ class Vector2:
 
     Attributes:
     ___________
-    x: int or float
+    x: int/float
         the x-coordinate of the vector
-    y: int or float
+    y: int/float
         the y-coordinate of the vector
-    w: int or float
+    w: int/float
         the w-coordinate of the vector
         w=0 leave the vector unchanged when multiplied by a translation matrix
 
     Methods:
     ________
-    __add__(other_vector): Vector2
+    __add__(Vector2): Vector2
         Returns the addition of the vector with another 2D vector
-    __sub__(other_Vector): Vector2
+    __sub__(Vector2): Vector2
         Returns the subtraction of another 2D vector from the vector
-    __mul__(scalar): Vector2
+    __mul__(int/float): Vector2
         Returns the multiplication of the vector with an int or float scalar
-    __div__(scalar): Vector2
+    __div__(int/float): Vector2
         Returns the division of the vector by an int or float scalar
     __eq__(Vector2): bool
         Returns the equality comparison of the vector with another 2D vector
@@ -35,9 +35,9 @@ class Vector2:
         Returns the reverse of the vector
     normalise(): Vector2
         Returns the normal of the vector
-    length(): int or float
+    length(): int/float
         Returns the pythagorean length of the vector
-    dot(Vector2): int or float
+    dot(Vector2): int/float
         Returns the dot product of vector with another 2D vector
     cross(Vector2): Vector2
         Returns the cross product of vector with another 2D vector
@@ -45,7 +45,7 @@ class Vector2:
         Returns the perpendicular of the vector
     invert(): Vector2
         Returns the inverse of the vector
-    rotate(Vector2, int or float): Vector2
+    rotate(Vector2, int/float): Vector2
         Returns the rotation of the vector at angle theta with respect to 2D vector origin
     """
     def __init__(self, x=0, y=0, w=0):
@@ -54,17 +54,17 @@ class Vector2:
             self.y = y
             self.w = w
         else:
-            raise TypeError("Arguments must be ints or floats")
+            raise TypeError("Vector2 argument must be an int or float")
 
     def __add__(self, other_vector):
         """
-        Calculates the addition of self with other vector
+        Calculates the addition of vector with another 2D vector
 
-        :param  other_vector: the other vector
-        :type   other_vector: Vector2
-        :return:the resulting added vector
-        :rtype: Vector2
-        :raises:TypeError: wrong argument type
+        :param   other_vector: the addition 2D vector
+        :type    other_vector: Vector2
+        :return: the resulting added vector
+        :rtype:  Vector2
+        :raises: TypeError: wrong argument type
         """
         if is_vector2(other_vector):
             return Vector2(self.x + other_vector.x, self.y + other_vector.y)
@@ -72,13 +72,13 @@ class Vector2:
 
     def __sub__(self, other_vector):
         """
-        Calculates the subtraction of other vector from self
+        Calculates the subtraction of another 2D vector from the vector
 
-        :param  other_vector: the other vector
-        :type   other_vector: Vector2
-        :return:the resulting subtracted vector
-        :rtype: Vector2
-        :raises:TypeError: wrong argument type
+        :param   other_vector: the subtraction 2D vector
+        :type    other_vector: Vector2
+        :return: the resulting subtracted vector
+        :rtype:  Vector2
+        :raises: TypeError: wrong argument type
         """
         if is_vector2(other_vector):
             return Vector2(self.x - other_vector.x, self.y - other_vector.y)
@@ -86,13 +86,13 @@ class Vector2:
 
     def __mul__(self, scalar):
         """
-        Calculates the multiplication of self with a scalar.
+        Calculates the multiplication of the vector with a scalar of type int or float
 
-        :param  scalar: the multiplication scalar
-        :type   scalar: int/float
-        :return:the resulting multiplied vector
-        :rtype: Vector2
-        :raises:TypeError: wrong argument type
+        :param   scalar: the multiplication scalar
+        :type    scalar: int/float
+        :return: the resulting multiplied vector
+        :rtype:  Vector2
+        :raises: TypeError: wrong argument type
         """
         if is_int_or_float(scalar):
             return Vector2(self.x * scalar, self.y * scalar)
@@ -100,13 +100,13 @@ class Vector2:
 
     def __div__(self, scalar):
         """
-        Calculates the division of self with a scalar.
+        Calculates the division of the vector by a scalar of type int or float
 
-        :param  scalar: the division scalar
-        :type   scalar: int/float
-        :return:the resulting divided vector
-        :rtype: Vector2
-        :raises:TypeError: wrong argument type
+        :param   scalar: the division scalar
+        :type    scalar: int/float
+        :return: the resulting divided vector
+        :rtype:  Vector2
+        :raises: TypeError: wrong argument type
         """
         if is_int_or_float(scalar):
             return Vector2(self.x / scalar, self.y / scalar)
@@ -117,9 +117,9 @@ class Vector2:
 
     def __eq__(self, other_vector):
         """
-        Compares the equality of self and other vector.
+        Compares the equality of the vector and another 2D vector
 
-        :param  other_vector: the other vector
+        :param  other_vector: the other 2D vector
         :type   other_vector: Vector2
         :return:the vector equality
         :rtype: bool
@@ -131,9 +131,9 @@ class Vector2:
 
     def __ne__(self, other_vector):
         """
-        Compares the inequality of self and other vector.
+        Compares the inequality of the vector and another 2D vector
 
-        :param  other_vector: the other vector
+        :param  other_vector: the other 2D vector
         :type   other_vector: Vector2
         :return:the vector inequality
         :rtype: bool
@@ -169,13 +169,13 @@ class Vector2:
         Calculates the pythagorean length of the vector
 
         :return: the vector length
-        :rtype: int or float
+        :rtype: int/float
         """
         return sqrt(self.dot(self))
 
     def dot(self, other_vector):
         """
-        Calculates the dot product of self and other vector.
+        Calculates the dot product of self and another 2D vector
 
         :param:  other_vector: the other vector
         :type:   other_vector: Vector2
@@ -189,7 +189,7 @@ class Vector2:
 
     def cross(self, other_vector):
         """
-        Calculates the cross product of self and other vector.
+        Calculates the cross product of the vector and another 2D vector
 
         :param  other_vector: the other vector
         :type   other_vector: Vector2
@@ -204,7 +204,7 @@ class Vector2:
 
     def get_perpendicular(self):
         """
-        Calculates the vector perpendicular to self
+        Calculates the 2D vector perpendicular to the vector
 
         :return: the perpendicular vector
         :rtype: Vector2
@@ -213,7 +213,7 @@ class Vector2:
 
     def invert(self):
         """
-        Calculates the inverse vector to self
+        Calculates the 2D vector inverse to the vector
 
         :return:the inverse vector
         :rtype: Vector2
@@ -227,7 +227,7 @@ class Vector2:
         :param: origin: the origin vector of rotation
                 theta:  the angle of rotation
         :type:  origin: Vector2
-                theta:  Float or Int
+                theta:  int/float
         :return:the cross product
         :rtype: Vector2
         :raises:TypeError: Wrong argument type
