@@ -1,5 +1,5 @@
-from three_d.point3 import Point3, is_point3
-from three_d.vector3 import Vector3, is_vector3
+from geometry_utils.three_d.point3 import Point3, is_point3
+from geometry_utils.three_d.vector3 import Vector3, is_vector3
 
 
 class AxisAlignedBox3:
