@@ -1,6 +1,6 @@
-from maths_utility import floats_are_close, is_float, is_int_or_float
-from three_d.axis_aligned_box3 import AxisAlignedBox3
-from three_d.point3 import Point3, is_point3
+from geometry_utils.maths_utility import floats_are_close, is_float, is_int_or_float
+from geometry_utils.three_d.axis_aligned_box3 import AxisAlignedBox3
+from geometry_utils.three_d.point3 import Point3, is_point3
 
 
 class Edge3:
