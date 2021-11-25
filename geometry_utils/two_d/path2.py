@@ -50,7 +50,7 @@ class Path2:
         :return: closeness of the path
         :rtype:  bool
         """
-        return self.last_edge.p2 == self.first_edge.p1 and self.is_continuous
+        return self.list_of_edges[-1].p2 == self.list_of_edges[0].p1 and self.is_continuous
 
     @property
     def is_continuous(self):
