@@ -1,8 +1,8 @@
 import inspect
 from math import cos, sin
 
-from maths_utility import is_list, is_int_or_float
-from three_d.vector3 import Vector3, is_vector3
+from geometry_utils.maths_utility import is_list, is_int_or_float
+from geometry_utils.three_d.vector3 import Vector3, is_vector3
 
 
 class Matrix4:
