@@ -1,6 +1,6 @@
-from maths_utility import is_list
-from three_d.axis_aligned_box3 import AxisAlignedBox3
-from three_d.edge3 import is_edge3
+from geometry_utils.maths_utility import is_list
+from geometry_utils.three_d.axis_aligned_box3 import AxisAlignedBox3
+from geometry_utils.three_d.edge3 import is_edge3
 
 
 class Path3:
