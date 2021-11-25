@@ -50,6 +50,8 @@ class Path2:
         :return: closeness of the path
         :rtype:  bool
         """
+        if self.path_length < 3:
+            return False
         return self.list_of_edges[-1].p2 == self.list_of_edges[0].p1 and self.is_continuous
 
     @property
@@ -61,9 +63,13 @@ class Path2:
         :rtype: bool
         """
         continuity = True
-        for edge, next_edge in zip(self.list_of_edges, self.list_of_edges[1:]):
-            if edge.p2 != next_edge.p1:
-                continuity = False
+
+        if self.path_length < 2:
+            continuity = False
+        else:
+            for edge, next_edge in zip(self.list_of_edges, self.list_of_edges[1:]):
+                if edge.p2 != next_edge.p1:
+                    continuity = False
         return continuity
 
     def get_path_bounds(self):
