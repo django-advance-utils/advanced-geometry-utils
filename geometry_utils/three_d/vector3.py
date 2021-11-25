@@ -1,6 +1,6 @@
 from math import sqrt
 
-from maths_utility import is_int_or_float, are_ints_or_floats
+from geometry_utils.maths_utility import is_int_or_float, are_ints_or_floats
 
 
 class Vector3:
