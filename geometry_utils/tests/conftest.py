@@ -2,19 +2,19 @@ import math
 
 import pytest
 
-from three_d.axis_aligned_box3 import AxisAlignedBox3
-from three_d.edge3 import Edge3
-from three_d.matrix4 import Matrix4
-from three_d.path3 import Path3
-from three_d.point3 import Point3
-from three_d.vector3 import Vector3
-from two_d.axis_aligned_box2 import AxisAlignedBox2
-from two_d.edge2 import Edge2
-from two_d.intersection import Intersection
-from two_d.matrix3 import Matrix3
-from two_d.path2 import Path2
-from two_d.point2 import Point2
-from two_d.vector2 import Vector2
+from geometry_utils.three_d.axis_aligned_box3 import AxisAlignedBox3
+from geometry_utils.three_d.edge3 import Edge3
+from geometry_utils.three_d.matrix4 import Matrix4
+from geometry_utils.three_d.path3 import Path3
+from geometry_utils.three_d.point3 import Point3
+from geometry_utils.three_d.vector3 import Vector3
+from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
+from geometry_utils.two_d.edge2 import Edge2
+from geometry_utils.two_d.intersection import Intersection
+from geometry_utils.two_d.matrix3 import Matrix3
+from geometry_utils.two_d.path2 import Path2
+from geometry_utils.two_d.point2 import Point2
+from geometry_utils.two_d.vector2 import Vector2
 
 '''
 Point2 
