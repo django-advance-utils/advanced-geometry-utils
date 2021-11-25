@@ -1,7 +1,7 @@
 import pytest
 from math import sqrt
 
-from two_d.vector2 import Vector2
+from geometry_utils.two_d.vector2 import Vector2
 
 '''
 Vector2 Addition Tests

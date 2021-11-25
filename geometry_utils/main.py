@@ -1,7 +1,7 @@
 import math
 
-from two_d.edge2 import Edge2
-from two_d.point2 import Point2
+from geometry_utils.two_d.edge2 import Edge2
+from geometry_utils.two_d.point2 import Point2
 
 if __name__ == '__main__':
     test_edge = Edge2(Point2(0.0, 0.0), Point2(5.0, 5.0), 2.5, True, True)
@@ -11,7 +11,7 @@ if __name__ == '__main__':
 
     circle = []
     for i in range(360):
-        t = ((math.pi * 2)/ 360.0) * float(i)
+        t = ((math.pi * 2) / 360.0) * float(i)
         circle.append(Point2((math.sin(t) * radius),
                              (math.cos(t) * radius)))
 

@@ -1,7 +1,7 @@
 from math import atan2, sin, cos, fabs, sqrt
 
-from maths_utility import double_epsilon, double_pi, degrees_to_radians, are_ints_or_floats
-from two_d.point2 import Point2, is_point2
+from geometry_utils.maths_utility import double_epsilon, double_pi, degrees_to_radians, are_ints_or_floats
+from geometry_utils.two_d.point2 import Point2, is_point2
 
 
 class Ellipse:

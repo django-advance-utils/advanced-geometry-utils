@@ -1,8 +1,8 @@
 import pytest
 
-from three_d.axis_aligned_box3 import AxisAlignedBox3
-from three_d.point3 import Point3
-from three_d.vector3 import Vector3
+from geometry_utils.three_d.axis_aligned_box3 import AxisAlignedBox3
+from geometry_utils.three_d.point3 import Point3
+from geometry_utils.three_d.vector3 import Vector3
 
 
 def test_box3_box3_addition_return_arithmetic(test_box3_1, test_box3_2):

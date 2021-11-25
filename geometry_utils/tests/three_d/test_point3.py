@@ -1,7 +1,7 @@
 import pytest
 
-from three_d.point3 import Point3
-from three_d.vector3 import Vector3
+from geometry_utils.three_d.point3 import Point3
+from geometry_utils.three_d.vector3 import Vector3
 
 from math import sqrt
 

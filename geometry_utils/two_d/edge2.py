@@ -1,10 +1,10 @@
 from math import atan2
 
-from maths_utility import floats_are_close, double_epsilon, pi, double_pi, is_list, is_int_or_float
-from two_d.axis_aligned_box2 import AxisAlignedBox2
-from two_d.ellipse import Ellipse
-from two_d.intersection import Intersection
-from two_d.point2 import Point2, is_point2
+from geometry_utils.maths_utility import floats_are_close, double_epsilon, pi, double_pi, is_list, is_int_or_float
+from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
+from geometry_utils.two_d.ellipse import Ellipse
+from geometry_utils.two_d.intersection import Intersection
+from geometry_utils.two_d.point2 import Point2, is_point2
 
 
 class Edge2:

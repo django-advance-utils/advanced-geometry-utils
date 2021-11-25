@@ -1,5 +1,5 @@
-from maths_utility import are_ints_or_floats
-from three_d.vector3 import Vector3, is_vector3
+from geometry_utils.maths_utility import are_ints_or_floats
+from geometry_utils.three_d.vector3 import Vector3, is_vector3
 
 
 class Point3:

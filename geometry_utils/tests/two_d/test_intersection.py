@@ -1,8 +1,7 @@
 import pytest
 
-from maths_utility import floats_are_close
-from two_d.intersection import Intersection
-from two_d.point2 import Point2
+from geometry_utils.maths_utility import floats_are_close
+from geometry_utils.two_d.point2 import Point2
 
 
 def test_intersection_with_edge2(intersection1, test_vector3_1):

@@ -1,6 +1,6 @@
 from math import sqrt, cos, sin
 
-from maths_utility import are_ints_or_floats, is_int_or_float
+from geometry_utils.maths_utility import are_ints_or_floats, is_int_or_float
 
 
 class Vector2:

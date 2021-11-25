@@ -1,5 +1,5 @@
-from two_d.point2 import Point2, is_point2
-from maths_utility import floats_are_close, ranges_overlap
+from geometry_utils.two_d.point2 import Point2, is_point2
+from geometry_utils.maths_utility import floats_are_close, ranges_overlap
 
 
 class Intersection:

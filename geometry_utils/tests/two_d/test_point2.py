@@ -1,7 +1,7 @@
 import pytest
 
-from two_d.point2 import Point2
-from two_d.vector2 import Vector2
+from geometry_utils.two_d.point2 import Point2
+from geometry_utils.two_d.vector2 import Vector2
 
 
 '''

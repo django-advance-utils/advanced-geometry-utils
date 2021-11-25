@@ -1,4 +1,4 @@
-from three_d.matrix4 import Matrix4
+from geometry_utils.three_d.matrix4 import Matrix4
 
 
 def test_matrix4_make_translation(test_matrix4_1, test_vector3_1):

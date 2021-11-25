@@ -1,6 +1,6 @@
-from maths_utility import is_list
-from two_d.axis_aligned_box2 import AxisAlignedBox2
-from two_d.edge2 import is_edge2
+from geometry_utils.maths_utility import is_list
+from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
+from geometry_utils.two_d.edge2 import is_edge2
 
 
 class Path2:

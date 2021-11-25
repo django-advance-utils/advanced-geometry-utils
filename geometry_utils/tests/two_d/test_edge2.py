@@ -1,8 +1,8 @@
-from two_d.axis_aligned_box2 import AxisAlignedBox2
-from two_d.point2 import Point2
-from two_d.vector2 import Vector2
-from two_d.edge2 import Edge2
-from maths_utility import floats_are_close
+from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
+from geometry_utils.two_d.point2 import Point2
+from geometry_utils.two_d.vector2 import Vector2
+from geometry_utils.two_d.edge2 import Edge2
+from geometry_utils.maths_utility import floats_are_close
 
 from math import sqrt
 

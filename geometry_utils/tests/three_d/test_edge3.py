@@ -1,7 +1,7 @@
-from three_d.axis_aligned_box3 import AxisAlignedBox3
-from three_d.point3 import Point3
-from three_d.vector3 import Vector3
-from maths_utility import floats_are_close
+from geometry_utils.three_d.axis_aligned_box3 import AxisAlignedBox3
+from geometry_utils.three_d.point3 import Point3
+from geometry_utils.three_d.vector3 import Vector3
+from geometry_utils.maths_utility import floats_are_close
 
 from math import sqrt
 

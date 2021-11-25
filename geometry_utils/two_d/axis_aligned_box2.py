@@ -1,5 +1,5 @@
-from two_d.point2 import Point2, is_point2
-from two_d.vector2 import Vector2, is_vector2
+from geometry_utils.two_d.point2 import Point2, is_point2
+from geometry_utils.two_d.vector2 import Vector2, is_vector2
 
 
 class AxisAlignedBox2:

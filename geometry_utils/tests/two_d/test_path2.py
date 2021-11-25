@@ -1,5 +1,5 @@
-from two_d.axis_aligned_box2 import AxisAlignedBox2
-from two_d.point2 import Point2
+from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
+from geometry_utils.two_d.point2 import Point2
 
 
 def test_path2_continuity(path2_1, path2_2, path2_3):
