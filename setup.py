@@ -12,7 +12,9 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/django-advance-utils/geometry-utils",
     include_package_data=True,
-    packages=['geometry_utils'],
+    packages=['geometry_utils',
+              'geometry_utils.three_d',
+              'geometry_utils.two_d'],
     classifiers=[
         "Programming Language :: Python :: 2",
         "License :: OSI Approved :: MIT License",
