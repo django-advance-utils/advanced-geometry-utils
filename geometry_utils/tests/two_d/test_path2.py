@@ -3,13 +3,13 @@ from geometry_utils.two_d.point2 import Point2
 
 
 def test_path2_continuity(path2_1, path2_2, path2_3):
-    assert path2_1.is_continuous()
-    assert path2_2.is_continuous()
-    assert not path2_3.is_continuous()
+    assert path2_1.is_continuous
+    assert path2_2.is_continuous
+    assert not path2_3.is_continuous
 
 
 def test_path2_closed(path2_1):
-    assert path2_1.is_closed()
+    assert path2_1.is_closed
 
 
 def test_get_path2_bounds(path2_1):
