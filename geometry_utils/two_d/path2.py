@@ -83,3 +83,7 @@ class Path2:
         for edge in self.list_of_edges:
             path_bounds.include(edge.get_edge_bounds())
         return path_bounds
+
+
+def is_path2(input_variable):
+    return isinstance(input_variable, Path2)
