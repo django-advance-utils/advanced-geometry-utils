@@ -13,4 +13,4 @@ def test_path2_closed(path2_1):
 
 
 def test_get_path2_bounds(path2_1):
-    assert path2_1.get_path_bounds() == AxisAlignedBox2(Point2(0.0, 0.0), Point2(2.0, 2.0))
+    assert path2_1.get_path_bounds == AxisAlignedBox2(Point2(0.0, 0.0), Point2(2.0, 2.0))
