@@ -65,6 +65,12 @@ class Edge2:
             if not is_int_or_float(radius):
                 raise TypeError("Radius must be an int or float")
 
+    def __eq__(self, other):
+        if is_edge2(other):
+            return self.p1 == other.p1 and self.p2 == other.p2 and \
+                   self.radius == other.radius and self.large == other.large and \
+                   self.arc_centre == other.arc_centre and self.clockwise == other.clockwise
+
     def calculate_arc_centre(self):
         """
         Calculates the centre of the arc
