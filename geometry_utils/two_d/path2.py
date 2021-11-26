@@ -1,6 +1,6 @@
 from geometry_utils.maths_utility import is_list
 from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
-from geometry_utils.two_d.edge2 import is_edge2
+from geometry_utils.two_d.edge2 import is_edge2, Edge2
 
 
 class Path2:
@@ -28,9 +28,18 @@ class Path2:
 
     def __init__(self):
         self.list_of_edges = []
+
+    @property
+    def first_edge(self):
         if self.path_length >= 1:
-            self.first_edge = self.list_of_edges[0]
-            self.last_edge = self.list_of_edges[-1]
+            return self.list_of_edges[0]
+        raise TypeError("Can not find the first edge of an empty list of edges")
+
+    @property
+    def last_edge(self):
+        if self.path_length >= 1:
+            return self.list_of_edges[-1]
+        raise TypeError("Can not find the last edge of an empty list of edges")
 
     @property
     def path_length(self):
@@ -72,6 +81,7 @@ class Path2:
                     continuity = False
         return continuity
 
+    @property
     def get_path_bounds(self):
         """
         Derives the AxisAlignedBox2 containing the bounds of the path
@@ -84,6 +94,19 @@ class Path2:
             path_bounds.include(edge.get_edge_bounds())
         return path_bounds
 
+    def remove_duplicate_edges(self):
+        indices_of_edges_to_remove = []
+        last_edge = None
+
+        for index, edge in enumerate(self.list_of_edges):
+            if last_edge is not None:
+                if edge == last_edge:
+                    indices_of_edges_to_remove.append(index)
+            last_edge = edge
+
+        indices_of_edges_to_remove.sort(reverse=True)
+        for index in indices_of_edges_to_remove:
+            del self.list_of_edges[index]
 
 def is_path2(input_variable):
     return isinstance(input_variable, Path2)
