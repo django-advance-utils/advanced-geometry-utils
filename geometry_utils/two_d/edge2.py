@@ -1,10 +1,11 @@
-from math import atan2
+from math import atan2, acos, fabs
 
 from geometry_utils.maths_utility import floats_are_close, double_epsilon, pi, double_pi, is_list, is_int_or_float
 from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
 from geometry_utils.two_d.ellipse import Ellipse
 from geometry_utils.two_d.intersection import Intersection
 from geometry_utils.two_d.point2 import Point2, is_point2
+from geometry_utils.two_d.vector2 import is_vector2
 
 
 class Edge2:
@@ -78,6 +79,9 @@ class Edge2:
         :return:the 2D point of the arc centre
         :rtype: Point2
         """
+        if self.p1 == self.p2:
+            return self.p1
+
         if floats_are_close(self.radius, 0.0):
             return Point2((self.p1.x + self.p2.x) * 0.5, (self.p1.y + self.p2.y) * 0.5)
 
@@ -229,6 +233,65 @@ class Edge2:
                 raise TypeError("First argument must be an object of Edge2")
             if not is_list(list_of_intersections):
                 raise TypeError("Second argument must be a list")
+
+    def offset_edge(self, vector):
+        if is_vector2(vector):
+            self.p1 += vector
+            self.p2 += vector
+
+    def is_circle(self):
+        return self.is_arc() and self.p1 == self.p2
+
+    def arc_to_points(self):
+        if self.p1 == self.p2 or not self.is_arc():
+            raise TypeError("The edge must be an arc")
+
+        # Calculate the sweep angle of the arc
+        v1 = (self.p1 - self.arc_centre).normalise()
+        v2 = (self.p2 - self.arc_centre).normalise()
+
+        dot_product = v1.dot(v2)
+
+        v1_length = v1.length()
+        v2_length = v2.length()
+
+        #  If this is the large arc we need the obtuse angle between the vectors
+        value = dot_product/(v1_length * v2_length)
+        value = max(-1, min(value, 1))
+
+        sweep_angle = acos(value)
+        if sweep_angle < pi() and self.large:
+            sweep_angle = (2 * pi()) - sweep_angle
+
+        # Use the sweep angle to calculate how many points to produce on the arc
+        number_of_arc_points = int((fabs(sweep_angle) * 180.0) / (pi() * 2.0))
+
+        if number_of_arc_points < 3:
+            raise ValueError("Insufficient number of arc points generated")
+
+        t = atan2(v1.x, v1.y)
+
+        # If the arc is clockwise, the sweep angle is negative
+        if self.clockwise:
+            sweep_angle *= -1
+
+        t_inc = sweep_angle / (number_of_arc_points - 1)
+
+        list_of_arc_points = []
+
+        arc_point = Point2()
+        for i in range(0, number_of_arc_points):
+            sin_t = sin(t)
+            cos_t = cos(t)
+
+            arc_point.x = self.arc_centre.x + (self.radius * cos_t)
+            arc_point.y = self.arc_centre.y + (self.radius * sin_t)
+
+            list_of_arc_points.append(arc_point)
+            t += t_inc
+
+        return list_of_arc_points
+
 
 
 def is_edge2(input_variable):
