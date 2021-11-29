@@ -2,6 +2,7 @@ import inspect
 from math import cos, sin
 
 from geometry_utils.maths_utility import is_list, is_int_or_float
+from geometry_utils.two_d.point2 import is_point2, Point2
 from geometry_utils.two_d.vector2 import Vector2, is_vector2
 
 
@@ -67,13 +68,16 @@ class Matrix3:
                         result.vals[i][j] += self.vals[i][k] * other.vals[k][j]
             return result
 
-        if is_vector2(other):
-            result = Vector2()
+        if is_vector2(other) or is_point2(other):
+            if is_vector2(other):
+                result = Vector2()
+            else:
+                result = Point2()
             result.x = self.vals[0][0] * other.x + self.vals[0][1] * other.y + self.vals[0][2] * other.w
             result.y = self.vals[1][0] * other.x + self.vals[1][1] * other.y + self.vals[1][2] * other.w
             result.w = self.vals[2][0] * other.x + self.vals[2][1] * other.y + self.vals[2][2] * other.w
-
             return result
+
         raise TypeError("Multiplication must be done with a 3 x 3 matrix or 2D vector")
 
     def __eq__(self, other):
@@ -90,8 +94,7 @@ class Matrix3:
             return [[True if i == j else False for i in self.vals] for j in other.vals]
         raise TypeError("Comparison must be with another object of Matrix3")
 
-    @classmethod
-    def make_translation(cls, vector):
+    def make_translation(self, vector):
         """
         Creates a translation matrix using the 2D vector
 
@@ -102,16 +105,13 @@ class Matrix3:
         :raises: TypeError: Wrong argument type
         """
         if is_vector2(vector):
-            mat = cls
-            mat.vals = [[1.0, 0.0, vector.x],
+            self.vals = [[1.0, 0.0, vector.x],
                         [0.0, 1.0, vector.y],
                         [0.0, 0.0, 1.0]]
+        else:
+            raise TypeError("Translation must be with an object of Vector2")
 
-            return mat
-        raise TypeError("Translation must be with an object of Vector2")
-
-    @classmethod
-    def make_rotation(cls, theta):
+    def make_rotation(self, theta):
         """
         Creates a rotation matrix using an angle
 
@@ -123,15 +123,13 @@ class Matrix3:
         """
 
         if is_int_or_float(theta):
-            mat = cls
             cos_theta = cos(theta)
             sin_theta = sin(theta)
-            mat.vals = [[cos_theta, -sin_theta, 0.0],
-                        [sin_theta,  cos_theta, 0.0],
-                        [0.0,        0.0,       1.0]]
-
-            return mat
-        raise TypeError("Rotation must be with an int or float")
+            self.vals = [[cos_theta, -sin_theta, 0.0],
+                         [sin_theta,  cos_theta, 0.0],
+                         [0.0,        0.0,       1.0]]
+        else:
+            raise TypeError("Rotation must be with an int or float")
 
 
 def is_matrix3(input_variable):
