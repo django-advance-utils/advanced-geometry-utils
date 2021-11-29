@@ -184,7 +184,7 @@ class Vector2:
         :raises:TypeError: Wrong argument type
         """
         if is_vector2(other_vector):
-            return self.x * other_vector.x + self.y * other_vector.y
+            return (self.x * other_vector.x) + (self.y * other_vector.y)
         raise TypeError("Dot product must be with another object of Vector2")
 
     def cross(self, other_vector):
