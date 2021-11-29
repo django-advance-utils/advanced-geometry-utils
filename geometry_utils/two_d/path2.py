@@ -1,6 +1,10 @@
-from geometry_utils.maths_utility import is_list
+from copy import deepcopy
+
+from geometry_utils.maths_utility import degrees_to_radians
 from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
-from geometry_utils.two_d.edge2 import is_edge2, Edge2
+from geometry_utils.two_d.edge2 import Edge2
+from geometry_utils.two_d.matrix3 import Matrix3
+from geometry_utils.two_d.vector2 import is_vector2
 
 
 class Path2:
@@ -28,6 +32,11 @@ class Path2:
 
     def __init__(self):
         self.list_of_edges = []
+
+    def __eq__(self, other_path):
+        if is_path2(other_path):
+            return self.list_of_edges == other_path.list_of_edges
+        raise TypeError("Comparison must be done with another object of Path2")
 
     @property
     def first_edge(self):
@@ -107,6 +116,67 @@ class Path2:
         indices_of_edges_to_remove.sort(reverse=True)
         for index in indices_of_edges_to_remove:
             del self.list_of_edges[index]
+
+    def offset_path(self, vector):
+        if is_vector2(vector):
+            for edge in self.list_of_edges:
+                edge.offset_edge(vector)
+        else:
+            raise TypeError("Path offset must be done with a vector")
+
+    def rotate_around(self, rotation_vector, rotation_angle):
+        if is_vector2(rotation_vector):
+            reversed_rotation_vector = rotation_vector.reverse()
+            self.offset_path(reversed_rotation_vector)
+            self.rotate(rotation_angle)
+            self.offset_path(rotation_vector)
+
+    def rotate(self, rotation_angle):
+        rotation_angle_in_radians = degrees_to_radians(rotation_angle)
+
+        rotation_matrix = Matrix3()
+        rotation_matrix.make_rotation(rotation_angle_in_radians)
+
+        for edge in self.list_of_edges:
+            edge.p1 = rotation_matrix * edge.p1
+            edge.p2 = rotation_matrix * edge.p2
+
+    def close_path(self):
+        if self.path_length > 1 and not self.is_closed:
+            self.list_of_edges.append(Edge2(self.list_of_edges[-1].p2, self.list_of_edges[0].p1))
+
+    def is_circle(self):
+        return self.path_length == 1 and self.list_of_edges[0].is_circle()
+
+    def get_enclosed_area(self):
+        if not self.is_closed or self.path_length == 0:
+            raise TypeError("The path must be closed and have more than one edge")
+
+        path = deepcopy(self)
+
+        path.remove_duplicate_edges()
+
+    # to be reviewed with Simon and Tom
+    def remove_arcs(self):
+        index = 0
+        list_of_edges_to_remove = []
+        for edge in self.list_of_edges:
+            if edge.is_arc:
+                list_of_edges_to_remove.append((index, edge.arc_to_points()))
+                edge.radius = 0
+                edge.clockwise = False
+                edge.large = False
+
+    def is_quadrilateral(self):
+        if self.path_length != 4 or not self.is_closed or not self.is_continuous:
+            return False
+
+        for edge in self.list_of_edges:
+            if edge.is_arc():
+                return False
+
+        return True
+
 
 def is_path2(input_variable):
     return isinstance(input_variable, Path2)
