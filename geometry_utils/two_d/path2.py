@@ -1,6 +1,6 @@
 from copy import deepcopy
 
-from geometry_utils.maths_utility import degrees_to_radians
+from geometry_utils.maths_utility import degrees_to_radians, is_int_or_float
 from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
 from geometry_utils.two_d.edge2 import Edge2
 from geometry_utils.two_d.matrix3 import Matrix3
@@ -39,13 +39,13 @@ class Path2:
         raise TypeError("Comparison must be done with another object of Path2")
 
     @property
-    def first_edge(self):
+    def get_first_edge(self):
         if self.path_length >= 1:
             return self.list_of_edges[0]
         raise TypeError("Can not find the first edge of an empty list of edges")
 
     @property
-    def last_edge(self):
+    def get_last_edge(self):
         if self.path_length >= 1:
             return self.list_of_edges[-1]
         raise TypeError("Can not find the last edge of an empty list of edges")
@@ -103,6 +103,9 @@ class Path2:
             path_bounds.include(edge.get_edge_bounds())
         return path_bounds
 
+    def to_tuple_list(self):
+        return [(edge.p1, edge.p2) for edge in self.list_of_edges]
+
     def remove_duplicate_edges(self):
         indices_of_edges_to_remove = []
         last_edge = None
@@ -117,6 +120,14 @@ class Path2:
         for index in indices_of_edges_to_remove:
             del self.list_of_edges[index]
 
+    def flip_xy(self):
+        for edge in self.list_of_edges:
+            edge.flip_xy()
+
+    def mirror_y(self):
+        for edge in self.list_of_edges:
+            edge.mirror_y()
+
     def offset_path(self, vector):
         if is_vector2(vector):
             for edge in self.list_of_edges:
@@ -125,7 +136,7 @@ class Path2:
             raise TypeError("Path offset must be done with a vector")
 
     def rotate_around(self, rotation_vector, rotation_angle):
-        if is_vector2(rotation_vector):
+        if is_vector2(rotation_vector) and is_int_or_float(rotation_angle):
             reversed_rotation_vector = rotation_vector.reverse()
             self.offset_path(reversed_rotation_vector)
             self.rotate(rotation_angle)
@@ -161,11 +172,18 @@ class Path2:
         index = 0
         list_of_edges_to_remove = []
         for edge in self.list_of_edges:
-            if edge.is_arc:
+            if edge.is_arc():
                 list_of_edges_to_remove.append((index, edge.arc_to_points()))
                 edge.radius = 0
                 edge.clockwise = False
                 edge.large = False
+            index += 1
+
+        index_offset = 0
+        for new_edge in list_of_edges_to_remove:
+            offset_location = new_edge[0] + index_offset
+            self.list_of_edges[offset_location] = new_edge[1]
+            index_offset += len(new_edge[1]) - 1
 
     def is_quadrilateral(self):
         if self.path_length != 4 or not self.is_closed or not self.is_continuous:
