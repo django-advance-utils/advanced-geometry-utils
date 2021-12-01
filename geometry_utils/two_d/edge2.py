@@ -1,6 +1,7 @@
-from math import atan2, acos, fabs
+import copy
+from math import atan2, acos, fabs, sin, cos, pi
 
-from geometry_utils.maths_utility import floats_are_close, double_epsilon, pi, double_pi, is_list, is_int_or_float
+from geometry_utils.maths_utility import floats_are_close, double_epsilon, PI, double_pi, is_list, is_int_or_float, CIRCLE_FACTORS, CIRCLE_DIVISIONS
 from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
 from geometry_utils.two_d.ellipse import Ellipse
 from geometry_utils.two_d.intersection import Intersection
@@ -85,8 +86,8 @@ class Edge2:
         if floats_are_close(self.radius, 0.0):
             return Point2((self.p1.x + self.p2.x) * 0.5, (self.p1.y + self.p2.y) * 0.5)
 
-        ellipse = Ellipse(start=self.p1, end=self.p2, major_radius=self.radius, minor_radius=self.radius,
-                          clockwise=self.clockwise, large_arc=self.large, angle=0.0)
+        ellipse = Ellipse(start = self.p1, end = self.p2, major_radius = self.radius, minor_radius = self.radius,
+                          clockwise = self.clockwise, large_arc = self.large, angle=0.0)
         return ellipse.centre
 
     def is_arc(self):
@@ -169,7 +170,7 @@ class Edge2:
 
                     point_to_arc_centre_point_angle = -point_to_arc_centre_point_angle
 
-                if point_to_arc_centre_point_angle > pi():
+                if point_to_arc_centre_point_angle > PI():
                     point_to_arc_centre_point_angle -= double_pi()
                 point_to_arc_centre_point_angle /= self.get_sweep()
 
@@ -204,7 +205,7 @@ class Edge2:
             return 0.0
 
         ellipse = Ellipse(start=self.p1, centre=self.arc_centre, end=self.p2, major_radius=self.radius,
-                          minor_radius=self.radius, clockwise=self.clockwise, angle=0.0)
+                          minor_radius=self.radius, clockwise=self.clockwise, angle=270.0)
         return ellipse.get_arc_sweep()
 
     def get_edge_bounds(self):
@@ -238,6 +239,19 @@ class Edge2:
         if is_vector2(vector):
             self.p1 += vector
             self.p2 += vector
+        raise TypeError("Edge offset is done by an object of Vector2")
+
+    def flip_xy(self):
+        self.p1.flip_xy()
+        self.p2.flip_xy()
+        if self.clockwise:
+            self.clockwise = False
+
+    def mirror_y(self):
+        self.p1.mirror_y()
+        self.p2.mirror_y()
+        if self.clockwise:
+            self.clockwise = False
 
     def is_circle(self):
         return self.is_arc() and self.p1 == self.p2
@@ -260,11 +274,11 @@ class Edge2:
         value = max(-1, min(value, 1))
 
         sweep_angle = acos(value)
-        if sweep_angle < pi() and self.large:
-            sweep_angle = (2 * pi()) - sweep_angle
+        if sweep_angle < PI() and self.large:
+            sweep_angle = (2 * PI()) - sweep_angle
 
         # Use the sweep angle to calculate how many points to produce on the arc
-        number_of_arc_points = int((fabs(sweep_angle) * 180.0) / (pi() * 2.0))
+        number_of_arc_points = int((fabs(sweep_angle) * 180.0) / (PI() * 2.0))
 
         if number_of_arc_points < 3:
             raise ValueError("Insufficient number of arc points generated")
@@ -279,20 +293,71 @@ class Edge2:
 
         list_of_arc_points = []
 
-        arc_point = Point2()
+
         for i in range(0, number_of_arc_points):
             sin_t = sin(t)
             cos_t = cos(t)
-
+            arc_point = Point2()
             arc_point.x = self.arc_centre.x + (self.radius * cos_t)
             arc_point.y = self.arc_centre.y + (self.radius * sin_t)
 
             list_of_arc_points.append(arc_point)
             t += t_inc
 
-        return list_of_arc_points
+        list_of_arc_edges = []
+        for previous_point, point in zip(list_of_arc_points,list_of_arc_points[1:]):
+            list_of_arc_edges.append(Edge2(previous_point, point))
 
+        return list_of_arc_edges
 
+    def get_arc_start_angle(self):
+        arc_start_angle = atan2(self.p1.y - self.arc_centre.y, self.p1.x - self.arc_centre.x)
+        if arc_start_angle < 0:
+            arc_start_angle += double_pi()
+        return arc_start_angle
+
+    def get_arc_end_angle(self):
+        arc_end_angle =  atan2(self.p2.y - self.arc_centre.y, self.p2.x - self.arc_centre.x)
+        if arc_end_angle < 0:
+            arc_end_angle += double_pi()
+        return arc_end_angle
+
+    def flatten_arc(self):
+        arc_start_angle = self.get_arc_start_angle()
+        arc_end_angle = self.get_arc_end_angle()
+
+        start_number, start_diff = divmod((arc_start_angle * CIRCLE_DIVISIONS / double_pi()) + 0.5, 1)
+        end_number, end_diff = divmod((arc_end_angle * CIRCLE_DIVISIONS / double_pi()) + 0.5, 1)
+        number = int(start_number)
+        parts = []
+        temp = Point2()
+
+        while number != end_number + 1:
+            y_factor, x_factor = CIRCLE_FACTORS[number]
+            if number == start_number:
+                temp = copy.deepcopy(self.p1)
+            elif number == end_number:
+                temp = copy.deepcopy(self.p2)
+            else:
+                if self.clockwise:
+                    temp.x = self.arc_centre.x - self.radius * x_factor
+                    temp.y = self.arc_centre.y - self.radius * y_factor
+                else:
+                    temp.x = self.arc_centre.x + self.radius * x_factor
+                    temp.y = self.arc_centre.y + self.radius * y_factor
+
+            if self.clockwise:
+                part_point = Point2(temp.x + self.p1.x * x_factor, temp.y + self.p1.y * y_factor)
+            else:
+                part_point = Point2(temp.x - self.p1.x * x_factor, temp.y - self.p1.y * y_factor)
+            parts.append(part_point)
+            number += 1
+            if number >= CIRCLE_DIVISIONS:
+                if number == end_number:
+                    break
+                number = 0
+
+        return parts
 
 def is_edge2(input_variable):
     return isinstance(input_variable, Edge2)
