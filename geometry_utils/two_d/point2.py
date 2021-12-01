@@ -152,6 +152,14 @@ class Point2:
             return (self - other_point).length()
         raise TypeError("Argument must be an object of Point2")
 
+    def flip_xy(self):
+        tmp = self.x
+        self.x = self.y
+        self.y = tmp
+
+    def mirror_y(self):
+        self.x = -self.x
+
 
 def is_point2(input_variable):
     return isinstance(input_variable, Point2)
