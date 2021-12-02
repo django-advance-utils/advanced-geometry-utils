@@ -323,6 +323,47 @@ class Edge2:
         return arc_end_angle
 
     def flatten_arc(self):
+        if self.clockwise:
+            points = self.flatten_arc_clockwise()
+        else:
+            points = self.flatten_arc_anticlockwise()
+        list_of_arc_edges = []
+        for previous_point, point in zip(points,points[1:]):
+            list_of_arc_edges.append(Edge2(previous_point, point))
+        return list_of_arc_edges
+
+    def flatten_arc_clockwise(self):
+        arc_start_angle = self.get_arc_start_angle()
+        arc_end_angle = self.get_arc_end_angle()
+
+        start_number, start_diff = divmod((arc_end_angle * CIRCLE_DIVISIONS / double_pi()) + 0.5, 1)
+        end_number, end_diff = divmod((arc_start_angle * CIRCLE_DIVISIONS / double_pi()) + 0.5, 1)
+        number = int(start_number)
+        parts = []
+        temp = Point2()
+
+
+        while number != end_number + 1:
+            x_factor, y_factor = CIRCLE_FACTORS[number]
+            if number == start_number:
+                temp = copy.deepcopy(self.p1)
+            elif number == end_number:
+                temp = copy.deepcopy(self.p2)
+            else:
+
+                temp.x = self.arc_centre.x - self.radius * x_factor
+                temp.y = self.arc_centre.y - self.radius * y_factor
+
+            part_point = Point2(temp.x - self.p1.x * x_factor, temp.y - self.p1.y * y_factor)
+            parts.append(part_point)
+            number += 1
+            if number >= CIRCLE_DIVISIONS:
+                if number == end_number:
+                    break
+                number = 0
+        return parts
+
+    def flatten_arc_anticlockwise(self):
         arc_start_angle = self.get_arc_start_angle()
         arc_end_angle = self.get_arc_end_angle()
 
@@ -339,24 +380,16 @@ class Edge2:
             elif number == end_number:
                 temp = copy.deepcopy(self.p2)
             else:
-                if self.clockwise:
-                    temp.x = self.arc_centre.x - self.radius * x_factor
-                    temp.y = self.arc_centre.y - self.radius * y_factor
-                else:
-                    temp.x = self.arc_centre.x + self.radius * x_factor
-                    temp.y = self.arc_centre.y + self.radius * y_factor
 
-            if self.clockwise:
-                part_point = Point2(temp.x + self.p1.x * x_factor, temp.y + self.p1.y * y_factor)
-            else:
-                part_point = Point2(temp.x - self.p1.x * x_factor, temp.y - self.p1.y * y_factor)
+                temp.x = self.arc_centre.x + self.radius * x_factor
+                temp.y = self.arc_centre.y + self.radius * y_factor
+            part_point = Point2(temp.x - self.p1.x * x_factor, temp.y - self.p1.y * y_factor)
             parts.append(part_point)
             number += 1
             if number >= CIRCLE_DIVISIONS:
                 if number == end_number:
                     break
                 number = 0
-
         return parts
 
 def is_edge2(input_variable):
