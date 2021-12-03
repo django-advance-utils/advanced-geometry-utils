@@ -23,7 +23,7 @@ class Intersection:
     end_of_line: bool
         check if the end of the edge has been reached
     do_collinear_test: bool
-        check if collinear test is to be done
+        check if collinear tests is to be done
 
     Methods:
     ________
