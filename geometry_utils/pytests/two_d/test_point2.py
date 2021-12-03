@@ -20,7 +20,7 @@ Point Addition Tests
 
 def test_point2_point2_addition_return_type(test_point2_1, test_point2_2):
     with pytest.raises(TypeError):
-        return isinstance(test_point2_1 + test_point2_2, Point2)
+        return test_point2_1 + test_point2_2
 
 
 def test_point2_vector2_addition_return_type(test_point2_1, test_vector2_1):
