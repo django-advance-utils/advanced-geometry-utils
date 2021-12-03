@@ -1,6 +1,6 @@
 from math import atan2, sin, cos, fabs, sqrt
 
-from geometry_utils.maths_utility import double_epsilon, double_pi, degrees_to_radians, are_ints_or_floats
+from geometry_utils.maths_utility import DOUBLE_EPSILON, TWO_PI, degrees_to_radians, are_ints_or_floats
 from geometry_utils.two_d.point2 import Point2, is_point2
 
 
