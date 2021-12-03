@@ -23,9 +23,9 @@ class Path2:
     Methods:
     ________
     is_closed(): bool
-        Returns the result of the test if the path is closed
+        Returns the result of the tests if the path is closed
     is_continuous(): bool
-        Returns the result of the test if the path is continuous
+        Returns the result of the tests if the path is continuous
     get_path_bounds(): AxisAlignedBox2()
         Returns 2D box containing the edges of the path
     """
@@ -173,7 +173,7 @@ class Path2:
         list_of_edges_to_remove = []
         for edge in self.list_of_edges:
             if edge.is_arc():
-                list_of_edges_to_remove.append((index, edge.arc_to_points()))
+                list_of_edges_to_remove.append((index, edge.flatten_arc()))
                 edge.radius = 0
                 edge.clockwise = False
                 edge.large = False
