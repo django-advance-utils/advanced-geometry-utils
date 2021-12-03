@@ -1,7 +1,7 @@
 PI = float(3.141592653589793238)
 
-HALF_PI = float(PI * (1/2))
-ONE_AND_HALF_PI = float(PI * (3/2))
+HALF_PI = float(PI * 1/2)
+ONE_AND_HALF_PI = float(PI * 3/2)
 TWO_PI = float(PI * 2)
 
 DEG_TO_RAD = PI / 180.0
