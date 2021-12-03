@@ -1,7 +1,7 @@
 import copy
 from math import atan2, acos, fabs, sin, cos, pi
 
-from geometry_utils.maths_utility import floats_are_close, double_epsilon, PI, double_pi, is_list, is_int_or_float, CIRCLE_FACTORS, CIRCLE_DIVISIONS, change_coordinates
+from geometry_utils.maths_utility import floats_are_close, DOUBLE_EPSILON, PI, TWO_PI, is_list, is_int_or_float, CIRCLE_FACTORS, CIRCLE_DIVISIONS
 from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
 from geometry_utils.two_d.ellipse import Ellipse
 from geometry_utils.two_d.intersection import Intersection
@@ -170,8 +170,8 @@ class Edge2:
 
                     point_to_arc_centre_point_angle = -point_to_arc_centre_point_angle
 
-                if point_to_arc_centre_point_angle > PI():
-                    point_to_arc_centre_point_angle -= double_pi()
+                if point_to_arc_centre_point_angle > PI:
+                    point_to_arc_centre_point_angle -= TWO_PI
                 point_to_arc_centre_point_angle /= self.get_sweep()
 
                 return point_to_arc_centre_point_angle + 0.5
@@ -236,6 +236,11 @@ class Edge2:
                 raise TypeError("Second argument must be a list")
 
     def offset_edge(self, vector):
+        """
+        Offsets the edge by the provided 2D vector
+
+        :param vector: the 2D vector by which the edge is to be offset by
+        """
         if is_vector2(vector):
             self.p1 += vector
             self.p2 += vector
@@ -268,12 +273,12 @@ class Edge2:
         arc_start_angle = self.get_arc_start_angle()
         arc_end_angle = self.get_arc_end_angle()
 
-        start_number, start_diff = divmod((arc_start_angle * CIRCLE_DIVISIONS / double_pi()) + 0.5, 1)
-        end_number, end_diff = divmod((arc_end_angle * CIRCLE_DIVISIONS / double_pi()) + 0.5, 1)
+        start_number, start_diff = divmod((arc_start_angle * CIRCLE_DIVISIONS / TWO_PI) + 0.5, 1)
+        end_number, end_diff = divmod((arc_end_angle * CIRCLE_DIVISIONS / TWO_PI) + 0.5, 1)
 
         number = int(start_number)
 
-        parts = []
+        points = []
         temp = Point2()
 
         while number != end_number + 1:
@@ -286,8 +291,8 @@ class Edge2:
                 temp.x = self.arc_centre.x + self.radius * x_factor
                 temp.y = self.arc_centre.y + self.radius * y_factor
             part_point = Point2(temp.x - self.p1.x * x_factor, temp.y - self.p1.y * y_factor)
-            parts.append(part_point)
-            if clockwise:
+            points.append(part_point)
+            if self.clockwise:
                 number -= 1
             else:
                 number += 1
@@ -296,12 +301,11 @@ class Edge2:
                 if number == end_number:
                     break
                 number = 0
-        return parts
 
         list_of_arc_edges = []
         for previous_point, point in zip(points,points[1:]):
             list_of_arc_edges.append(Edge2(previous_point, point))
-        return points
+        return list_of_arc_edges
 
 
 def is_edge2(input_variable):
