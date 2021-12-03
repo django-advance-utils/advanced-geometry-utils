@@ -1,7 +1,7 @@
 import copy
 from math import atan2, acos, fabs, sin, cos, pi
 
-from geometry_utils.maths_utility import floats_are_close, double_epsilon, PI, double_pi, is_list, is_int_or_float, CIRCLE_FACTORS, CIRCLE_DIVISIONS
+from geometry_utils.maths_utility import floats_are_close, double_epsilon, PI, double_pi, is_list, is_int_or_float, CIRCLE_FACTORS, CIRCLE_DIVISIONS, change_coordinates
 from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
 from geometry_utils.two_d.ellipse import Ellipse
 from geometry_utils.two_d.intersection import Intersection
@@ -256,92 +256,25 @@ class Edge2:
     def is_circle(self):
         return self.is_arc() and self.p1 == self.p2
 
-    def arc_to_points(self):
-        if self.p1 == self.p2 or not self.is_arc():
-            raise TypeError("The edge must be an arc")
-
-        # Calculate the sweep angle of the arc
-        v1 = (self.p1 - self.arc_centre).normalise()
-        v2 = (self.p2 - self.arc_centre).normalise()
-
-        dot_product = v1.dot(v2)
-
-        v1_length = v1.length()
-        v2_length = v2.length()
-
-        #  If this is the large arc we need the obtuse angle between the vectors
-        value = dot_product/(v1_length * v2_length)
-        value = max(-1, min(value, 1))
-
-        sweep_angle = acos(value)
-        if sweep_angle < PI() and self.large:
-            sweep_angle = (2 * PI()) - sweep_angle
-
-        # Use the sweep angle to calculate how many points to produce on the arc
-        number_of_arc_points = int((fabs(sweep_angle) * 180.0) / (PI() * 2.0))
-
-        if number_of_arc_points < 3:
-            raise ValueError("Insufficient number of arc points generated")
-
-        t = atan2(v1.x, v1.y)
-
-        # If the arc is clockwise, the sweep angle is negative
-        if self.clockwise:
-            sweep_angle *= -1
-
-        t_inc = sweep_angle / (number_of_arc_points - 1)
-
-        list_of_arc_points = []
-
-
-        for i in range(0, number_of_arc_points):
-            sin_t = sin(t)
-            cos_t = cos(t)
-            arc_point = Point2()
-            arc_point.x = self.arc_centre.x + (self.radius * cos_t)
-            arc_point.y = self.arc_centre.y + (self.radius * sin_t)
-
-            list_of_arc_points.append(arc_point)
-            t += t_inc
-
-        list_of_arc_edges = []
-        for previous_point, point in zip(list_of_arc_points,list_of_arc_points[1:]):
-            list_of_arc_edges.append(Edge2(previous_point, point))
-
-        return list_of_arc_edges
-
     def get_arc_start_angle(self):
-        arc_start_angle = atan2(self.p1.y - self.arc_centre.y, self.p1.x - self.arc_centre.x)
-        if arc_start_angle < 0:
-            arc_start_angle += double_pi()
-        return arc_start_angle
+        return atan2(self.p1.y - self.arc_centre.y, self.p1.x - self.arc_centre.x)
 
     def get_arc_end_angle(self):
-        arc_end_angle =  atan2(self.p2.y - self.arc_centre.y, self.p2.x - self.arc_centre.x)
-        if arc_end_angle < 0:
-            arc_end_angle += double_pi()
-        return arc_end_angle
+        return atan2(self.p2.y - self.arc_centre.y, self.p2.x - self.arc_centre.x)
+
+
 
     def flatten_arc(self):
-        if self.clockwise:
-            points = self.flatten_arc_clockwise()
-        else:
-            points = self.flatten_arc_anticlockwise()
-        list_of_arc_edges = []
-        for previous_point, point in zip(points,points[1:]):
-            list_of_arc_edges.append(Edge2(previous_point, point))
-        return list_of_arc_edges
-
-    def flatten_arc_clockwise(self):
         arc_start_angle = self.get_arc_start_angle()
         arc_end_angle = self.get_arc_end_angle()
 
-        start_number, start_diff = divmod((arc_end_angle * CIRCLE_DIVISIONS / double_pi()) + 0.5, 1)
-        end_number, end_diff = divmod((arc_start_angle * CIRCLE_DIVISIONS / double_pi()) + 0.5, 1)
+        start_number, start_diff = divmod((arc_start_angle * CIRCLE_DIVISIONS / double_pi()) + 0.5, 1)
+        end_number, end_diff = divmod((arc_end_angle * CIRCLE_DIVISIONS / double_pi()) + 0.5, 1)
+
         number = int(start_number)
+
         parts = []
         temp = Point2()
-
 
         while number != end_number + 1:
             x_factor, y_factor = CIRCLE_FACTORS[number]
@@ -350,47 +283,26 @@ class Edge2:
             elif number == end_number:
                 temp = copy.deepcopy(self.p2)
             else:
-
-                temp.x = self.arc_centre.x - self.radius * x_factor
-                temp.y = self.arc_centre.y - self.radius * y_factor
-
-            part_point = Point2(temp.x - self.p1.x * x_factor, temp.y - self.p1.y * y_factor)
-            parts.append(part_point)
-            number += 1
-            if number >= CIRCLE_DIVISIONS:
-                if number == end_number:
-                    break
-                number = 0
-        return parts
-
-    def flatten_arc_anticlockwise(self):
-        arc_start_angle = self.get_arc_start_angle()
-        arc_end_angle = self.get_arc_end_angle()
-
-        start_number, start_diff = divmod((arc_start_angle * CIRCLE_DIVISIONS / double_pi()) + 0.5, 1)
-        end_number, end_diff = divmod((arc_end_angle * CIRCLE_DIVISIONS / double_pi()) + 0.5, 1)
-        number = int(start_number)
-        parts = []
-        temp = Point2()
-
-        while number != end_number + 1:
-            y_factor, x_factor = CIRCLE_FACTORS[number]
-            if number == start_number:
-                temp = copy.deepcopy(self.p1)
-            elif number == end_number:
-                temp = copy.deepcopy(self.p2)
-            else:
-
                 temp.x = self.arc_centre.x + self.radius * x_factor
                 temp.y = self.arc_centre.y + self.radius * y_factor
             part_point = Point2(temp.x - self.p1.x * x_factor, temp.y - self.p1.y * y_factor)
             parts.append(part_point)
-            number += 1
+            if clockwise:
+                number -= 1
+            else:
+                number += 1
+
             if number >= CIRCLE_DIVISIONS:
                 if number == end_number:
                     break
                 number = 0
         return parts
+
+        list_of_arc_edges = []
+        for previous_point, point in zip(points,points[1:]):
+            list_of_arc_edges.append(Edge2(previous_point, point))
+        return points
+
 
 def is_edge2(input_variable):
     return isinstance(input_variable, Edge2)
