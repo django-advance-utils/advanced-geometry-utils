@@ -28,6 +28,7 @@ class Matrix3:
     make_rotation(int/float): Matrix3
         Creates a 3 x 3 rotation matrix
     """
+
     def __init__(self, vals=None):
         if vals is None:
             self.set_identity()
@@ -106,8 +107,8 @@ class Matrix3:
         """
         if is_vector2(vector):
             self.vals = [[1.0, 0.0, vector.x],
-                        [0.0, 1.0, vector.y],
-                        [0.0, 0.0, 1.0]]
+                         [0.0, 1.0, vector.y],
+                         [0.0, 0.0, 1.0]]
         else:
             raise TypeError("Translation must be with an object of Vector2")
 
@@ -126,8 +127,8 @@ class Matrix3:
             cos_theta = cos(theta)
             sin_theta = sin(theta)
             self.vals = [[cos_theta, -sin_theta, 0.0],
-                         [sin_theta,  cos_theta, 0.0],
-                         [0.0,        0.0,       1.0]]
+                         [sin_theta, cos_theta, 0.0],
+                         [0.0, 0.0, 1.0]]
         else:
             raise TypeError("Rotation must be with an int or float")
 
