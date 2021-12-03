@@ -3,6 +3,15 @@ import pytest
 from geometry_utils.two_d.point2 import Point2
 from geometry_utils.two_d.vector2 import Vector2
 
+'''
+Point Initialisation
+'''
+
+
+def test_point2_with_string_inputs():
+    with pytest.raises(TypeError):
+        return Point2("0", "0", "0")
+
 
 '''
 Point Addition Tests
