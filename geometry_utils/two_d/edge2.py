@@ -67,11 +67,21 @@ class Edge2:
             if not is_int_or_float(radius):
                 raise TypeError("Radius must be an int or float")
 
-    def __eq__(self, other):
+    def __eq__(self, other_edge):
+        """
+        Compares the equality of the edge and another 2D edge
+
+        :param   other_edge: the other 2D point
+        :type    other_edge: Edge2
+        :return: the edge equality
+        :rtype:  bool
+        :raises: TypeError: Wrong argument type
+        """
         if is_edge2(other):
-            return self.p1 == other.p1 and self.p2 == other.p2 and \
-                   self.radius == other.radius and self.large == other.large and \
-                   self.arc_centre == other.arc_centre and self.clockwise == other.clockwise
+            return self.p1 == other_edge.p1 and self.p2 == other_edge.p2 and \
+                   self.radius == other_edge.radius and self.large == other_edge.large and \
+                   self.arc_centre == other_edge.arc_centre and self.clockwise == other_edge.clockwise
+        raise TypeError("Comparison must be with another object of Edge2")
 
     def calculate_arc_centre(self):
         """
@@ -240,6 +250,7 @@ class Edge2:
         Offsets the edge by the provided 2D vector
 
         :param vector: the 2D vector by which the edge is to be offset by
+
         """
         if is_vector2(vector):
             self.p1 += vector
@@ -247,6 +258,10 @@ class Edge2:
         raise TypeError("Edge offset is done by an object of Vector2")
 
     def flip_xy(self):
+        """
+        Flips the x and y coordinates of the start and end points of the edge
+
+        """
         self.p1.flip_xy()
         self.p2.flip_xy()
         if self.clockwise:
@@ -267,8 +282,6 @@ class Edge2:
     def get_arc_end_angle(self):
         return atan2(self.p2.y - self.arc_centre.y, self.p2.x - self.arc_centre.x)
 
-
-
     def flatten_arc(self):
         arc_start_angle = self.get_arc_start_angle()
         arc_end_angle = self.get_arc_end_angle()
@@ -277,11 +290,15 @@ class Edge2:
         end_number, end_diff = divmod((arc_end_angle * CIRCLE_DIVISIONS / TWO_PI) + 0.5, 1)
 
         number = int(start_number)
+        if self.clockwise:
+            end_number -= 1
+        else:
+            end_number+= 1
 
         points = []
         temp = Point2()
 
-        while number != end_number + 1:
+        while number != end_number:
             x_factor, y_factor = CIRCLE_FACTORS[number]
             if number == start_number:
                 temp = copy.deepcopy(self.p1)
