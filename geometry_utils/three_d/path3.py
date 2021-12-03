@@ -19,9 +19,9 @@ class Path3:
     Methods:
     ________
     is_closed(): bool
-        Returns the result of the test if the path is closed
+        Returns the result of the tests if the path is closed
     is_continuous(): bool
-        Returns the result of the test if the path is continuous
+        Returns the result of the tests if the path is continuous
     get_path_bounds(): AxisAlignedBox3()
         Returns 3D box containing the edges of the path
     """
