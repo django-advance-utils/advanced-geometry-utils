@@ -17,5 +17,5 @@ def test_matrix3_make_rotation(test_matrix3_1):
 
 def test_matrix3_to_matrix3_multiplication(test_matrix3_1, test_matrix3_2):
     assert test_matrix3_1 * test_matrix3_2 == Matrix3([[1.0, 1.0, 1.0],
-                                                     [1.0, 1.0, 1.0],
-                                                     [1.0, 1.0, 1.0]])
+                                                       [1.0, 1.0, 1.0],
+                                                       [1.0, 1.0, 1.0]])
