@@ -77,7 +77,7 @@ class Edge2:
         :rtype:  bool
         :raises: TypeError: Wrong argument type
         """
-        if is_edge2(other):
+        if is_edge2(other_edge):
             return self.p1 == other_edge.p1 and self.p2 == other_edge.p2 and \
                    self.radius == other_edge.radius and self.large == other_edge.large and \
                    self.arc_centre == other_edge.arc_centre and self.clockwise == other_edge.clockwise
