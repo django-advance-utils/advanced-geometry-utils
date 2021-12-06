@@ -156,9 +156,11 @@ class Point2:
         tmp = self.x
         self.x = self.y
         self.y = tmp
+        return self
 
     def mirror_y(self):
         self.x = -self.x
+        return self
 
 
 def is_point2(input_variable):
