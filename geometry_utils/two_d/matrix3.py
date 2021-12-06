@@ -1,7 +1,6 @@
-import inspect
 from math import cos, sin
 
-from geometry_utils.maths_utility import is_list, is_int_or_float
+from geometry_utils.maths_utility import is_list, is_int_or_float, are_ints_or_floats
 from geometry_utils.two_d.point2 import is_point2, Point2
 from geometry_utils.two_d.vector2 import Vector2, is_vector2
 
@@ -39,7 +38,7 @@ class Matrix3:
                 raise TypeError("Matrix3 argument must be a list")
             if not len(vals) == 3 or not len(vals[0]) == 3:
                 raise AttributeError("Input Matrix must be 3 x 3")
-            if not is_int_or_float(vals[0][0]):
+            if not are_ints_or_floats(self.vals[0][0]) or are_ints_or_floats(self.vals[0][1]) or are_ints_or_floats(self.vals[0][2]):
                 raise TypeError("Matrix3 argument list must contain int or float")
 
     def set_identity(self):
@@ -91,7 +90,7 @@ class Matrix3:
         :rtype:  bool
         :raises: TypeError: Wrong argument type
         """
-        if is_matrix3(other) or inspect.isclass(other):  # revisit
+        if is_matrix3(other):
             return [[True if i == j else False for i in self.vals] for j in other.vals]
         raise TypeError("Comparison must be with another object of Matrix3")
 
@@ -109,6 +108,7 @@ class Matrix3:
             self.vals = [[1.0, 0.0, vector.x],
                          [0.0, 1.0, vector.y],
                          [0.0, 0.0, 1.0]]
+            return self
         else:
             raise TypeError("Translation must be with an object of Vector2")
 
@@ -129,6 +129,7 @@ class Matrix3:
             self.vals = [[cos_theta, -sin_theta, 0.0],
                          [sin_theta, cos_theta, 0.0],
                          [0.0, 0.0, 1.0]]
+            return self
         else:
             raise TypeError("Rotation must be with an int or float")
 
