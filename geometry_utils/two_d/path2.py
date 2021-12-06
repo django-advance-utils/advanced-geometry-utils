@@ -119,14 +119,17 @@ class Path2:
         indices_of_edges_to_remove.sort(reverse=True)
         for index in indices_of_edges_to_remove:
             del self.list_of_edges[index]
+        return self
 
     def flip_xy(self):
         for edge in self.list_of_edges:
             edge.flip_xy()
+        return self
 
     def mirror_y(self):
         for edge in self.list_of_edges:
             edge.mirror_y()
+        return self
 
     def offset_path(self, vector):
         if is_vector2(vector):
