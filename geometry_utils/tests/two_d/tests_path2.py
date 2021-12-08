@@ -27,8 +27,6 @@ test_path2_5.list_of_edges = [Edge2(Point2(1.0, 1.0), Point2(2.0, 2.0)),
                               Edge2(Point2(4.0, 4.0), Point2(5.0, 5.0))]
 
 
-
-
 class TestPath2(unittest.TestCase):
     def test_path2_path2_equality(self):
         self.assertEqual(test_path2_3, test_path2_5)

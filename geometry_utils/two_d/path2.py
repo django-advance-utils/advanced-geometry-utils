@@ -1,4 +1,4 @@
-from copy import deepcopy, copy
+from copy import deepcopy
 
 from geometry_utils.maths_utility import is_int_or_float
 from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
@@ -36,6 +36,7 @@ class Path2:
         if is_path2(other_path):
             if self.path_length != other_path.path_length:
                 return False
+
             for index, enum in enumerate(self.list_of_edges):
                 if self.list_of_edges[index] != other_path.list_of_edges[index]:
                     return False
