@@ -1,12 +1,13 @@
 import copy
 from math import atan2, acos, fabs, sin, cos, pi
 
-from geometry_utils.maths_utility import floats_are_close, DOUBLE_EPSILON, PI, TWO_PI, is_list, is_int_or_float, CIRCLE_FACTORS, CIRCLE_DIVISIONS
+from geometry_utils.maths_utility import floats_are_close, DOUBLE_EPSILON, PI, TWO_PI, is_list, is_int_or_float, CIRCLE_FACTORS, CIRCLE_DIVISIONS, degrees_to_radians
 from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
 from geometry_utils.two_d.ellipse import Ellipse
 from geometry_utils.two_d.intersection import Intersection
 from geometry_utils.two_d.point2 import Point2, is_point2
 from geometry_utils.two_d.vector2 import is_vector2
+from geometry_utils.two_d.matrix3 import Matrix3
 
 
 class Edge2:
@@ -83,6 +84,22 @@ class Edge2:
                    self.arc_centre == other_edge.arc_centre and self.clockwise == other_edge.clockwise
         raise TypeError("Comparison must be with another object of Edge2")
 
+    def __ne__(self, other_edge):
+        """
+        Compares the inequality of the edge and another 2D edge
+
+        :param   other_edge: the other 2D point
+        :type    other_edge: Edge2
+        :return: the edge inequality
+        :rtype:  bool
+        :raises: TypeError: Wrong argument type
+        """
+        if is_edge2(other_edge):
+            return self.p1 != other_edge.p1 or self.p2 != other_edge.p2 or \
+                   self.radius != other_edge.radius or self.large != other_edge.large or \
+                   self.arc_centre != other_edge.arc_centre or self.clockwise != other_edge.clockwise
+        raise TypeError("Comparison must be with another object of Edge2")
+
     def calculate_arc_centre(self):
         """
         Calculates the centre of the arc
@@ -107,7 +124,7 @@ class Edge2:
         :return:if the edge is an arc
         :rtype: bool
         """
-        return self.radius > double_epsilon()
+        return self.radius > DOUBLE_EPSILON
 
     def point_parametric(self, s):
         """
@@ -255,7 +272,9 @@ class Edge2:
         if is_vector2(vector):
             self.p1 += vector
             self.p2 += vector
-        raise TypeError("Edge offset is done by an object of Vector2")
+            self.arc_centre = self.calculate_arc_centre()
+        else:
+            raise TypeError("Edge offset is done by an object of Vector2")
 
     def flip_xy(self):
         """
@@ -264,14 +283,17 @@ class Edge2:
         """
         self.p1.flip_xy()
         self.p2.flip_xy()
+        self.arc_centre = self.calculate_arc_centre()
         if self.clockwise:
             self.clockwise = False
 
     def mirror_y(self):
         self.p1.mirror_y()
         self.p2.mirror_y()
+        self.arc_centre = self.calculate_arc_centre()
         if self.clockwise:
             self.clockwise = False
+        return self
 
     def is_circle(self):
         return self.is_arc() and self.p1 == self.p2
@@ -323,6 +345,19 @@ class Edge2:
         for previous_point, point in zip(points,points[1:]):
             list_of_arc_edges.append(Edge2(previous_point, point))
         return list_of_arc_edges
+
+    def rotate(self, rotation_angle):
+        rotation_angle_in_radians = degrees_to_radians(rotation_angle)
+
+        rotation_matrix = Matrix3()
+        rotation_matrix.make_rotation(rotation_angle_in_radians)
+
+        self.p1 = rotation_matrix * self.p1
+        self.p2 = rotation_matrix * self.p2
+
+        self.arc_centre = self.calculate_arc_centre()
+
+        return self
 
 
 def is_edge2(input_variable):
