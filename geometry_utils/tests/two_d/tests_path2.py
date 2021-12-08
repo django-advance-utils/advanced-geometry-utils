@@ -4,6 +4,7 @@ from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
 from geometry_utils.two_d.edge2 import Edge2
 from geometry_utils.two_d.path2 import Path2
 from geometry_utils.two_d.point2 import Point2
+from geometry_utils.two_d.vector2 import Vector2
 
 test_path2_1 = Path2()
 test_path2_1.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 1.0)),
@@ -20,16 +21,17 @@ test_path2_3.list_of_edges = [Edge2(Point2(1.0, 1.0), Point2(2.0, 2.0)),
                               Edge2(Point2(2.0, 2.0), Point2(3.0, 3.0)),
                               Edge2(Point2(4.0, 4.0), Point2(5.0, 5.0))]
 
-test_path2_4 = Path2()
-test_path2_4.list_of_edges = [Edge2(Point2(1.0, 1.0), Point2(2.0, 2.0)),
-                              Edge2(Point2(2.0, 2.0), Point2(3.0, 3.0)),
+test_path2_5 = Path2()
+test_path2_5.list_of_edges = [Edge2(Point2(1.0, 1.0), Point2(2.0, 2.0)),
                               Edge2(Point2(2.0, 2.0), Point2(3.0, 3.0)),
                               Edge2(Point2(4.0, 4.0), Point2(5.0, 5.0))]
 
 
+
+
 class TestPath2(unittest.TestCase):
     def test_path2_path2_equality(self):
-        self.assertEqual(Path2(), Path2())
+        self.assertEqual(test_path2_3, test_path2_5)
 
     def test_path2_float_equality(self):
         with self.assertRaises(TypeError):
@@ -62,20 +64,85 @@ class TestPath2(unittest.TestCase):
 
     def test_path2_to_tuple_list(self):
         test_path_tuple = test_path2_1.to_tuple_list()
-        self.assert_(test_path_tuple, ((Point2(0.0, 0.0), Point2(1.0, 1.0)),
-                                       (Point2(1.0, 1.0), Point2(2.0, 2.0)),
-                                       (Point2(2.0, 2.0), Point2(0.0, 0.0))))
+        self.assertEqual(test_path_tuple, [(Point2(0.0, 0.0), Point2(1.0, 1.0)),
+                                           (Point2(1.0, 1.0), Point2(2.0, 2.0)),
+                                           (Point2(2.0, 2.0), Point2(0.0, 0.0))])
 
     def test_path2_remove_duplicate_edges(self):
-        self.assert_(test_path2_4.remove_duplicate_edges(), test_path2_3)
+        test_path2_4 = Path2()
+        test_path2_4.list_of_edges = [Edge2(Point2(1.0, 1.0), Point2(2.0, 2.0)),
+                                      Edge2(Point2(2.0, 2.0), Point2(3.0, 3.0)),
+                                      Edge2(Point2(2.0, 2.0), Point2(3.0, 3.0)),
+                                      Edge2(Point2(4.0, 4.0), Point2(5.0, 5.0))]
+        self.assert_(test_path2_4.remove_duplicate_edges() == test_path2_3)
 
     def test_path2_flip_xy(self):
-        self.assert_(test_path2_1.flip_xy(), test_path2_1)
+        self.assert_(test_path2_1.flip_xy() == test_path2_1)
 
     def test_path2_mirror_y(self):
-        self.assert_(test_path2_4.mirror_y(), [Edge2(Point2(-1.0, 1.0), Point2(-2.0, 2.0)),
-                                               Edge2(Point2(-2.0, 2.0), Point2(-3.0, 3.0)),
-                                               Edge2(Point2(-4.0, 4.0), Point2(-5.0, 5.0))])
+        test_path2_4 = Path2()
+        test_path2_4.list_of_edges = [Edge2(Point2(1.0, 1.0), Point2(2.0, 2.0)),
+                                      Edge2(Point2(2.0, 2.0), Point2(3.0, 3.0))]
+        mirrored_path = Path2()
+        mirrored_path.list_of_edges = [Edge2(Point2(-1.0, 1.0), Point2(-2.0, 2.0)),
+                                       Edge2(Point2(-2.0, 2.0), Point2(-3.0, 3.0))]
+        test_path2_4.mirror_y()
+        self.assertEqual(test_path2_4, mirrored_path)
+
+    def test_path2_offset_path(self):
+        offset_vector = Vector2(1.0, 1.0)
+        offset_path = Path2()
+        offset_path.list_of_edges = [Edge2(Point2(2.0, 2.0), Point2(3.0, 3.0)),
+                                     Edge2(Point2(3.0, 3.0), Point2(4.0, 4.0)),
+                                     Edge2(Point2(4.0, 4.0), Point2(5.0, 5.0))]
+        self.assertEqual(test_path2_2.offset_path(offset_vector), offset_path)
+
+    def test_path2_rotate_around_vector_and_angle(self):
+        test_path_to_rotate = Path2()
+        test_path_to_rotate.list_of_edges = [Edge2(Point2(1.0, 1.0), Point2(2.0, 2.0)),
+                                             Edge2(Point2(2.0, 2.0), Point2(3.0, 3.0))]
+        rotation_vector = Vector2(0.0, 0.0)
+
+        test_path_to_rotate.rotate_around(rotation_vector, 90.0)
+
+        rotated_path = Path2()
+        rotated_path.list_of_edges = [Edge2(Point2(-1.0, 1.0), Point2(-2.0, 2.0)),
+                                      Edge2(Point2(-2.0, 2.0), Point2(-3.0, 3.0))]
+
+        self.assertEqual(test_path_to_rotate, rotated_path)
+    
+    def test_path2_close_path(self):
+        test_path_to_close = Path2()
+        test_path_to_close.list_of_edges = [Edge2(Point2(1.0, 1.0), Point2(2.0, 2.0)),
+                                            Edge2(Point2(2.0, 2.0), Point2(3.0, 3.0))]
+        test_path_to_close.close_path()
+
+        closed_path = Path2()
+        closed_path.list_of_edges = [Edge2(Point2(1.0, 1.0), Point2(2.0, 2.0)),
+                                     Edge2(Point2(2.0, 2.0), Point2(3.0, 3.0)),
+                                     Edge2(Point2(3.0, 3.0), Point2(1.0, 1.0))]
+
+        self.assertEqual(test_path_to_close, closed_path)
+
+    def test_path2_is_circle(self):
+        test_circle_path = Path2()
+        test_circle_path.list_of_edges = [Edge2(Point2(1.0, 1.0), Point2(1.0, 1.0), 1.0)]
+
+        self.assert_(test_circle_path.is_circle())
+
+    def test_path2_get_enclosed_area(self):
+        test_path2_4 = Path2()
+        test_path2_4.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 1.0)),
+                                      Edge2(Point2(1.0, 1.0), Point2(2.0, 2.0)),
+                                      Edge2(Point2(1.0, 1.0), Point2(2.0, 2.0)),
+                                      Edge2(Point2(2.0, 2.0), Point2(0.0, 0.0))]
+        self.assert_(test_path2_4.get_enclosed_area() == test_path2_1)
+
+    def test_path2_remove_arcs(self):
+        test_path = Path2()
+        test_path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 1.0)),
+                                   Edge2(Point2(1.0, 1.0), Point2(2.0, 2.0), 1.5, True)]
+        test_path.remove_arcs()
 
 
 if __name__ == '__main__':
