@@ -1,3 +1,4 @@
+from geometry_utils import maths_utility
 from geometry_utils.maths_utility import are_ints_or_floats
 from geometry_utils.two_d.vector2 import Vector2, is_vector2
 
@@ -98,7 +99,8 @@ class Point2:
         :raises: TypeError: Wrong argument type
         """
         if is_point2(other_point):
-            return self.x != other_point.x or self.y != other_point.y
+            return not maths_utility.floats_are_close(self.x, other_point.x) or \
+                   not maths_utility.floats_are_close(self.y, other_point.y)
         raise TypeError("Comparison must be done with another object of Point2")
 
     def __le__(self, other_point):
