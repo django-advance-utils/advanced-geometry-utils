@@ -33,13 +33,28 @@ class TestPath2(unittest.TestCase):
 
     def test_path2_float_equality(self):
         with self.assertRaises(TypeError):
-            self.assertEqual(Path2(), 9.0)
+            self.assertEqual(test_path2_1, 9.0)
+
+    def test_path2_equality_with_unequal_number_of_edges(self):
+        test_path = Path2()
+        with self.assertRaises(IndexError):
+            self.assertEqual(test_path2_1, test_path)
 
     def test_path2_get_first_edge(self):
         self.assertEqual(test_path2_1.get_first_edge, Edge2(Point2(), Point2(1.0, 1.0)))
 
+    def test_path2_get_first_edge_from_empty_list_of_edges(self):
+        test_path = Path2()
+        with self.assertRaises(IndexError):
+            self.assert_(test_path.get_first_edge)
+
     def test_path2_get_last_edge(self):
         self.assertEqual(test_path2_1.get_last_edge, Edge2(Point2(2.0, 2.0), Point2(0.0, 0.0)))
+
+    def test_path2_get_last_edge_from_empty_list_of_edges(self):
+        test_path = Path2()
+        with self.assertRaises(IndexError):
+            self.assert_(test_path.get_last_edge)
 
     def test_path2_path_length(self):
         self.assertEqual(test_path2_1.path_length, 3)
@@ -108,7 +123,7 @@ class TestPath2(unittest.TestCase):
                                       Edge2(Point2(-2.0, 2.0), Point2(-3.0, 3.0))]
 
         self.assertEqual(test_path_to_rotate, rotated_path)
-    
+
     def test_path2_close_path(self):
         test_path_to_close = Path2()
         test_path_to_close.list_of_edges = [Edge2(Point2(1.0, 1.0), Point2(2.0, 2.0)),
@@ -137,10 +152,10 @@ class TestPath2(unittest.TestCase):
         self.assert_(test_path2_4.get_enclosed_area() == test_path2_1)
 
     def test_path2_remove_arcs(self):
-        test_path = Path2()
-        test_path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 1.0)),
-                                   Edge2(Point2(1.0, 1.0), Point2(2.0, 2.0), 1.5, True)]
-        test_path.remove_arcs()
+        test_path_to_remove_arcs = Path2()
+        test_path_to_remove_arcs.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 1.0)),
+                                                  Edge2(Point2(1.0, 1.0), Point2(2.0, 2.0), 1.5, True)]
+        test_path_to_remove_arcs.remove_arcs()
 
 
 if __name__ == '__main__':
