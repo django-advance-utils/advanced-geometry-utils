@@ -85,7 +85,8 @@ class Point2:
         :raises: TypeError: Wrong argument type
         """
         if is_point2(other_point):
-            return self.x == other_point.x and self.y == other_point.y
+            return maths_utility.floats_are_close(self.x, other_point.x) or \
+                   maths_utility.floats_are_close(self.y, other_point.y)
         raise TypeError("Comparison must be done with another object of Point2")
 
     def __ne__(self, other_point):
