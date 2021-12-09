@@ -153,9 +153,12 @@ class TestPath2(unittest.TestCase):
 
     def test_path2_remove_arcs(self):
         test_path_to_remove_arcs = Path2()
-        test_path_to_remove_arcs.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 1.0)),
-                                                  Edge2(Point2(1.0, 1.0), Point2(2.0, 2.0), 1.5, True)]
+        test_path_to_remove_arcs.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 1.0), 1.0, True),
+                                                  Edge2(Point2(1.0, 1.0), Point2(2.0, 2.0))]
         test_path_to_remove_arcs.remove_arcs()
+
+        self.assertEqual(test_path_to_remove_arcs.list_of_edges[0].p1, Point2(0.0, 0.0))
+        self.assertEqual(test_path_to_remove_arcs.list_of_edges[-2].p2, Point2(1.0, 1.0))
 
 
 if __name__ == '__main__':

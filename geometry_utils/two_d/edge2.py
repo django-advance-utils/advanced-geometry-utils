@@ -315,7 +315,7 @@ class Edge2:
         if self.clockwise:
             end_number -= 1
         else:
-            end_number+= 1
+            end_number += 1
 
         points = []
         temp = Point2()
