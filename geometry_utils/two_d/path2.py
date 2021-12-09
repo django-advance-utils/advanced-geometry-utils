@@ -33,27 +33,28 @@ class Path2:
         self.list_of_edges = []
 
     def __eq__(self, other_path):
-        if is_path2(other_path):
-            if self.path_length != other_path.path_length:
-                return False
-
-            for index, enum in enumerate(self.list_of_edges):
+        if is_path2(other_path) and self.path_length == other_path.path_length:
+            for index in range(self.path_length):
                 if self.list_of_edges[index] != other_path.list_of_edges[index]:
                     return False
             return True
-        raise TypeError("Comparison must be done with another object of Path2")
+        else:
+            if not is_path2(other_path):
+                raise TypeError("Comparison must be done with another object of Path2")
+            if self.path_length != other_path.path_length:
+                raise IndexError("Comparison must be done with another path of equal number of edges")
 
     @property
     def get_first_edge(self):
         if self.path_length >= 1:
             return self.list_of_edges[0]
-        raise TypeError("Can not find the first edge of an empty list of edges")
+        raise IndexError("Can not find the first edge of an empty list of edges")
 
     @property
     def get_last_edge(self):
         if self.path_length >= 1:
             return self.list_of_edges[-1]
-        raise TypeError("Can not find the last edge of an empty list of edges")
+        raise IndexError("Can not find the last edge of an empty list of edges")
 
     @property
     def path_length(self):
@@ -73,9 +74,8 @@ class Path2:
         :return: closeness of the path
         :rtype:  bool
         """
-        if self.path_length < 3:
-            return False
-        return self.list_of_edges[-1].p2 == self.list_of_edges[0].p1 and self.is_continuous
+        if self.path_length > 2:
+            return self.list_of_edges[-1].p2 == self.list_of_edges[0].p1 and self.is_continuous
 
     @property
     def is_continuous(self):
