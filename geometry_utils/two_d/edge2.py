@@ -374,7 +374,7 @@ class Edge2:
         numerator = self.p2.y - self.p1.y
         denominator = self.p2.x - self.p1.x
         if denominator == 0:
-            return "vertical"
+            return "Vertical"
         return numerator / denominator
 
     def edge_length(self):
