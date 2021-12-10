@@ -206,6 +206,15 @@ class Path2:
 
         return True
 
+    def is_rectangular(self):
+        if not self.is_quadrilateral():
+            return False
+        t = self.list_of_edges[2].angle_to_edge(self.list_of_edges[3])
+        return (self.list_of_edges[0].is_perpendicular_to(self.list_of_edges[1]) and
+                self.list_of_edges[1].is_perpendicular_to(self.list_of_edges[2]) and
+                self.list_of_edges[2].is_perpendicular_to(self.list_of_edges[3]) and
+                self.list_of_edges[3].is_perpendicular_to(self.list_of_edges[0]))
+
 
 def get_convex_hull(list_of_points):
     if is_list_of_points(list_of_points):

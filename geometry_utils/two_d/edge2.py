@@ -1,7 +1,8 @@
 import copy
+import math
 from math import atan2, acos, fabs, sin, cos, pi
 
-from geometry_utils.maths_utility import floats_are_close, DOUBLE_EPSILON, PI, TWO_PI, is_list, is_int_or_float, CIRCLE_FACTORS, CIRCLE_DIVISIONS, degrees_to_radians
+from geometry_utils.maths_utility import floats_are_close, DOUBLE_EPSILON, PI, TWO_PI, is_list, is_int_or_float, CIRCLE_FACTORS, CIRCLE_DIVISIONS, degrees_to_radians, HALF_PI, ONE_AND_HALF_PI
 from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
 from geometry_utils.two_d.ellipse import Ellipse
 from geometry_utils.two_d.intersection import Intersection
@@ -358,6 +359,37 @@ class Edge2:
         self.arc_centre = self.calculate_arc_centre()
 
         return self
+
+    def is_parallel_to(self, other_edge):
+        if is_edge2(other_edge):
+            return self.get_slope() == other_edge.get_slope()
+
+    def is_perpendicular_to(self, other_edge):
+        if is_edge2(other_edge):
+            return self.angle_to_edge(other_edge) == HALF_PI or self.angle_to_edge(other_edge) == -ONE_AND_HALF_PI
+
+    def get_slope(self):
+        if self.is_arc():
+            raise TypeError("Slope can not be derived for an arc")
+        numerator = self.p2.y - self.p1.y
+        denominator = self.p2.x - self.p1.x
+        if denominator == 0:
+            return "vertical"
+        return numerator / denominator
+
+    def edge_length(self):
+        if self.is_arc():
+            raise TypeError("Length can not be derived for an arc")
+        return self.p1.distance_to(self.p2)
+
+    def angle_to_x_axis(self):
+        if self.is_arc():
+            raise TypeError("X-axis angle can not be derived for an arc")
+        return math.atan2(self.p2.y - self.p1.y, self.p2.x - self.p1.x)
+
+    def angle_to_edge(self, other_edge):
+        if is_edge2(other_edge):
+            return self.angle_to_x_axis() - other_edge.angle_to_x_axis()
 
 
 def is_edge2(input_variable):
