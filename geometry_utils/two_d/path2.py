@@ -4,7 +4,7 @@ from geometry_utils.maths_utility import is_int_or_float
 from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
 from geometry_utils.two_d.edge2 import Edge2
 from geometry_utils.two_d.vector2 import is_vector2
-from geometry_utils.two_d.point2 import is_list_of_points, points_orientation, get_leftmost_point_index
+from geometry_utils.two_d.point2 import is_list_of_points, points_orientation, get_leftmost_point_index, Point2
 
 
 class Path2:
@@ -214,6 +214,22 @@ class Path2:
                 self.list_of_edges[1].is_perpendicular_to(self.list_of_edges[2]) and
                 self.list_of_edges[2].is_perpendicular_to(self.list_of_edges[3]) and
                 self.list_of_edges[3].is_perpendicular_to(self.list_of_edges[0]))
+
+    def convert_circle_to_points(self):
+        if self.is_circle():
+            circle_centre = Point2()
+            circle_centre.x = self.list_of_edges[0].arc_centre.x
+            circle_centre.y = self.list_of_edges[0].arc_centre.y
+            circle_radius = self.list_of_edges[0].radius
+
+            circle_list_of_points = [
+                Point2(circle_centre.x - circle_radius, circle_centre.y),
+                Point2(circle_centre.x, circle_centre.y + circle_radius),
+                Point2(circle_centre.x + circle_radius, circle_centre.y),
+                Point2(circle_centre.x, circle_centre.y - circle_radius)
+            ]
+
+            return circle_list_of_points
 
 
 def get_convex_hull(list_of_points):
