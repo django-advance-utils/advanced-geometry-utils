@@ -172,7 +172,7 @@ def get_leftmost_point_index(list_of_points):
         minimum_point_index = 0
         number_of_points = len(list_of_points)
         for index in range(1, number_of_points):
-            if list_of_points[index].x < list_of_points[index]:
+            if list_of_points[index].x < list_of_points[minimum_point_index]:
                 minimum_point_index = index
             elif list_of_points[index].x == list_of_points[minimum_point_index].x:
                 if list_of_points[index].y > list_of_points[minimum_point_index].y:
