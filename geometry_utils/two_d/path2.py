@@ -4,6 +4,7 @@ from geometry_utils.maths_utility import is_int_or_float
 from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
 from geometry_utils.two_d.edge2 import Edge2
 from geometry_utils.two_d.vector2 import is_vector2
+from geometry_utils.two_d.point2 import is_list_of_points, points_orientation, get_leftmost_point_index
 
 
 class Path2:
@@ -204,6 +205,40 @@ class Path2:
                 return False
 
         return True
+
+
+def get_convex_hull(list_of_points):
+    if is_list_of_points(list_of_points):
+
+        number_of_points = len(list_of_points)
+
+        if number_of_points < 3:
+            raise IndexError("There must be at least three points")
+
+        leftmost_point_index = get_leftmost_point_index(list_of_points)
+        print(list_of_points[leftmost_point_index].x, list_of_points[leftmost_point_index].y)
+
+        list_of_convex_hull_points = []
+
+        first_point_index = leftmost_point_index
+
+        while True:
+            list_of_convex_hull_points.append(list_of_points[first_point_index])
+            second_point_index = (first_point_index + 1) % number_of_points
+
+            for i in range(number_of_points):
+                if points_orientation(list_of_points[first_point_index], list_of_points[i],
+                                      list_of_points[second_point_index]) == "Counterclockwise":
+                    second_point_index = i
+            first_point_index = second_point_index
+            if first_point_index == leftmost_point_index:
+                break
+
+        convex_hull = Path2()
+        for previous_point, point in zip(list_of_convex_hull_points, list_of_convex_hull_points[1:]):
+            convex_hull.list_of_edges.append(Edge2(previous_point, point))
+        convex_hull.close_path()
+        return convex_hull
 
 
 def is_path2(input_variable):
