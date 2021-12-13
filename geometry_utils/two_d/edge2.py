@@ -391,6 +391,9 @@ class Edge2:
         if is_edge2(other_edge):
             return self.angle_to_x_axis() - other_edge.angle_to_x_axis()
 
+    def minimum_y(self):
+        return min(self.p1.y, self.p2.y)
+
 
 def is_edge2(input_variable):
     return isinstance(input_variable, Edge2)
