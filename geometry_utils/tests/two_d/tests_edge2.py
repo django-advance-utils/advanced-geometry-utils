@@ -10,6 +10,7 @@ from geometry_utils.two_d.vector2 import Vector2
 test_edge2_1 = Edge2()
 test_edge2_2 = Edge2(Point2(0.0, 0.0), Point2(2.0, 2.0))
 test_edge2_3 = Edge2(Point2(2.0, 2.0), Point2(4.0, 4.0))
+test_edge2_4 = Edge2(Point2(0.0, 0.0), Point2(2.0, 2.0))
 
 
 radius = 600.0
@@ -20,6 +21,20 @@ for i in range(360):
 
 
 class TestEdge2(unittest.TestCase):
+    def test_edge2_to_edge2_equality(self):
+        self.assertEqual(test_edge2_2, test_edge2_4)
+
+    def test_edge2_to_float_equality(self):
+        with self.assertRaises(TypeError):
+            return test_edge2_1 == 9.0
+
+    def test_edge2_to_edge2_inequality(self):
+        self.assertNotEqual(test_edge2_2, test_edge2_1)
+
+    def test_edge2_to_float_inequality(self):
+        with self.assertRaises(TypeError):
+            return test_edge2_1 != 9.0
+
     def test_edge2_point_parametric(self):
         assert test_edge2_2.point_parametric(0.0) == test_edge2_2.p1
         assert test_edge2_2.point_parametric(1.0) == test_edge2_2.p2
