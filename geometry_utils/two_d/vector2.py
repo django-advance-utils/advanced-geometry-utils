@@ -218,7 +218,7 @@ class Vector2:
         :return:the inverse vector
         :rtype: Vector2
         """
-        return Vector2(-self.x, -self.y)
+        return Vector2(self.y, self.x)
 
     def rotate(self, origin, theta):
         """
