@@ -64,15 +64,11 @@ class TestVector2(unittest.TestCase):
 
     # Vector2 Equality Tests
     def test_vector2_vector2_equality(self):
-        self.assertEqual(test_vector2_1, test_vector2_1)
         self.assertEqual(test_vector2_1, test_vector2_3)
 
     def test_vector2_float_equality(self):
         with self.assertRaises(TypeError):
             self.assertEqual(test_vector2_1, 9.0)
-
-    def test_vector2_vector2_equality_return_type(self):
-        self.assertIsInstance(test_vector2_1 == test_vector2_3, bool)
 
     # Vector2 Inequality Tests
     def test_vector2_vector2_inequality(self):
@@ -83,17 +79,12 @@ class TestVector2(unittest.TestCase):
         with self.assertRaises(TypeError):
             self.assertNotEqual(test_vector2_1, 9.0)
 
-    def test_vector2_vector2_inequality_return_type(self):
-        self.assertIsInstance(test_vector2_1 != test_vector2_3, bool)
-
     # Vector2 Dot Tests
     def test_vector2_dot_vector2_return_type(self):
         self.assertIsInstance(test_vector2_1.dot(test_vector2_2), float)
-        self.assertIsInstance(test_vector2_2.dot(test_vector2_1), float)
 
     def test_vector2_dot_vector2_arithmetic(self):
         self.assertEqual(test_vector2_1.dot(test_vector2_2), 1.0)
-        self.assertEqual(test_vector2_2.dot(test_vector2_1), 1.0)
 
     def test_vector2_dot_float(self):
         with self.assertRaises(TypeError):
@@ -102,11 +93,9 @@ class TestVector2(unittest.TestCase):
     # Vector2 Cross Tests
     def test_vector2_cross_vector2_return_type(self):
         self.assertIsInstance(test_vector2_1.cross(test_vector2_2), Vector2)
-        self.assertIsInstance(test_vector2_2.cross(test_vector2_1), Vector2)
 
     def test_vector2_cross_vector2_arithmetic(self):
         self.assertEqual(test_vector2_1.cross(test_vector2_2), Vector2(-1.0, 1.0))
-        self.assertEqual(test_vector2_2.cross(test_vector2_1), Vector2(1.0, -1.0))
 
     def test_vector2_cross_float(self):
         with self.assertRaises(TypeError):
@@ -151,6 +140,20 @@ class TestVector2(unittest.TestCase):
     def test_vector2_rotate_with_Vector2_theta(self):
         with self.assertRaises(TypeError):
             return test_vector2_2.rotate(test_vector2_4, test_vector2_4)
+
+    # Vector Invert Tests
+    def test_vector2_invert_return_type(self):
+        self.assertIsInstance(test_vector2_2.invert(), Vector2)
+
+    def test_vector_invert_arithmetic(self):
+        self.assertEqual(test_vector2_2.invert(), Vector2(0.0, 1.0))
+
+    # Vector Get_Perpendicular Tests
+    def test_vector2_get_perpendicular_return_type(self):
+        self.assertIsInstance(test_vector2_2.get_perpendicular(), Vector2)
+
+    def test_vector_get_perpendicular_arithmetic(self):
+        self.assertEqual(test_vector2_1.get_perpendicular(), Vector2(-1.0, 1.0))
 
 
 if __name__ == '__main__':
