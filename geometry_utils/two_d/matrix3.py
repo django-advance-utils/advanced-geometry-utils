@@ -109,8 +109,7 @@ class Matrix3:
                          [0.0, 1.0, vector.y],
                          [0.0, 0.0, 1.0]]
             return self
-        else:
-            raise TypeError("Translation must be with an object of Vector2")
+        raise TypeError("Translation must be with an object of Vector2")
 
     def make_rotation(self, theta):
         """
@@ -130,8 +129,7 @@ class Matrix3:
                          [sin_theta, cos_theta, 0.0],
                          [0.0, 0.0, 1.0]]
             return self
-        else:
-            raise TypeError("Rotation must be with an int or float")
+        raise TypeError("Rotation must be with an int or float")
 
 
 def is_matrix3(input_variable):
