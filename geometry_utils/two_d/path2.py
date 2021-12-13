@@ -4,7 +4,7 @@ from geometry_utils.maths_utility import is_int_or_float
 from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
 from geometry_utils.two_d.edge2 import Edge2
 from geometry_utils.two_d.vector2 import is_vector2
-from geometry_utils.two_d.point2 import is_list_of_points, points_orientation, get_leftmost_point_index, Point2
+from geometry_utils.two_d.point2 import is_list_of_points, get_points_orientation, get_leftmost_point_index, Point2
 
 
 class Path2:
@@ -251,8 +251,8 @@ def get_convex_hull(list_of_points):
             second_point_index = (first_point_index + 1) % number_of_points
 
             for i in range(number_of_points):
-                if points_orientation(list_of_points[first_point_index], list_of_points[i],
-                                      list_of_points[second_point_index]) == "Counterclockwise":
+                if get_points_orientation(list_of_points[first_point_index], list_of_points[i],
+                                          list_of_points[second_point_index]) == "Counterclockwise":
                     second_point_index = i
             first_point_index = second_point_index
             if first_point_index == leftmost_point_index:
