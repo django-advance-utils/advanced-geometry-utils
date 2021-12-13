@@ -1,6 +1,6 @@
 from math import sqrt, cos, sin
 
-from geometry_utils.maths_utility import are_ints_or_floats, is_int_or_float
+from geometry_utils.maths_utility import are_ints_or_floats, is_int_or_float, floats_are_close
 
 
 class Vector2:
@@ -126,7 +126,7 @@ class Vector2:
         :raises:TypeError: Wrong argument type
         """
         if is_vector2(other_vector):
-            return self.x == other_vector.x and self.y == other_vector.y
+            return floats_are_close(self.x, other_vector.x) and floats_are_close(self.y, other_vector.y)
         raise TypeError("Comparison must be with another object of Vector2")
 
     def __ne__(self, other_vector):
@@ -140,7 +140,7 @@ class Vector2:
         :raises:TypeError: Wrong argument type
         """
         if is_vector2(other_vector):
-            return self.x != other_vector.x or self.y != other_vector.y
+            return not floats_are_close(self.x, other_vector.x) or not floats_are_close(self.y, other_vector.y)
         raise TypeError("Comparison must be with another object of Vector2")
 
     def reverse(self):
