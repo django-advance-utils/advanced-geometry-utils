@@ -99,9 +99,10 @@ class Ellipse:
         numerator = ((rx * rx) * (ry * ry)) - ((rx * rx) * (y_dash * y_dash)) - ((ry * ry) * (x_dash * x_dash))
         denominator = ((rx * rx) * (y_dash * y_dash)) + ((ry * ry) * (x_dash * x_dash))
 
-        root_part = sqrt(numerator / denominator)
         if numerator < 0.0:
             root_part = 0.0
+        else:
+            root_part = sqrt(numerator / denominator)
 
         if self.large_arc != self.clockwise:
             root_part *= -1
@@ -144,6 +145,6 @@ class Ellipse:
             second_point_to_centre_distance.y *= -1
         start = atan2(first_point_to_centre_distance.y, first_point_to_centre_distance.x)
         extent = atan2(second_point_to_centre_distance.y, second_point_to_centre_distance.x) - start
-        if extent < -double_epsilon():
-            extent += double_pi()
+        if extent < -DOUBLE_EPSILON:
+            extent += TWO_PI
         return extent
