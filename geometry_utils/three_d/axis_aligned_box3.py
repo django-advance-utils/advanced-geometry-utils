@@ -72,7 +72,7 @@ class AxisAlignedBox3:
             return self.min <= item <= self.max
         if isinstance(item, AxisAlignedBox3):
             return self.__contains__(item.min) and self.__contains__(item.max)
-        raise TypeError("Variable must be an object of Point2 or AxisAlignedBox2")
+        raise TypeError("Variable must be an object of Point3 or AxisAlignedBox3")
 
     def intersects(self, item):
         """
@@ -86,7 +86,7 @@ class AxisAlignedBox3:
         """
         if is_box3(item):
             return item.min >= self.min and item.max <= self.max
-        raise TypeError("Intersection must be with an object of AxisAlignedBox2")
+        raise TypeError("Intersection must be with an object of AxisAlignedBox3")
 
     def size(self):
         """
