@@ -1,4 +1,4 @@
-from geometry_utils.maths_utility import floats_are_close, is_float, is_int_or_float
+from geometry_utils.maths_utility import floats_are_close, is_float, is_int_or_float, DOUBLE_EPSILON
 from geometry_utils.three_d.axis_aligned_box3 import AxisAlignedBox3
 from geometry_utils.three_d.point3 import Point3, is_point3
 
@@ -56,14 +56,14 @@ class Edge3:
             self.radius = radius
             self.clockwise = clockwise
             self.large = large
-            self.arc_centre = self.get_arc_centre()
+            self.arc_centre = self.calculate_arc_centre()
         else:
             if not is_point3(p1) or not is_point3(p2) or not is_point3(via):
                 raise TypeError("First, second and third arguments must be objects of Point2")
             if not is_int_or_float(radius):
                 raise TypeError("Fourth argument must be an int or float")
 
-    def get_arc_centre(self):
+    def calculate_arc_centre(self):
         """
         Calculates the centre of the arc
 
@@ -72,6 +72,15 @@ class Edge3:
         """
         if floats_are_close(self.radius, 0.0):
             return Point3((self.p1.x + self.p2.x) * 0.5, (self.p1.y + self.p2.y) * 0.5, (self.p1.z + self.p2.z) * 0.5)
+
+    def is_arc(self):
+        """
+        Tests if the edge is an arc
+
+        :return:if the edge is an arc
+        :rtype: bool
+        """
+        return self.radius > DOUBLE_EPSILON
 
     def midpoint(self):
         return self.point_parametric(0.5)
@@ -138,6 +147,9 @@ class Edge3:
         bounds.include(self.p1)
         bounds.include(self.p2)
         return bounds
+
+    def is_circle(self):
+        return self.is_arc() and self.p1 == self.p2
 
 
 def is_edge3(input_variable):
