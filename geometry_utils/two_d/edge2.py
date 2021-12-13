@@ -180,11 +180,11 @@ class Edge2:
                     centre_to_arc_centre_distance = (self.p2 - self.p1).get_perpendicular()
 
                     if not self.clockwise:
-                        centre_to_arc_centre_distance = centre_to_arc_centre_distance.invert()
+                        centre_to_arc_centre_distance = centre_to_arc_centre_distance.reverse()
 
                 else:
                     if self.large:
-                        centre_to_arc_centre_distance = centre_to_arc_centre_distance.invert()
+                        centre_to_arc_centre_distance = centre_to_arc_centre_distance.reverse()
 
                 point_to_centre_distance = point_to_centre_distance.normalise()
                 centre_to_arc_centre_distance = centre_to_arc_centre_distance.normalise()
