@@ -1,4 +1,4 @@
-from geometry_utils.maths_utility import are_ints_or_floats
+from geometry_utils.maths_utility import are_ints_or_floats, floats_are_close
 from geometry_utils.three_d.vector3 import Vector3, is_vector3
 
 
@@ -88,7 +88,9 @@ class Point3:
         :raises: TypeError: Wrong argument type
         """
         if is_point3(other_point):
-            return bool(self.x == other_point.x and self.y == other_point.y and self.z == other_point.z)
+            return floats_are_close(self.x, other_point.x) and \
+                   floats_are_close(self.y, other_point.y) and \
+                   floats_are_close(self.z, other_point.z)
         raise TypeError("Comparison must be done with another object of Point3")
 
     def __ne__(self, other_point):
@@ -102,7 +104,9 @@ class Point3:
         :raises: TypeError: Wrong argument type
         """
         if is_point3(other_point):
-            return bool(self.x != other_point.x or self.y != other_point.y or self.z != other_point.z)
+            return not floats_are_close(self.x, other_point.x) or \
+                   not floats_are_close(self.y, other_point.y) or \
+                   not floats_are_close(self.z, other_point.z)
         raise TypeError("Comparison must be done with another object of Point3")
 
     def __le__(self, other_point):
