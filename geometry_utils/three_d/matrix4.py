@@ -1,4 +1,3 @@
-import inspect
 from math import cos, sin
 
 from geometry_utils.maths_utility import is_list, is_int_or_float
@@ -31,6 +30,7 @@ class Matrix4:
     make_z_rotation(int/float): Matrix4
         Creates a 4 x 4 rotation matrix around z-axis
     """
+
     def __init__(self, vals=None):
         if vals is None:
             self.set_identity()
@@ -51,7 +51,7 @@ class Matrix4:
         :return: the identity matrix
         :rtype:  Matrix4
         """
-        self.vals = [[1.0 if i == j else 0.0 for i in range(4)] for j in range(4)]
+        self.vals = [[1 if i == j else 0.0 for i in range(4)] for j in range(4)]
 
     def __mul__(self, other):
         """
@@ -95,12 +95,11 @@ class Matrix4:
         :rtype:  bool
         :raises: TypeError: Wrong argument type
         """
-        if is_matrix4(other) or inspect.isclass(other):  # revisit
+        if is_matrix4(other):
             return [[True if i == j else False for i in self.vals] for j in other.vals]
         raise TypeError("Comparison must be with another object of Matrix4")
 
-    @classmethod
-    def make_translation(cls, vector):
+    def make_translation(self, vector):
         """
         Creates a translation matrix using the 3D vector
 
@@ -111,17 +110,15 @@ class Matrix4:
         :raises: TypeError: Wrong argument type
         """
         if is_vector3(vector):
-            mat = cls
-            mat.vals = [[1.0, 0.0, 0.0, vector.x],
-                        [0.0, 1.0, 0.0, vector.y],
-                        [0.0, 0.0, 1.0, vector.z],
-                        [0.0, 0.0, 0.0, 1.0]]
+            self.vals = [[1.0, 0.0, 0.0, vector.x],
+                         [0.0, 1.0, 0.0, vector.y],
+                         [0.0, 0.0, 1.0, vector.z],
+                         [0.0, 0.0, 0.0, 1.0]]
 
-            return mat
+            return self
         raise TypeError("Translation must be with an object of Vector3")
 
-    @classmethod
-    def make_x_rotation(cls, theta):
+    def make_x_rotation(self, theta):
         """
         Creates an x-axis rotation matrix using an angle
 
@@ -132,19 +129,17 @@ class Matrix4:
         :raises: TypeError: Wrong argument type
         """
         if is_int_or_float(theta):
-            mat = cls
             cos_theta = cos(theta)
             sin_theta = sin(theta)
-            mat.vals = [[1.0,  0.0,       0.0,       0.0],
-                        [0.0,  cos_theta, sin_theta, 0.0],
-                        [0.0, -sin_theta, cos_theta, 0.0],
-                        [0.0,  0.0,       0.0,       1.0]]
+            self.vals = [[1.0, 0.0, 0.0, 0.0],
+                         [0.0, cos_theta, sin_theta, 0.0],
+                         [0.0, -sin_theta, cos_theta, 0.0],
+                         [0.0, 0.0, 0.0, 1.0]]
 
-            return mat
+            return self
         raise TypeError("X rotation must be with an int or float")
 
-    @classmethod
-    def make_y_rotation(cls, theta):
+    def make_y_rotation(self, theta):
         """
         Creates a y-axis rotation matrix using an angle
 
@@ -155,19 +150,17 @@ class Matrix4:
         :raises: TypeError: Wrong argument type
         """
         if is_int_or_float(theta):
-            mat = cls
             cos_theta = cos(theta)
             sin_theta = sin(theta)
-            mat.vals = [[cos_theta, 0.0, -sin_theta, 0.0],
-                        [0.0,       1.0,  0.0,       0.0],
-                        [sin_theta, 0.0,  cos_theta, 0.0],
-                        [0.0,       0.0,  0.0,       1.0]]
+            self.vals = [[cos_theta, 0.0, -sin_theta, 0.0],
+                         [0.0, 1.0, 0.0, 0.0],
+                         [sin_theta, 0.0, cos_theta, 0.0],
+                         [0.0, 0.0, 0.0, 1.0]]
 
-            return mat
+            return self
         raise TypeError("Y rotation must be with an int or float")
 
-    @classmethod
-    def make_z_rotation(cls, theta):
+    def make_z_rotation(self, theta):
         """
         Creates a z-axis rotation matrix using an angle
 
@@ -178,15 +171,14 @@ class Matrix4:
         :raises: TypeError: Wrong argument type
         """
         if is_int_or_float(theta):
-            mat = cls
             cos_theta = cos(theta)
             sin_theta = sin(theta)
-            mat.vals = [[cos_theta, -sin_theta, 0.0, 0.0],
-                        [sin_theta,  cos_theta, 0.0, 0.0],
-                        [0.0,        0.0,       1.0, 0.0],
-                        [0.0,        0.0,       0.0, 1.0]]
+            self.vals = [[cos_theta, -sin_theta, 0.0, 0.0],
+                         [sin_theta, cos_theta, 0.0, 0.0],
+                         [0.0, 0.0, 1.0, 0.0],
+                         [0.0, 0.0, 0.0, 1.0]]
 
-            return mat
+            return self
         raise TypeError("Z rotation must be with an int or float")
 
 
