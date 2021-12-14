@@ -79,7 +79,7 @@ def test_edge2_get_tangent(test_edge2_2):
 
 
 def test_edge2_calculate_arc_centre(test_edge2_2):
-    assert test_edge2_2.calculate_arc_centre() == Point2(1.0, 1.0)
+    assert test_edge2_2.calculate_centre() == Point2(1.0, 1.0)
 
 
 def test_edge2_get_edge_bounds(test_edge2_2):
