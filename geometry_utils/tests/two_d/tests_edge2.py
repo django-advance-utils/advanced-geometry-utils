@@ -21,6 +21,10 @@ for i in range(360):
 
 
 class TestEdge2(unittest.TestCase):
+    def test_edge2_float_arguments(self):
+        with self.assertRaises(TypeError):
+            return Edge2("0", "0", "0")
+
     def test_edge2_to_edge2_equality(self):
         self.assertEqual(test_edge2_2, test_edge2_4)
 
@@ -103,7 +107,7 @@ class TestEdge2(unittest.TestCase):
         assert test_edge2_2.get_tangent() == Vector2(2.0 / math.sqrt(8.0), 2.0 / math.sqrt(8.0))
 
     def test_edge2_calculate_arc_centre(self):
-        assert test_edge2_2.calculate_arc_centre() == Point2(1.0, 1.0)
+        assert test_edge2_2.calculate_centre() == Point2(1.0, 1.0)
 
     def test_edge2_get_edge_bounds(self):
         assert test_edge2_2.get_edge_bounds() == AxisAlignedBox2(Point2(0.0, 0.0), Point2(2.0, 2.0))
