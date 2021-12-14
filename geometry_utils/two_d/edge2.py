@@ -2,7 +2,8 @@ import copy
 import math
 from math import atan2, acos, fabs, sin, cos, pi
 
-from geometry_utils.maths_utility import floats_are_close, DOUBLE_EPSILON, PI, TWO_PI, is_list, is_int_or_float, CIRCLE_FACTORS, CIRCLE_DIVISIONS, degrees_to_radians, HALF_PI, ONE_AND_HALF_PI
+from geometry_utils.maths_utility import floats_are_close, DOUBLE_EPSILON, PI, TWO_PI, is_list, is_int_or_float, \
+    CIRCLE_FACTORS, CIRCLE_DIVISIONS, degrees_to_radians, HALF_PI, ONE_AND_HALF_PI, is_float
 from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
 from geometry_utils.two_d.ellipse import Ellipse
 from geometry_utils.two_d.intersection import Intersection
@@ -113,7 +114,7 @@ class Edge2:
         if self.p1 == self.p2:
             return self.p1
 
-        if floats_are_close(self.radius, 0.0):
+        if not self.is_arc():
             return Point2((self.p1.x + self.p2.x) * 0.5, (self.p1.y + self.p2.y) * 0.5)
 
         ellipse = Ellipse(start = self.p1, end = self.p2, major_radius = self.radius, minor_radius = self.radius,
@@ -144,7 +145,7 @@ class Edge2:
                 return self.p1
 
             if self.is_arc():
-                t = self.get_sweep() * s
+                t = self.get_sweep_angle() * s
                 if self.clockwise:
                     t *= -1
                 p1_vector = self.p1.to_vector2()
@@ -202,7 +203,7 @@ class Edge2:
 
                 if point_to_arc_centre_point_angle > PI:
                     point_to_arc_centre_point_angle -= TWO_PI
-                point_to_arc_centre_point_angle /= self.get_sweep()
+                point_to_arc_centre_point_angle /= self.get_sweep_angle()
 
                 return point_to_arc_centre_point_angle + 0.5
 
@@ -224,11 +225,11 @@ class Edge2:
         p2_vector = self.p2.to_vector2()
         return (p2_vector - p1_vector).normalise()
 
-    def get_sweep(self):
+    def get_sweep_angle(self):
         """
-        Calculates the sweep of the edge
+        Calculates the sweep of the edge which is an arc
 
-        :return:the resulting sweep of the edge
+        :return:the resulting sweep of the edge which is an arc
         :rtype: int/float
         """
         if not self.is_arc():
@@ -350,25 +351,30 @@ class Edge2:
         return list_of_arc_edges
 
     def rotate(self, rotation_angle):
-        rotation_angle_in_radians = degrees_to_radians(rotation_angle)
+        if is_float(rotation_angle):
+            rotation_angle_in_radians = degrees_to_radians(rotation_angle)
 
-        rotation_matrix = Matrix3()
-        rotation_matrix.make_rotation(rotation_angle_in_radians)
+            rotation_matrix = Matrix3()
+            rotation_matrix.make_rotation(rotation_angle_in_radians)
 
-        self.p1 = rotation_matrix * self.p1
-        self.p2 = rotation_matrix * self.p2
+            self.p1 = rotation_matrix * self.p1
+            self.p2 = rotation_matrix * self.p2
 
-        self.centre = self.calculate_centre()
+            self.centre = self.calculate_centre()
 
-        return self
+            return self
+        raise TypeError("Rotation angle must be a float")
 
     def is_parallel_to(self, other_edge):
         if is_edge2(other_edge):
             return self.get_slope() == other_edge.get_slope()
+        raise TypeError("Parallel check must be with an Edge2 object")
 
     def is_perpendicular_to(self, other_edge):
         if is_edge2(other_edge):
-            return self.angle_to_edge(other_edge) == HALF_PI or self.angle_to_edge(other_edge) == -ONE_AND_HALF_PI
+            return (self.angle_to_edge(other_edge) == HALF_PI or self.angle_to_edge(other_edge) == -ONE_AND_HALF_PI or
+                    self.angle_to_edge(other_edge) == -HALF_PI or self.angle_to_edge(other_edge) == ONE_AND_HALF_PI)
+        raise TypeError("Perpendicular check must be with an Edge2 object")
 
     def get_slope(self):
         if self.is_arc():
@@ -391,10 +397,16 @@ class Edge2:
 
     def angle_to_edge(self, other_edge):
         if is_edge2(other_edge):
+            if self.is_arc() or other_edge.is_arc():
+                raise TypeError("Angle check can not be found from an arc")
             return self.angle_to_x_axis() - other_edge.angle_to_x_axis()
+        raise TypeError("Angle check must be done with another object Edge2")
 
     def minimum_y(self):
         return min(self.p1.y, self.p2.y)
+
+    def maximum_y(self):
+        return max(self.p1.y, self.p2.y)
 
 
 def is_edge2(input_variable):
