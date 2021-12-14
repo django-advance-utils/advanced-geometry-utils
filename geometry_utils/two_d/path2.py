@@ -230,6 +230,26 @@ class Path2:
 
             return circle_list_of_points
 
+    def flip_vertical(self):
+        minimum_y = self.list_of_edges[0].minimum_y()
+        maximum_y = self.list_of_edges[0].maximum_y()
+        for edge in self.list_of_edges:
+            minimum_y = min(minimum_y, edge.minimum_y())
+            maximum_y = max(maximum_y, edge.maximum_y())
+
+        y_range = maximum_y - minimum_y
+        mid = minimum_y + (y_range / 2)
+
+        for edge in self.list_of_edges:
+            offset_p1 = edge.p1.y - mid
+            offset_p2 = edge.p2.y - mid
+
+            edge.p1.y -= offset_p1 * 2
+            edge.p2.y -= offset_p2 * 2
+
+            if edge.clockwise:
+                edge.clockwise = False
+
 
 def get_convex_hull(list_of_points):
     if is_list_of_points(list_of_points):
