@@ -99,9 +99,8 @@ class Ellipse:
         numerator = ((rx * rx) * (ry * ry)) - ((rx * rx) * (y_dash * y_dash)) - ((ry * ry) * (x_dash * x_dash))
         denominator = ((rx * rx) * (y_dash * y_dash)) + ((ry * ry) * (x_dash * x_dash))
 
-        if numerator < 0.0:
-            root_part = 0.0
-        else:
+        root_part = 0.0
+        if numerator > 0.0:
             root_part = sqrt(numerator / denominator)
 
         if self.large_arc != self.clockwise:
