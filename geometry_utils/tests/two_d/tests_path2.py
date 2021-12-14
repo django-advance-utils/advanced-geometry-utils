@@ -139,7 +139,7 @@ class TestPath2(unittest.TestCase):
 
     def test_path2_is_circle(self):
         test_circle_path = Path2()
-        test_circle_path.list_of_edges = [Edge2(Point2(1.0, 1.0), Point2(1.0, 1.0), 1.0)]
+        test_circle_path.list_of_edges = [Edge2(Point2(1.0, 1.0), Point2(1.0, 1.0), 2.0)]
 
         self.assert_(test_circle_path.is_circle())
 
