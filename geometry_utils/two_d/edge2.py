@@ -62,7 +62,7 @@ class Edge2:
             self.radius = radius
             self.clockwise = clockwise
             self.large = large
-            self.arc_centre = self.calculate_arc_centre()
+            self.centre = self.calculate_centre()
         else:
             if not is_point2(p1) or not is_point2(p2):
                 raise TypeError("First and second arguments must be objects of Point2")
@@ -80,9 +80,10 @@ class Edge2:
         :raises: TypeError: Wrong argument type
         """
         if is_edge2(other_edge):
-            return self.p1 == other_edge.p1 and self.p2 == other_edge.p2 and \
-                   self.radius == other_edge.radius and self.large == other_edge.large and \
-                   self.arc_centre == other_edge.arc_centre and self.clockwise == other_edge.clockwise
+            equality =  (self.p1 == other_edge.p1 and self.p2 == other_edge.p2 and
+                         self.radius == other_edge.radius and self.large == other_edge.large and
+                         self.centre == other_edge.centre and self.clockwise == other_edge.clockwise)
+            return equality
         raise TypeError("Comparison must be with another object of Edge2")
 
     def __ne__(self, other_edge):
@@ -96,12 +97,13 @@ class Edge2:
         :raises: TypeError: Wrong argument type
         """
         if is_edge2(other_edge):
-            return self.p1 != other_edge.p1 or self.p2 != other_edge.p2 or \
-                   self.radius != other_edge.radius or self.large != other_edge.large or \
-                   self.arc_centre != other_edge.arc_centre or self.clockwise != other_edge.clockwise
+            inequality = (self.p1 != other_edge.p1 or self.p2 != other_edge.p2 or
+                          self.radius != other_edge.radius or self.large != other_edge.large or
+                          self.centre != other_edge.centre or self.clockwise != other_edge.clockwise)
+            return inequality
         raise TypeError("Comparison must be with another object of Edge2")
 
-    def calculate_arc_centre(self):
+    def calculate_centre(self):
         """
         Calculates the centre of the arc
 
@@ -146,7 +148,7 @@ class Edge2:
                 if self.clockwise:
                     t *= -1
                 p1_vector = self.p1.to_vector2()
-                arc_centre_vector = self.arc_centre.to_vector2()
+                arc_centre_vector = self.centre.to_vector2()
                 return p1_vector.rotate(arc_centre_vector, t)
             tangent = self.get_tangent()
             p1_p2_distance = self.p1.distance_to(self.p2)
@@ -172,8 +174,8 @@ class Edge2:
                 p1_vector = self.p1.to_vector2()
                 p2_vector = self.p2.to_vector2()
 
-                point_to_centre_distance = (point - self.arc_centre)
-                centre_to_arc_centre_distance = (((p1_vector + p2_vector)/2.0) - self.arc_centre.to_vector2())
+                point_to_centre_distance = (point - self.centre)
+                centre_to_arc_centre_distance = (((p1_vector + p2_vector)/2.0) - self.centre.to_vector2())
 
                 if floats_are_close(centre_to_arc_centre_distance.x, 0.0) and \
                         floats_are_close(centre_to_arc_centre_distance.y, 0.0):
@@ -232,7 +234,7 @@ class Edge2:
         if not self.is_arc():
             return 0.0
 
-        ellipse = Ellipse(start=self.p1, centre=self.arc_centre, end=self.p2, major_radius=self.radius,
+        ellipse = Ellipse(start=self.p1, centre=self.centre, end=self.p2, major_radius=self.radius,
                           minor_radius=self.radius, clockwise=self.clockwise, angle=270.0)
         return ellipse.get_arc_sweep()
 
@@ -273,7 +275,7 @@ class Edge2:
         if is_vector2(vector):
             self.p1 += vector
             self.p2 += vector
-            self.arc_centre = self.calculate_arc_centre()
+            self.centre = self.calculate_centre()
         else:
             raise TypeError("Edge offset is done by an object of Vector2")
 
@@ -284,14 +286,14 @@ class Edge2:
         """
         self.p1.flip_xy()
         self.p2.flip_xy()
-        self.arc_centre = self.calculate_arc_centre()
+        self.centre = self.calculate_centre()
         if self.clockwise:
             self.clockwise = False
 
     def mirror_y(self):
         self.p1.mirror_y()
         self.p2.mirror_y()
-        self.arc_centre = self.calculate_arc_centre()
+        self.centre = self.calculate_centre()
         if self.clockwise:
             self.clockwise = False
         return self
@@ -300,10 +302,10 @@ class Edge2:
         return self.is_arc() and self.p1 == self.p2
 
     def get_arc_start_angle(self):
-        return atan2(self.p1.y - self.arc_centre.y, self.p1.x - self.arc_centre.x)
+        return atan2(self.p1.y - self.centre.y, self.p1.x - self.centre.x)
 
     def get_arc_end_angle(self):
-        return atan2(self.p2.y - self.arc_centre.y, self.p2.x - self.arc_centre.x)
+        return atan2(self.p2.y - self.centre.y, self.p2.x - self.centre.x)
 
     def flatten_arc(self):
         arc_start_angle = self.get_arc_start_angle()
@@ -328,8 +330,8 @@ class Edge2:
             elif number == end_number:
                 temp = copy.deepcopy(self.p2)
             else:
-                temp.x = self.arc_centre.x + self.radius * x_factor
-                temp.y = self.arc_centre.y + self.radius * y_factor
+                temp.x = self.centre.x + self.radius * x_factor
+                temp.y = self.centre.y + self.radius * y_factor
             part_point = Point2(temp.x - self.p1.x * x_factor, temp.y - self.p1.y * y_factor)
             points.append(part_point)
             if self.clockwise:
@@ -356,7 +358,7 @@ class Edge2:
         self.p1 = rotation_matrix * self.p1
         self.p2 = rotation_matrix * self.p2
 
-        self.arc_centre = self.calculate_arc_centre()
+        self.centre = self.calculate_centre()
 
         return self
 
