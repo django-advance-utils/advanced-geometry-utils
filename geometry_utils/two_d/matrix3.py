@@ -1,6 +1,6 @@
 from math import cos, sin
 
-from geometry_utils.maths_utility import is_list, is_int_or_float, are_ints_or_floats
+from geometry_utils.maths_utility import is_list, is_int_or_float, are_ints_or_floats, is_float
 from geometry_utils.two_d.point2 import is_point2, Point2
 from geometry_utils.two_d.vector2 import Vector2, is_vector2
 
@@ -122,14 +122,14 @@ class Matrix3:
         :raises: TypeError: Wrong argument type
         """
 
-        if is_int_or_float(theta):
+        if is_float(theta):
             cos_theta = cos(theta)
             sin_theta = sin(theta)
             self.vals = [[cos_theta, -sin_theta, 0.0],
                          [sin_theta, cos_theta, 0.0],
                          [0.0, 0.0, 1.0]]
             return self
-        raise TypeError("Rotation must be with an int or float")
+        raise TypeError("Rotation must be with a float")
 
 
 def is_matrix3(input_variable):
