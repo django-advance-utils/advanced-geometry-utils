@@ -6,13 +6,14 @@ from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
 from geometry_utils.two_d.edge2 import Edge2
 from geometry_utils.two_d.point2 import Point2
 from geometry_utils.two_d.vector2 import Vector2
-from geometry_utils.maths_utility import HALF_PI
+from geometry_utils.maths_utility import HALF_PI, QUARTER_PI
 
 test_edge2_1 = Edge2()
 test_edge2_2 = Edge2(Point2(0.0, 0.0), Point2(2.0, 2.0))
 test_edge2_3 = Edge2(Point2(2.0, 2.0), Point2(4.0, 4.0))
 test_edge2_4 = Edge2(Point2(0.0, 0.0), Point2(2.0, 2.0))
 test_edge2_5 = Edge2(Point2(0.0, 0.0), Point2(2.0, 2.0), 2.0)
+test_edge2_6 = Edge2(Point2(0.0, 0.0), Point2(0.0, 0.0), 5.0)
 
 radius = 600.0
 test_circle_points_1 = []
@@ -31,7 +32,7 @@ class TestEdge2(unittest.TestCase):
 
     def test_edge2_to_float_equality(self):
         with self.assertRaises(TypeError):
-            return test_edge2_1 == 9.0
+            self.assertEqual(test_edge2_1, 9.0)
 
     def test_edge2_to_edge2_inequality(self):
         self.assertNotEqual(test_edge2_2, test_edge2_1)
@@ -42,6 +43,7 @@ class TestEdge2(unittest.TestCase):
 
     def test_edge2_is_arc(self):
         self.assert_(not test_edge2_2.is_arc())
+        self.assert_(test_edge2_5.is_arc())
 
     def test_edge2_get_sweep_angle(self):
         self.assertEqual(test_edge2_5.get_sweep_angle(), HALF_PI)
@@ -119,14 +121,16 @@ class TestEdge2(unittest.TestCase):
             return test_edge2_1.parametric_point(9.0)
 
     def test_edge2_get_tangent(self):
-        self.assertEqual(test_edge2_2.get_tangent(), Vector2(2.0 / math.sqrt(8.0), 2.0 / math.sqrt(8.0)))
+        self.assertEqual(test_edge2_2.get_tangent(test_edge2_2.p1), Vector2(2.0 / math.sqrt(8.0), 2.0 / math.sqrt(8.0)))
 
     def test_edge2_calculate_centre(self):
         self.assertEqual(test_edge2_2.calculate_centre(), Point2(1.0, 1.0))
+        self.assertEqual(test_edge2_5.calculate_centre(), Point2(0.0, 2.0))
+        self.assertEqual(test_edge2_6.calculate_centre(), test_edge2_6.p2)
 
     def test_edge2_get_edge_bounds(self):
         self.assertEqual(test_edge2_2.get_edge_bounds(), AxisAlignedBox2(Point2(0.0, 0.0), Point2(2.0, 2.0)))
-
+    '''
     def test_edge2_intersect_edge2(self):
         list_of_intersects = []
         test_edge2_2.intersect(test_edge2_3, list_of_intersects)
@@ -135,7 +139,7 @@ class TestEdge2(unittest.TestCase):
     def test_edge2_intersect_float(self):
         with self.assertRaises(TypeError):
             return test_edge2_1.intersect(9.0, 9.0)
-
+    '''
     def test_edge2_offset_edge(self):
         offset_vector = Vector2(1.0, 1.0)
         edge_to_be_offset = Edge2(Point2(0, 0), Point2(3, 3))
@@ -228,10 +232,27 @@ class TestEdge2(unittest.TestCase):
     def test_edge2_edge_length(self):
         self.assert_(floats_are_close(test_edge2_2.edge_length(), 2.828427))
 
+    '''
     def test_edge2_edge_length_arc(self):
         with self.assertRaises(TypeError):
             return test_edge2_5.edge_length()
+    '''
 
+    def test_edge2_angle_to_x_axis(self):
+        self.assertEqual(test_edge2_2.angle_to_x_axis(), QUARTER_PI)
+
+    def test_edge2_angle_to_edge(self):
+        self.assertEqual(test_edge2_2.angle_to_edge(test_edge2_4), 0.0)
+
+    def test_edge2_angle_to_edge_arc(self):
+        with self.assertRaises(TypeError):
+            return test_edge2_5.angle_to_edge(test_edge2_4)
+
+    def test_edge2_minimum_y(self):
+        self.assertEqual(test_edge2_2.minimum_y(), 0.0)
+
+    def test_edge2_maximum_y(self):
+        self.assertEqual(test_edge2_2.maximum_y(), 2.0)
 
 
 if __name__ == '__main__':
