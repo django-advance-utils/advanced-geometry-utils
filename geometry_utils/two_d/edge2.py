@@ -6,7 +6,6 @@ from geometry_utils.maths_utility import floats_are_close, DOUBLE_EPSILON, PI, T
     CIRCLE_FACTORS, CIRCLE_DIVISIONS, degrees_to_radians, HALF_PI, ONE_AND_HALF_PI, is_float
 from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
 from geometry_utils.two_d.ellipse import Ellipse
-from geometry_utils.two_d.intersection import Intersection
 from geometry_utils.two_d.point2 import Point2, is_point2
 from geometry_utils.two_d.vector2 import is_vector2
 from geometry_utils.two_d.matrix3 import Matrix3
@@ -151,7 +150,7 @@ class Edge2:
                 p1_vector = self.p1.to_vector2()
                 arc_centre_vector = self.centre.to_vector2()
                 return p1_vector.rotate(arc_centre_vector, t)
-            tangent = self.get_tangent()
+            tangent = self.get_tangent(self.p1)
             p1_p2_distance = self.p1.distance_to(self.p2)
             vector = tangent * (s * p1_p2_distance)
             return self.p1 + vector
@@ -207,23 +206,35 @@ class Edge2:
 
                 return point_to_arc_centre_point_angle + 0.5
 
-            tangent = self.get_tangent()
+            tangent = self.get_tangent(self.p1)
             point_p1_difference = (point - self.p1)
             p1_to_p2_distance = self.p1.distance_to(self.p2)
             distance = tangent.dot(point_p1_difference)
             return distance / p1_to_p2_distance
         raise TypeError("Argument must be an object of Point2")
 
-    def get_tangent(self):
+    def get_normal(self, point):
+        if is_point2(point):
+            if self.is_arc():
+                return (self.centre - point).normalise()
+            return self.get_tangent(point).get_perpendicular()
+        raise TypeError("Input argument must be an object of Point2")
+
+    def get_tangent(self, point):
         """
         Calculates the tangent of the edge
 
         :return:the resulting tangent of the edge
         :rtype: int/float
         """
-        p1_vector = self.p1.to_vector2()
-        p2_vector = self.p2.to_vector2()
-        return (p2_vector - p1_vector).normalise()
+        if is_point2(point):
+            if self.is_arc():
+                if self.clockwise:
+                    return self.get_normal(point).get_perpendicular()
+                else:
+                    return self.get_normal(point).get_perpendicular().inverse()
+            return (self.p2 - self.p1).normalise()
+        raise TypeError("Input argument must be an object of Point2")
 
     def get_sweep_angle(self):
         """
@@ -251,21 +262,6 @@ class Edge2:
         bounds.include(self.p2)
         return bounds
 
-    def intersect(self, other_edge, list_of_intersections):
-        """
-        Creates the intersection of the edge with another edge and appends the list of intersections
-
-        """
-        if is_edge2(other_edge) and is_list(list_of_intersections):
-            edges_intersection = Intersection()
-            edges_intersection.intersect_lines(self.p1, self.p2, other_edge.p1, other_edge.p2)
-            list_of_intersections.append(edges_intersection)
-        else:
-            if not is_edge2(other_edge):
-                raise TypeError("First argument must be an object of Edge2")
-            if not is_list(list_of_intersections):
-                raise TypeError("Second argument must be a list")
-
     def offset_edge(self, vector):
         """
         Offsets the edge by the provided 2D vector
@@ -290,6 +286,24 @@ class Edge2:
         self.centre = self.calculate_centre()
         if self.clockwise:
             self.clockwise = False
+
+    def flip_x(self):
+        self.p1.x *= -1
+        self.p2.x *= -1
+        return self
+
+    def flip_y(self):
+        self.p1.y *= -1
+        self.p2.y *= -1
+        return self
+
+    def reverse(self):
+        tmp = self.p1
+        self.p1 = self.p2
+        self.p2 = tmp
+        if self.is_arc():
+            self.clockwise = not self.clockwise
+        return self
 
     def mirror_y(self):
         self.p1.mirror_y()
@@ -387,7 +401,9 @@ class Edge2:
 
     def edge_length(self):
         if self.is_arc():
-            raise TypeError("Length can not be derived for an arc")
+            ellipse = Ellipse(self.p1, self.centre, self.p2, self.radius, self.radius, self.clockwise)
+            sweep = ellipse.get_arc_sweep()
+            return sweep * self.radius
         return self.p1.distance_to(self.p2)
 
     def angle_to_x_axis(self):
