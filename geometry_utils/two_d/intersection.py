@@ -1,5 +1,7 @@
 from geometry_utils.two_d.point2 import Point2, is_point2
 from geometry_utils.maths_utility import floats_are_close, ranges_overlap
+from geometry_utils.two_d.edge2 import is_edge2
+from geometry_utils.maths_utility import is_list
 
 
 class Intersection:
@@ -50,6 +52,20 @@ class Intersection:
             self.do_collinear_test = do_collinear_test
         else:
             raise TypeError("First argument must be an object of Point2")
+
+    def intersect(self, first_edge, other_edge, list_of_intersections):
+        """
+        Creates the intersection of the edge with another edge and appends the list of intersections
+
+        """
+        if is_edge2(first_edge) and is_edge2(other_edge) and is_list(list_of_intersections):
+            self.intersect_lines(first_edge.p1, first_edge.p2, other_edge.p1, other_edge.p2)
+            list_of_intersections.append(self)
+        else:
+            if not is_edge2(first_edge) or not is_edge2(other_edge):
+                raise TypeError("First and second arguments must be objects of Edge2")
+            if not is_list(list_of_intersections):
+                raise TypeError("Third argument must be a list")
 
     def intersect_lines(self, p1, p2, p3, p4):
         """
@@ -128,3 +144,14 @@ class Intersection:
                                                           intersect_point_to_point4_distance, length_of_side2)
         else:
             raise TypeError("Arguments must be objects of Point2")
+
+    def intersect_line_circle(self, line_edge, circle_edge, list_of_intersections):
+        if is_edge2(line_edge) and is_edge2(circle_edge) and is_list(list_of_intersections):
+            lu = line_edge.p2 - line_edge.p1
+            lw = line_edge.p1 - circle_edge.centre
+            a = lu.dot(lu)
+            b = 2.0 * lu.dot(lw)
+            c = lw.dot(lw) - (circle_edge.radius * circle_edge.radius)
+
+            d = (b * b) - (4.0 * a * c)
+
