@@ -214,6 +214,16 @@ class Path2:
                 self.list_of_edges[2].is_perpendicular_to(self.list_of_edges[3]) and
                 self.list_of_edges[3].is_perpendicular_to(self.list_of_edges[0]))
 
+    def is_curved_top(self):
+        if self.path_length != 5:
+            return False
+
+        for edge in self.list_of_edges:
+            if not edge.is_arc() and not self.is_continuous:
+                return False
+
+        return True
+
     def convert_circle_to_points(self):
         if self.is_circle():
             circle_centre = Point2()
