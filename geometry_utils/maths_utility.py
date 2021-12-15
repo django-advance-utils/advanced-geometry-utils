@@ -1,5 +1,6 @@
 PI = float(3.141592653589793238)
 
+QUARTER_PI = float(PI * 1/4)
 HALF_PI = float(PI * 1/2)
 ONE_AND_HALF_PI = float(PI * 3/2)
 TWO_PI = float(PI * 2)
