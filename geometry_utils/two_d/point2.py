@@ -85,8 +85,7 @@ class Point2:
         :raises: TypeError: Wrong argument type
         """
         if is_point2(other_point):
-            return floats_are_close(self.x, other_point.x) and \
-                   floats_are_close(self.y, other_point.y)
+            return floats_are_close(self.x, other_point.x) and floats_are_close(self.y, other_point.y)
         raise TypeError("Comparison must be done with another object of Point2")
 
     def __ne__(self, other_point):
@@ -100,8 +99,7 @@ class Point2:
         :raises: TypeError: Wrong argument type
         """
         if is_point2(other_point):
-            return not floats_are_close(self.x, other_point.x) or \
-                   not floats_are_close(self.y, other_point.y)
+            return not floats_are_close(self.x, other_point.x) or not floats_are_close(self.y, other_point.y)
         raise TypeError("Comparison must be done with another object of Point2")
 
     def __le__(self, other_point):
@@ -156,12 +154,20 @@ class Point2:
         raise TypeError("Argument must be an object of Point2")
 
     def flip_xy(self):
+        """
+        Swaps the x and y coordinates of the point
+
+        """
         tmp = self.x
         self.x = self.y
         self.y = tmp
         return self
 
     def mirror_y(self):
+        """
+        Mirrors the x coordinate about the y-coordinate
+
+        """
         self.x = -self.x
         return self
 
