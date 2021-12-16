@@ -288,11 +288,19 @@ class Edge2:
             self.clockwise = False
 
     def flip_x(self):
+        """
+        Flips the x coordinate of the edge about the origin
+
+        """
         self.p1.x *= -1
         self.p2.x *= -1
         return self
 
     def flip_y(self):
+        """
+        Flips the x coordinate of the edge about the origin
+
+        """
         self.p1.y *= -1
         self.p2.y *= -1
         return self
