@@ -63,7 +63,7 @@ class Intersection:
         if is_edge2(first_edge) and is_edge2(second_edge) and is_list(list_of_intersections):
             if second_edge.is_circle():
                 intersection = self.intersect_line_circle(first_edge, second_edge)
-                list_of_intersections.extend(intersection)
+                list_of_intersections.append(intersection)
             else:
                 intersection = self.intersect_lines(first_edge, second_edge)
                 list_of_intersections.append(intersection)
