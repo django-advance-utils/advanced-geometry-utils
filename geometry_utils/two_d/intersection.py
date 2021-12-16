@@ -63,10 +63,11 @@ class Intersection:
         if is_edge2(first_edge) and is_edge2(second_edge) and is_list(list_of_intersections):
             if second_edge.is_circle():
                 intersection = self.intersect_line_circle(first_edge, second_edge)
+                list_of_intersections.extend(intersection)
             else:
                 intersection = self.intersect_lines(first_edge, second_edge)
+                list_of_intersections.append(intersection)
 
-            list_of_intersections.extend(intersection)
         else:
             if not is_edge2(first_edge) or not is_edge2(second_edge):
                 raise TypeError("First and second arguments must be objects of Edge2")
@@ -122,12 +123,11 @@ class Intersection:
 
             else:
                 self.vectors_intersect = True
-
-                s = (v.x * w.y - v.y * w.x) / denominator
-                # t = (u.x * w.y - u.y * w.x) / denominator
+                s = float(v.x * w.y - v.y * w.x) / denominator
+                t = float(u.x * w.y - u.y * w.x) / denominator
 
                 self.point.x = first_edge.p1.x + s * u.x
-                self.point.y = first_edge.p1.y + s * u.y
+                self.point.y = first_edge.p1.y + t * u.y
 
                 intersect_point_to_point1_distance = self.point.distance_to(first_edge.p1)
                 intersect_point_to_point2_distance = self.point.distance_to(first_edge.p2)
@@ -165,7 +165,7 @@ class Intersection:
             if d < 0.0:
                 return 0
             elif floats_are_close(d, 0.0):
-                u = -b / (2.0 * a)
+                u = float(-b) / (2.0 * a)
                 self.point = line_edge.p1 + (lu * u)
                 self.vectors_intersect = True
                 self.on_first_segment = 0.0 <= u <= 1.0
@@ -176,7 +176,7 @@ class Intersection:
                 elif floats_are_close(u, 1.0):
                     self.end_of_line = True
                     self.point = line_edge.p2
-                return 1
+                return self
             else:
                 sqrt_d = math.sqrt(d)
                 u_1 = (-b + sqrt_d) / (2.0 * a)
