@@ -177,7 +177,6 @@ class Path2:
             return path
         raise TypeError("The path must be closed and have more than one edge")
 
-    # to be reviewed with Simon and Tom
     def remove_arcs(self):
         index = 0
         list_of_edges_to_remove = []
