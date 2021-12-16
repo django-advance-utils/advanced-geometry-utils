@@ -1,3 +1,5 @@
+import math
+
 from geometry_utils.two_d.point2 import Point2, is_point2
 from geometry_utils.maths_utility import floats_are_close, ranges_overlap
 from geometry_utils.two_d.edge2 import is_edge2
@@ -53,21 +55,25 @@ class Intersection:
         else:
             raise TypeError("First argument must be an object of Point2")
 
-    def intersect(self, first_edge, other_edge, list_of_intersections):
+    def intersect(self, first_edge, second_edge, list_of_intersections):
         """
         Creates the intersection of the edge with another edge and appends the list of intersections
 
         """
-        if is_edge2(first_edge) and is_edge2(other_edge) and is_list(list_of_intersections):
-            self.intersect_lines(first_edge.p1, first_edge.p2, other_edge.p1, other_edge.p2)
-            list_of_intersections.append(self)
+        if is_edge2(first_edge) and is_edge2(second_edge) and is_list(list_of_intersections):
+            if second_edge.is_circle():
+                intersection = self.intersect_line_circle(first_edge, second_edge)
+            else:
+                intersection = self.intersect_lines(first_edge, second_edge)
+
+            list_of_intersections.extend(intersection)
         else:
-            if not is_edge2(first_edge) or not is_edge2(other_edge):
+            if not is_edge2(first_edge) or not is_edge2(second_edge):
                 raise TypeError("First and second arguments must be objects of Edge2")
             if not is_list(list_of_intersections):
                 raise TypeError("Third argument must be a list")
 
-    def intersect_lines(self, p1, p2, p3, p4):
+    def intersect_lines(self, first_edge, second_edge):
         """
         Creates an intersection between two edges
 
@@ -84,10 +90,10 @@ class Intersection:
         :raises:TypeError: wrong argument type
         """
 
-        if is_point2(p1) and is_point2(p2) and is_point2(p3) and is_point2(p4):
-            u = p2 - p1
-            v = p4 - p3
-            w = p1 - p3
+        if is_edge2(first_edge) and is_edge2(second_edge):
+            u = first_edge.p2 - first_edge.p1
+            v = second_edge.p2 - second_edge.p1
+            w = first_edge.p1 - second_edge.p1
 
             denominator = u.x * v.y - u.y * v.x
 
@@ -95,7 +101,7 @@ class Intersection:
                 self.vectors_intersect = False
                 self.on_first_segment = False
                 self.on_second_segment = False
-                self.point = p1
+                self.point = first_edge.p1
                 self.do_collinear_test = True
 
                 if self.do_collinear_test:
@@ -107,10 +113,10 @@ class Intersection:
                         self.vectors_intersect = True
                         self.collinear = True
 
-                        if ranges_overlap(min(p1.x, p2.x), max(p1.x, p2.x),
-                                          min(p3.x, p4.x), max(p3.x, p4.x)) and \
-                           ranges_overlap(min(p1.y, p2.y), max(p1.y, p2.y),
-                                          min(p3.y, p4.y), max(p3.y, p4.y)):
+                        if ranges_overlap(first_edge.minimum_x(), first_edge.maximum_x(),
+                                          second_edge.minimum_x(), second_edge.maximum_x()) and \
+                           ranges_overlap(first_edge.minimum_y(), first_edge.maximum_y(),
+                                          second_edge.minimum_y(), second_edge.maximum_y()):
                             self.on_first_segment = True
                             self.on_second_segment = True
 
@@ -120,13 +126,13 @@ class Intersection:
                 s = (v.x * w.y - v.y * w.x) / denominator
                 # t = (u.x * w.y - u.y * w.x) / denominator
 
-                self.point.x = p1.x + s * u.x
-                self.point.y = p1.y + s * u.y
+                self.point.x = first_edge.p1.x + s * u.x
+                self.point.y = first_edge.p1.y + s * u.y
 
-                intersect_point_to_point1_distance = self.point.distance_to(p1)
-                intersect_point_to_point2_distance = self.point.distance_to(p2)
-                intersect_point_to_point3_distance = self.point.distance_to(p3)
-                intersect_point_to_point4_distance = self.point.distance_to(p4)
+                intersect_point_to_point1_distance = self.point.distance_to(first_edge.p1)
+                intersect_point_to_point2_distance = self.point.distance_to(first_edge.p2)
+                intersect_point_to_point3_distance = self.point.distance_to(second_edge.p1)
+                intersect_point_to_point4_distance = self.point.distance_to(second_edge.p2)
 
                 if floats_are_close(intersect_point_to_point1_distance, 0.0) or \
                    floats_are_close(intersect_point_to_point2_distance, 0.0) or \
@@ -134,19 +140,20 @@ class Intersection:
                    floats_are_close(intersect_point_to_point4_distance, 0.0):
                     self.end_of_line = True
 
-                length_of_side1 = p1.distance_to(p2)
-                length_of_side2 = p3.distance_to(p4)
+                length_of_side1 = first_edge.edge_length()
+                length_of_side2 = second_edge.edge_length()
 
                 self.on_first_segment = floats_are_close(intersect_point_to_point1_distance +
                                                          intersect_point_to_point2_distance, length_of_side1)
 
                 self.on_second_segment = floats_are_close(intersect_point_to_point3_distance +
                                                           intersect_point_to_point4_distance, length_of_side2)
+                return self
         else:
             raise TypeError("Arguments must be objects of Point2")
 
-    def intersect_line_circle(self, line_edge, circle_edge, list_of_intersections):
-        if is_edge2(line_edge) and is_edge2(circle_edge) and is_list(list_of_intersections):
+    def intersect_line_circle(self, line_edge, circle_edge):
+        if is_edge2(line_edge) and is_edge2(circle_edge) and circle_edge.is_arc():
             lu = line_edge.p2 - line_edge.p1
             lw = line_edge.p1 - circle_edge.centre
             a = lu.dot(lu)
@@ -155,3 +162,45 @@ class Intersection:
 
             d = (b * b) - (4.0 * a * c)
 
+            if d < 0.0:
+                return 0
+            elif floats_are_close(d, 0.0):
+                u = -b / (2.0 * a)
+                self.point = line_edge.p1 + (lu * u)
+                self.vectors_intersect = True
+                self.on_first_segment = 0.0 <= u <= 1.0
+                self.on_second_segment = True
+                if floats_are_close(u, 0.0):
+                    self.end_of_line = True
+                    self.point = line_edge.p1
+                elif floats_are_close(u, 1.0):
+                    self.end_of_line = True
+                    self.point = line_edge.p2
+                return 1
+            else:
+                sqrt_d = math.sqrt(d)
+                u_1 = (-b + sqrt_d) / (2.0 * a)
+                u_2 = (-b - sqrt_d) / (2.0 * a)
+
+                self.point = line_edge.p1 + (lu * u_1)
+                self.vectors_intersect = True
+                self.on_first_segment = 0.0 <= u_1 <= 1.0
+                self.on_second_segment = True
+
+                if floats_are_close(u_1, 0.0):
+                    self.point = line_edge.p1
+                    self.end_of_line = True
+                elif floats_are_close(u_1, 1.0):
+                    self.point = line_edge.p2
+                    self.end_of_line = True
+
+                other_intersection = Intersection()
+                other_intersection.point = line_edge.p1 + (lu * u_2)
+                other_intersection.vectors_intersect = True
+                other_intersection.on_first_segment = 0.0 <= u_2 <= 1.0
+                other_intersection.on_second_segment = True
+
+                if floats_are_close(u_2, 0.0) or floats_are_close(u_2, 1.0):
+                    other_intersection.end_of_line = True
+
+                return [self, other_intersection]
