@@ -424,6 +424,12 @@ class Edge2:
     def maximum_y(self):
         return max(self.p1.y, self.p2.y)
 
+    def minimum_x(self):
+        return min(self.p1.x, self.p2.x)
+
+    def maximum_x(self):
+        return max(self.p1.x, self.p2.x)
+
 
 def is_edge2(input_variable):
     return isinstance(input_variable, Edge2)
