@@ -124,7 +124,7 @@ class AxisAlignedBox2:
         :return:the box centre
         :rtype: Vector2
         """
-        return Point2((self.min.x + self.max.x) * 0.5, (self.min.y + self.max.y) * 0.5)
+        return Vector2((self.min.x + self.max.x) * 0.5, (self.min.y + self.max.y) * 0.5)
 
     def __add__(self, vector):
         """
