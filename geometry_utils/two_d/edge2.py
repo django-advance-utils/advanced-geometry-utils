@@ -276,17 +276,6 @@ class Edge2:
         else:
             raise TypeError("Edge offset is done by an object of Vector2")
 
-    def flip_xy(self):
-        """
-        Flips the x and y coordinates of the start and end points of the edge
-
-        """
-        self.p1.flip_xy()
-        self.p2.flip_xy()
-        self.centre = self.calculate_centre()
-        if self.clockwise:
-            self.clockwise = False
-
     def flip_x(self):
         """
         Flips the x coordinate of the edge about the origin
