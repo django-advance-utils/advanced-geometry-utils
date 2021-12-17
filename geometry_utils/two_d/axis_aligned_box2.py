@@ -1,4 +1,4 @@
-from geometry_utils.two_d.point2 import Point2, is_point2
+from geometry_utils.two_d.point2 import is_point2
 from geometry_utils.two_d.vector2 import Vector2, is_vector2
 
 
@@ -36,12 +36,12 @@ class AxisAlignedBox2:
     empty(Point2): bool
         Tests if the 2D box is empty
     """
-    def __init__(self, minimum=Point2(0.0, 0.0), maximum=Point2(0.0, 0.0)):
-        if is_point2(minimum) and is_point2(maximum):
+    def __init__(self, minimum=None, maximum=None):
+        if (is_point2(minimum) and is_point2(maximum)) or (minimum is None and maximum is None):
             self.min = minimum
             self.max = maximum
         else:
-            raise TypeError("AxisAlignedBox2 arguments must be objects of Point2")
+            raise TypeError("AxisAlignedBox2 must be objects of type Point2")
 
     def include(self, other):
         """
@@ -54,13 +54,21 @@ class AxisAlignedBox2:
         :raises:TypeError: wrong argument type
         """
         if is_point2(other):
-            self.max.x = max(self.max.x, other.x)
-            self.min.x = min(self.min.x, other.x)
-            self.max.y = max(self.max.y, other.y)
-            self.min.y = min(self.min.y, other.y)
+            if not self.is_valid():
+                self.min = other
+                self.max = other
+            else:
+                self.max.x = max(self.max.x, other.x)
+                self.min.x = min(self.min.x, other.x)
+                self.max.y = max(self.max.y, other.y)
+                self.min.y = min(self.min.y, other.y)
         elif is_box2(other):
-            self.include(other.min)
-            self.include(other.max)
+            if not self.is_valid():
+                self.min = other.min
+                self.max = other.max
+            else:
+                self.include(other.min)
+                self.include(other.max)
         else:
             raise TypeError("Inclusion must be with an object of Point2 or AxisAlignedBox2")
 
@@ -77,7 +85,7 @@ class AxisAlignedBox2:
         if is_point2(item):
             return self.min <= item <= self.max
         if is_box2(item):
-            return self.__contains__(item.min) and self.__contains__(item.max)
+            return item.min in self and item.max in self
         raise TypeError("Variable must be an object of Point2 or AxisAlignedBox2")
 
     def intersects(self, item):
@@ -175,7 +183,12 @@ class AxisAlignedBox2:
         :return:the emptiness of the box
         :rtype: bool
         """
+        if not self.is_valid():
+            return True
         return self.size() == Vector2(0.0, 0.0)
+
+    def is_valid(self):
+        return self.min is not None and self.max is not None
 
 
 def is_box2(input_variable):
