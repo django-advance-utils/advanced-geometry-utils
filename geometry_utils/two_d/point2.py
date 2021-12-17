@@ -153,16 +153,6 @@ class Point2:
             return (self - other_point).length()
         raise TypeError("Argument must be an object of Point2")
 
-    def flip_xy(self):
-        """
-        Swaps the x and y coordinates of the point
-
-        """
-        tmp = self.x
-        self.x = self.y
-        self.y = tmp
-        return self
-
     def mirror_y(self):
         """
         Mirrors the x coordinate about the y-coordinate
