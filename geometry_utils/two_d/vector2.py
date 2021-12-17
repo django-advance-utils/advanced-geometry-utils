@@ -1,6 +1,6 @@
-from math import sqrt, cos, sin
+from math import sqrt, cos, sin, acos, atan2
 
-from geometry_utils.maths_utility import are_ints_or_floats, is_int_or_float, floats_are_close
+from geometry_utils.maths_utility import are_ints_or_floats, is_int_or_float, floats_are_close, radians_to_degrees
 
 
 class Vector2:
@@ -218,7 +218,7 @@ class Vector2:
         :return:the inverse vector
         :rtype: Vector2
         """
-        return Vector2(self.y, self.x)
+        return Vector2(-self.x, -self.y)
 
     def rotate(self, origin, theta):
         """
@@ -248,6 +248,16 @@ class Vector2:
             raise TypeError("Origin of rotation must be an object of Vector2")
         if not is_int_or_float(theta):
             raise TypeError("Angle of rotation must be a float or int")
+
+    def angle_between(self, other_vector):
+        self_unit_vector = self.normalise()
+        other_unit_vector = other_vector.normalise()
+        dot_product = self_unit_vector.dot(other_unit_vector)
+        angle = acos(dot_product)
+        return angle
+
+    def signed_angle_between(self, other_vector):
+        return atan2(other_vector.y, other_vector.x) - atan2(self.y, self.x)
 
 
 def is_vector2(input_variable):
