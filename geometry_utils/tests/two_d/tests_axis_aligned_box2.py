@@ -8,7 +8,7 @@ test_vector2_1 = Vector2(1.0, 1.0)
 test_point2_1 = Point2(1.0, 1.0)
 test_point2_2 = Point2(1.0, 0.0)
 test_box2_1 = AxisAlignedBox2(Point2(0.0, 0.0), Point2(2.0, 2.0))
-test_box2_2 = AxisAlignedBox2()
+test_box2_2 = AxisAlignedBox2(Point2(0.0, 0.0), Point2(0.0, 0.0))
 test_box2_3 = AxisAlignedBox2(Point2(0.0, 0.0), Point2(0.0, 0.0))
 test_box2_4 = AxisAlignedBox2(Point2(0.0, 0.0), Point2(0.0, 0.0))
 
