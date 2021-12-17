@@ -73,7 +73,7 @@ class TestPath2(unittest.TestCase):
         self.assert_(not test_path2_3.is_closed)
 
     def test_path2_get_path_bounds(self):
-        assert test_path2_1.get_path_bounds == AxisAlignedBox2(Point2(0.0, 0.0), Point2(2.0, 2.0))
+        assert test_path2_1.get_bounds == AxisAlignedBox2(Point2(0.0, 0.0), Point2(2.0, 2.0))
 
     def test_path2_to_tuple_list(self):
         test_path_tuple = test_path2_1.to_tuple_list()
