@@ -3,7 +3,7 @@ from copy import deepcopy
 from geometry_utils.maths_utility import is_int_or_float
 from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
 from geometry_utils.two_d.edge2 import Edge2
-from geometry_utils.two_d.vector2 import is_vector2
+from geometry_utils.two_d.vector2 import is_vector2, Vector2
 from geometry_utils.two_d.point2 import is_list_of_points, get_points_orientation, get_leftmost_point_index, Point2
 
 
@@ -97,7 +97,7 @@ class Path2:
         return continuity
 
     @property
-    def get_path_bounds(self):
+    def get_bounds(self):
         """
         Derives the AxisAlignedBox2 containing the bounds of the path
 
@@ -107,6 +107,30 @@ class Path2:
         path_bounds = AxisAlignedBox2()
         for edge in self.list_of_edges:
             path_bounds.include(edge.get_edge_bounds())
+
+            if edge.is_arc():
+                positive_x = edge.centre + Vector2(edge.radius, 0)
+                positive_y = edge.centre + Vector2(0, edge.radius)
+                negative_x = edge.centre + Vector2(-edge.radius, 0)
+                negative_y = edge.centre + Vector2(0, -edge.radius)
+
+                parametric_positive_x = edge.parametric_point(positive_x)
+                parametric_positive_y = edge.parametric_point(positive_y)
+                parametric_negative_x = edge.parametric_point(negative_x)
+                parametric_negative_y = edge.parametric_point(negative_y)
+
+                lower_bound = -0.0001
+                upper_bound = 1.0001
+
+                if lower_bound < parametric_positive_x < upper_bound:
+                    path_bounds.include(positive_x)
+                if lower_bound < parametric_positive_y < upper_bound:
+                    path_bounds.include(positive_y)
+                if lower_bound < parametric_negative_x < upper_bound:
+                    path_bounds.include(negative_x)
+                if lower_bound < parametric_negative_y < upper_bound:
+                    path_bounds.include(negative_y)
+
         return path_bounds
 
     def to_tuple_list(self):
@@ -128,11 +152,6 @@ class Path2:
         indices_of_edges_to_remove.sort(reverse=True)
         for index in indices_of_edges_to_remove:
             del self.list_of_edges[index]
-        return self
-
-    def flip_xy(self):
-        for edge in self.list_of_edges:
-            edge.flip_xy()
         return self
 
     def mirror_y(self):
@@ -238,26 +257,6 @@ class Path2:
             ]
 
             return circle_list_of_points
-
-    def flip_vertical(self):
-        minimum_y = self.list_of_edges[0].minimum_y()
-        maximum_y = self.list_of_edges[0].maximum_y()
-        for edge in self.list_of_edges:
-            minimum_y = min(minimum_y, edge.minimum_y())
-            maximum_y = max(maximum_y, edge.maximum_y())
-
-        y_range = maximum_y - minimum_y
-        mid = minimum_y + (y_range / 2)
-
-        for edge in self.list_of_edges:
-            offset_p1 = edge.p1.y - mid
-            offset_p2 = edge.p2.y - mid
-
-            edge.p1.y -= offset_p1 * 2
-            edge.p2.y -= offset_p2 * 2
-
-            if edge.clockwise:
-                edge.clockwise = False
 
 
 def get_convex_hull(list_of_points):
