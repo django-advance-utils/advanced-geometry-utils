@@ -6,6 +6,7 @@ ONE_AND_HALF_PI = float(PI * 3/2)
 TWO_PI = float(PI * 2)
 
 DEG_TO_RAD = PI / 180.0
+RAD_TO_DEG = 180.0 / PI
 
 CIRCLE_DIVISIONS = 512
 
@@ -526,8 +527,13 @@ DOUBLE_EPSILON = 0.0001
 
 
 def degrees_to_radians(theta_in_degrees):
-    if isinstance(theta_in_degrees, float):
+    if is_float(theta_in_degrees):
         return theta_in_degrees * DEG_TO_RAD
+
+
+def radians_to_degrees(theta_in_radians):
+    if is_float(theta_in_radians):
+        return theta_in_radians * RAD_TO_DEG
 
 
 def is_float(input_variable):
