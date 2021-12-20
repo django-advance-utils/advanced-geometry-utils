@@ -1,10 +1,11 @@
+import copy
 from copy import deepcopy
 
-from geometry_utils.maths_utility import is_int_or_float
+from geometry_utils.maths_utility import is_int_or_float, is_list
 from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
 from geometry_utils.two_d.edge2 import Edge2
 from geometry_utils.two_d.vector2 import is_vector2, Vector2
-from geometry_utils.two_d.point2 import is_list_of_points, get_points_orientation, get_leftmost_point_index, Point2
+from geometry_utils.two_d.point2 import is_list_of_points, Point2
 
 
 class Path2:
@@ -77,6 +78,7 @@ class Path2:
         """
         if self.path_length > 2:
             return self.list_of_edges[-1].p2 == self.list_of_edges[0].p1 and self.is_continuous
+        return False
 
     @property
     def is_continuous(self):
@@ -182,6 +184,13 @@ class Path2:
 
     def close_path(self):
         if self.path_length > 1 and not self.is_closed:
+            if not self.is_continuous:
+                for index, edge in enumerate(self.list_of_edges):
+                    if index == 0:
+                        continue
+                    if self.list_of_edges[index - 1].p2 != edge.p1:
+                        self.list_of_edges.insert(index, Edge2(self.list_of_edges[index - 1].p2, edge.p1))
+                        index += 1
             self.list_of_edges.append(Edge2(deepcopy(self.list_of_edges[-1].p2), deepcopy(self.list_of_edges[0].p1)))
         return self
 
@@ -258,39 +267,62 @@ class Path2:
 
             return circle_list_of_points
 
+    def get_points_orientation(self, list_of_point_indices):
+        # https://www.geeksforgeeks.org/convex-hull-set-1-jarviss-algorithm-or-wrapping/
+        if is_list(list_of_point_indices):
+            val = (((self.list_of_edges[list_of_point_indices[1]].minimum_y() - self.list_of_edges[list_of_point_indices[0]].minimum_y()) *
+                    (self.list_of_edges[list_of_point_indices[2]].minimum_x() - self.list_of_edges[list_of_point_indices[1]].minimum_x())) -
+                   ((self.list_of_edges[list_of_point_indices[1]].minimum_x() - self.list_of_edges[list_of_point_indices[0]].minimum_x()) *
+                    (self.list_of_edges[list_of_point_indices[2]].minimum_y() - self.list_of_edges[list_of_point_indices[1]].minimum_y())))
 
-def get_convex_hull(list_of_points):
-    if is_list_of_points(list_of_points):
+            if val == 0:
+                return "Collinear"
+            elif val > 0:
+                return "Clockwise"
+            else:
+                return "Counterclockwise"
+        raise TypeError("Input arguments must be objects of Point2")
 
-        number_of_points = len(list_of_points)
+    def get_leftmost_point_index(self):
+        minimum_point_index = 0
+        for index in range(1, self.path_length):
+            if self.list_of_edges[index].p1.x < self.list_of_edges[minimum_point_index].p1.x:
+                minimum_point_index = index
+            elif self.list_of_edges[index].p1.x == self.list_of_edges[minimum_point_index].p1.x:
+                if self.list_of_edges[index].p1.y > self.list_of_edges[minimum_point_index].p1.y:
+                    minimum_point_index = index
+        return minimum_point_index
 
-        if number_of_points < 3:
-            raise IndexError("There must be at least three points")
-
-        leftmost_point_index = get_leftmost_point_index(list_of_points)
-        print(list_of_points[leftmost_point_index].x, list_of_points[leftmost_point_index].y)
-
-        list_of_convex_hull_points = []
-
-        first_point_index = leftmost_point_index
-
-        while True:
-            list_of_convex_hull_points.append(list_of_points[first_point_index])
-            second_point_index = (first_point_index + 1) % number_of_points
-
-            for i in range(number_of_points):
-                if get_points_orientation(list_of_points[first_point_index], list_of_points[i],
-                                          list_of_points[second_point_index]) == "Counterclockwise":
-                    second_point_index = i
-            first_point_index = second_point_index
-            if first_point_index == leftmost_point_index:
-                break
-
+    def get_convex_hull(self):
         convex_hull = Path2()
-        for previous_point, point in zip(list_of_convex_hull_points, list_of_convex_hull_points[1:]):
-            convex_hull.list_of_edges.append(Edge2(previous_point, point))
-        convex_hull.close_path()
-        return convex_hull
+        if self.is_continuous:
+            convex_hull = copy.deepcopy(self)
+            if not self.is_closed:
+                convex_hull.close_path()
+            return convex_hull
+        else:
+            number_of_edges = self.path_length
+
+            if number_of_edges < 3:
+                raise IndexError("There must be at least three edges")
+
+            leftmost_point_index = self.get_leftmost_point_index()
+
+            first_point_index = leftmost_point_index
+
+            while True:
+                convex_hull.list_of_edges.append(self.list_of_edges[first_point_index])
+                second_point_index = (first_point_index + 1) % number_of_edges
+
+                for i in range(number_of_edges):
+                    if self.get_points_orientation([first_point_index, i, second_point_index]) == "Counterclockwise":
+                        second_point_index = i
+
+                first_point_index = second_point_index
+                if first_point_index == leftmost_point_index:
+                    break
+
+            return convex_hull
 
 
 def is_path2(input_variable):
