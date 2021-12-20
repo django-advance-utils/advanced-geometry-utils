@@ -162,35 +162,6 @@ class Point2:
         return self
 
 
-def get_leftmost_point_index(list_of_points):
-    if is_list_of_points(list_of_points):
-        minimum_point_index = 0
-        number_of_points = len(list_of_points)
-        for index in range(1, number_of_points):
-            if list_of_points[index].x < list_of_points[minimum_point_index].x:
-                minimum_point_index = index
-            elif list_of_points[index].x == list_of_points[minimum_point_index].x:
-                if list_of_points[index].y > list_of_points[minimum_point_index].y:
-                    minimum_point_index = index
-        return minimum_point_index
-    raise TypeError("Input argument must be a list of Point2 objects")
-
-
-def get_points_orientation(first_point, second_point, third_point):
-    # https://www.geeksforgeeks.org/convex-hull-set-1-jarviss-algorithm-or-wrapping/
-    if is_list_of_points([first_point, second_point, third_point]):
-        val = ((second_point.y - first_point.y) * (third_point.x - second_point.x) -
-               (second_point.x - first_point.x) * (third_point. y - second_point.y))
-
-        if val == 0:
-            return "Collinear"
-        elif val > 0:
-            return "Clockwise"
-        else:
-            return "Counterclockwise"
-    raise TypeError("Input arguments must be objects of Point2")
-
-
 def is_list_of_points(input_list):
     if isinstance(input_list, list):
         for input_variable in input_list:
