@@ -1,9 +1,9 @@
 import math
 
 from geometry_utils.two_d.point2 import Point2, is_point2
-from geometry_utils.maths_utility import floats_are_close, ranges_overlap
+from geometry_utils.maths_utility import floats_are_close, ranges_overlap, TWO_PI
 from geometry_utils.two_d.edge2 import is_edge2
-from geometry_utils.maths_utility import is_list
+from geometry_utils.two_d.vector2 import is_vector2
 
 
 class Intersection:
@@ -35,44 +35,35 @@ class Intersection:
         perform intersection of two edges   
     """
 
-    def __init__(self,
-                 point=Point2(0.0, 0.0),
-                 vectors_intersect=False,
-                 on_first_segment=False,
-                 on_second_segment=False,
-                 collinear=False,
-                 end_of_line=False,
-                 do_collinear_test=False):
+    def __init__(self):
+        self.vectors_intersect = False
+        self.on_first_segment = False
+        self.on_second_segment = False
+        self.collinear = False
+        self.end_of_line = False
+        self.point = Point2()
 
-        if is_point2(point):
-            self.vectors_intersect = vectors_intersect
-            self.on_first_segment = on_first_segment
-            self.on_second_segment = on_second_segment
-            self.collinear = collinear
-            self.end_of_line = end_of_line
-            self.point = point
-            self.do_collinear_test = do_collinear_test
-        else:
-            raise TypeError("First argument must be an object of Point2")
-
-    def intersect(self, first_edge, second_edge, list_of_intersections):
+    def intersect(self, first_edge, second_edge):
         """
         Creates the intersection of the edge with another edge and appends the list of intersections
 
         """
-        if is_edge2(first_edge) and is_edge2(second_edge) and is_list(list_of_intersections):
-            if second_edge.is_circle():
-                intersection = self.intersect_line_circle(first_edge, second_edge)
-                list_of_intersections.append(intersection)
+        if is_edge2(first_edge) and is_edge2(second_edge):
+            if second_edge.is_arc():
+                if second_edge.is_circle():
+                    intersection, next_intersection = self.intersect_line_circle(first_edge, second_edge)
+                    return intersection
+                else:
+                    intersection = self.intersect_line_arc(first_edge, second_edge)
+                    return intersection
             else:
                 intersection = self.intersect_lines(first_edge, second_edge)
-                list_of_intersections.append(intersection)
+                return intersection
+
 
         else:
             if not is_edge2(first_edge) or not is_edge2(second_edge):
                 raise TypeError("First and second arguments must be objects of Edge2")
-            if not is_list(list_of_intersections):
-                raise TypeError("Third argument must be a list")
 
     def intersect_lines(self, first_edge, second_edge):
         """
@@ -105,21 +96,20 @@ class Intersection:
                 self.point = first_edge.p1
                 self.do_collinear_test = True
 
-                if self.do_collinear_test:
-                    w_normalised = w.normalise()
-                    u_normalised = u.normalise()
-                    det = (w_normalised.x * u_normalised.y) - (w_normalised.y * u_normalised.x)
+                w_normalised = w.normalise()
+                u_normalised = u.normalise()
+                det = (w_normalised.x * u_normalised.y) - (w_normalised.y * u_normalised.x)
 
-                    if floats_are_close(det, 0.0):
-                        self.vectors_intersect = True
-                        self.collinear = True
+                if floats_are_close(det, 0.0):
+                    self.vectors_intersect = True
+                    self.collinear = True
 
-                        if ranges_overlap(first_edge.minimum_x(), first_edge.maximum_x(),
-                                          second_edge.minimum_x(), second_edge.maximum_x()) and \
-                           ranges_overlap(first_edge.minimum_y(), first_edge.maximum_y(),
-                                          second_edge.minimum_y(), second_edge.maximum_y()):
-                            self.on_first_segment = True
-                            self.on_second_segment = True
+                    if ranges_overlap(first_edge.minimum_x(), first_edge.maximum_x(),
+                                      second_edge.minimum_x(), second_edge.maximum_x()) and \
+                            ranges_overlap(first_edge.minimum_y(), first_edge.maximum_y(),
+                                           second_edge.minimum_y(), second_edge.maximum_y()):
+                        self.on_first_segment = True
+                        self.on_second_segment = True
 
             else:
                 self.vectors_intersect = True
@@ -135,9 +125,9 @@ class Intersection:
                 intersect_point_to_point4_distance = self.point.distance_to(second_edge.p2)
 
                 if floats_are_close(intersect_point_to_point1_distance, 0.0) or \
-                   floats_are_close(intersect_point_to_point2_distance, 0.0) or \
-                   floats_are_close(intersect_point_to_point3_distance, 0.0) or \
-                   floats_are_close(intersect_point_to_point4_distance, 0.0):
+                        floats_are_close(intersect_point_to_point2_distance, 0.0) or \
+                        floats_are_close(intersect_point_to_point3_distance, 0.0) or \
+                        floats_are_close(intersect_point_to_point4_distance, 0.0):
                     self.end_of_line = True
 
                 length_of_side1 = first_edge.edge_length()
@@ -148,12 +138,14 @@ class Intersection:
 
                 self.on_second_segment = floats_are_close(intersect_point_to_point3_distance +
                                                           intersect_point_to_point4_distance, length_of_side2)
-                return self
+            return [self]
         else:
             raise TypeError("Arguments must be objects of Point2")
 
     def intersect_line_circle(self, line_edge, circle_edge):
-        if is_edge2(line_edge) and is_edge2(circle_edge) and circle_edge.is_arc():
+        if is_edge2(line_edge) and is_edge2(circle_edge):
+            result = []
+
             lu = line_edge.p2 - line_edge.p1
             lw = line_edge.p1 - circle_edge.centre
             a = lu.dot(lu)
@@ -163,7 +155,7 @@ class Intersection:
             d = (b * b) - (4.0 * a * c)
 
             if d < 0.0:
-                return 0
+                return result
             elif floats_are_close(d, 0.0):
                 u = float(-b) / (2.0 * a)
                 self.point = line_edge.p1 + (lu * u)
@@ -176,7 +168,8 @@ class Intersection:
                 elif floats_are_close(u, 1.0):
                     self.end_of_line = True
                     self.point = line_edge.p2
-                return self
+                result.append(self)
+                return result
             else:
                 sqrt_d = math.sqrt(d)
                 u_1 = (-b + sqrt_d) / (2.0 * a)
@@ -202,5 +195,23 @@ class Intersection:
 
                 if floats_are_close(u_2, 0.0) or floats_are_close(u_2, 1.0):
                     other_intersection.end_of_line = True
+                result.append(self)
+                result.append(other_intersection)
+                return result
 
-                return [self, other_intersection]
+    def intersect_line_arc(self, line_edge, arc_edge):
+        if is_edge2(line_edge) and is_edge2(arc_edge) and arc_edge.is_arc():
+            intersections = self.intersect_line_circle(line_edge, arc_edge)
+
+            out = []
+
+            if len(intersections) < 1:
+                return out
+
+            for intersection in intersections:
+                if intersection.vectors_intersect:
+                    intersection_point_vector = intersection.point.to_vector2()
+                    intersection.on_second_segment = arc_edge.vector_within_arc(intersection_point_vector)
+                    out.append(intersection)
+
+            return out
