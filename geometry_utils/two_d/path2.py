@@ -5,7 +5,7 @@ from geometry_utils.maths_utility import is_int_or_float, is_list
 from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
 from geometry_utils.two_d.edge2 import Edge2
 from geometry_utils.two_d.vector2 import is_vector2, Vector2
-from geometry_utils.two_d.point2 import is_list_of_points, Point2
+from geometry_utils.two_d.point2 import Point2, is_point2
 
 
 class Path2:
@@ -300,30 +300,75 @@ class Path2:
             if not self.is_closed:
                 convex_hull.close_path()
             return convex_hull
-        else:
-            number_of_edges = self.path_length
 
-            if number_of_edges < 3:
-                raise IndexError("There must be at least three edges")
+        number_of_edges = self.path_length
 
-            leftmost_point_index = self.get_leftmost_point_index()
+        if number_of_edges < 3:
+            raise IndexError("There must be at least three edges")
 
-            first_point_index = leftmost_point_index
+        leftmost_point_index = self.get_leftmost_point_index()
 
-            while True:
-                convex_hull.list_of_edges.append(self.list_of_edges[first_point_index])
-                second_point_index = (first_point_index + 1) % number_of_edges
+        first_point_index = leftmost_point_index
 
-                for i in range(number_of_edges):
-                    if self.get_points_orientation([first_point_index, i, second_point_index]) == "Counterclockwise":
-                        second_point_index = i
+        while True:
+            convex_hull.list_of_edges.append(self.list_of_edges[first_point_index])
+            second_point_index = (first_point_index + 1) % number_of_edges
 
-                first_point_index = second_point_index
-                if first_point_index == leftmost_point_index:
-                    break
+            for i in range(number_of_edges):
+                if self.get_points_orientation([first_point_index, i, second_point_index]) == "Counterclockwise":
+                    second_point_index = i
 
-            return convex_hull
+            first_point_index = second_point_index
+            if first_point_index == leftmost_point_index:
+                break
+        convex_hull.close_path()
+        return convex_hull
 
+    def reverse(self):
+        self.list_of_edges.reverse()
+        for edge in self.list_of_edges:
+            edge.reverse()
+
+
+'''
+    def get_oriented_bounding_box(self):
+        class Box:
+            def __init__(self):
+                self.U0 = Vector2()
+                self.U1 = Vector2()
+                self.index = [0, 0, 0, 0]
+                self.sqr_len_min = 0.0
+                self.area = 0.0
+
+        def perp(point):
+            if is_point2(point):
+                return Point2(point.y, -point.x)
+
+        def inv(point):
+            if is_point2(point):
+                return Point2(-point.x, -point.y)
+
+        def sub(point1, point2):
+            if is_point2(point1) and is_point2(point2):
+                return Point2(point1.x - point2.x, point1.y - point2.y)
+
+        def smallest_box(start_index, end_index):
+            box = Box()
+            box.U0 = self.list_of_edges[end_index].p2 - self.list_of_edges[start_index].p1
+            box.U1 = box.U0.get_perpendicular()
+            box.index = [end_index, end_index, end_index, end_index]
+            box.sqr_len_min = box.U0.dot(box.U0)
+
+            origin = self.list_of_edges[end_index]
+            support = []
+
+            for index in range(4):
+                support.append(Point2())
+
+            index = 0
+            for edge in self.list_of_edges:
+                diff = 
+'''
 
 def is_path2(input_variable):
     return isinstance(input_variable, Path2)
