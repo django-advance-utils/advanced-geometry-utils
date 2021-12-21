@@ -257,7 +257,11 @@ class Vector2:
         return angle
 
     def signed_angle_between(self, other_vector):
-        return atan2(other_vector.y, other_vector.x) - atan2(self.y, self.x)
+        if is_vector2(other_vector):
+            return self.angle_to_x_axis() - other_vector.angle_to_x_axis
+
+    def angle_to_x_axis(self):
+        return atan2(self.y, self.x)
 
 
 def is_vector2(input_variable):
