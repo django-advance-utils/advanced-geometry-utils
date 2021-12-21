@@ -427,6 +427,45 @@ class Edge2:
     def maximum_x(self):
         return max(self.p1.x, self.p2.x)
 
+    def vector_within_arc(self, vector):
+        if is_vector2(vector) and self.is_arc():
+            start_dash = self.p1 - self.centre
+            end_dash = self.p2 - self.centre
+            int_dash = vector - self.centre.to_vector2()
+
+            if self.clockwise:
+                start_dash.y *= -1
+                end_dash.y *= -1
+                int_dash.y *= -1
+
+            start = start_dash.angle_to_x_axis()
+            extent = end_dash.angle_to_x_axis() - start
+
+            if floats_are_close(start, 0.0):
+                start = 0.0
+            if floats_are_close(extent, 0.0):
+                extent = 0.0
+            if extent < 0.0:
+                extent += TWO_PI
+
+            end = start + extent
+            theta = int_dash.angle_to_x_axis()
+
+            if floats_are_close(theta, 0.0):
+                theta = 0.0
+
+            while start < 0:
+                start += TWO_PI
+
+            while end < start:
+                end += TWO_PI
+
+            while not floats_are_close(theta, start) and theta < start:
+                theta += TWO_PI
+
+            return (((theta > start) or floats_are_close(theta, start)) and
+                    ((theta < end) or floats_are_close(theta, end)))
+
 
 def is_edge2(input_variable):
     return isinstance(input_variable, Edge2)
