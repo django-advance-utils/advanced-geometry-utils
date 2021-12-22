@@ -475,6 +475,14 @@ class Edge2:
             return (((theta > start) or floats_are_close(theta, start)) and
                     ((theta < end) or floats_are_close(theta, end)))
 
+    def transform(self, transformation_matrix):
+        self.p1 = transformation_matrix * self.p1
+        self.p2 = transformation_matrix * self.p2
+
+    def is_clockwise(self):
+        phi = (((self.centre.x - self.p1.x) * (self.p2.y - self.p1.y)) -
+               ((self.centre.y - self.p1.y) * (self.p2.x - self.p1.x)))
+        return phi < 0
 
 def is_edge2(input_variable):
     return isinstance(input_variable, Edge2)
