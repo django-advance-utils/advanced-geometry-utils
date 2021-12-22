@@ -44,6 +44,12 @@ class Point2:
         else:
             raise TypeError("Point2 argument must be an int or float")
 
+    def __repr__(self):
+        return repr({'x': self.x, 'y': self.y})
+
+    def __str__(self):
+        return "Point2(x:" + str("{:.2f}".format(self.x)) + ", y:" + str("{:.2f}".format(self.y)) + ")"
+
     def __add__(self, vector):
         """
         Translates point by the 2D vector value
@@ -128,6 +134,16 @@ class Point2:
         """
         if is_point2(other_point):
             return self.x >= other_point.x and self.y >= other_point.y
+        raise TypeError("Comparison must be done with another object of Point2")
+
+    def __lt__(self, other_point):
+        if is_point2(other_point):
+            return self.x < other_point.x and self.y < other_point.y
+        raise TypeError("Comparison must be done with another object of Point2")
+
+    def __gt__(self, other_point):
+        if is_point2(other_point):
+            return self.x > other_point.x and self.y > other_point.y
         raise TypeError("Comparison must be done with another object of Point2")
 
     def to_vector2(self):
