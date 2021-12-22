@@ -346,6 +346,10 @@ class Path2:
         for edge in self.list_of_edges:
             edge.reverse()
 
+    def transform(self, transformation_matrix):
+        for edge in self.list_of_edges:
+            edge.transform(transformation_matrix)
+
 
 '''
     def get_oriented_bounding_box(self):
