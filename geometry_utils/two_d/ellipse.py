@@ -74,6 +74,17 @@ class Ellipse:
             if not are_ints_or_floats([major_radius, minor_radius]):
                 raise TypeError("Fourth and fifth arguments must be ints or floats")
 
+    def __repr__(self):
+        return repr({'start:': self.start, 'centre:': self.centre, 'end:': self.end, 'major radius:': self.major_radius,
+                     'minor radius:': self.minor_radius, 'clockwise:': self.clockwise, 'large_arc:': self.large_arc,
+                     'angle:': self.angle, 'delta:': self.delta, 'valid:': self.valid})
+
+    def __str__(self):
+        return ("Ellipse2(start:" + str(self.start) + ", centre:" + str(self.centre) + ", end:" + str(self.end) +
+                ", major radius:" + str(self.major_radius) + ", minor radius:" + str(self.minor_radius) +
+                ", clockwise:" + str(self.clockwise) + ", large arc:" + str(self.large_arc) +
+                ", angle:" + str(self.angle) + ", delta:" + str(self.delta) + ", valid:" + str(self.valid) + ")")
+
     def calculate_centre(self):
         """
         Calculates the centre of self
