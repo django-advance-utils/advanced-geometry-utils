@@ -69,6 +69,15 @@ class Edge2:
             if not is_int_or_float(radius):
                 raise TypeError("Radius must be an int or float")
 
+    def __repr__(self):
+        return repr({'p1:': self.p1, 'p2:': self.p2, 'centre:': self.centre, 'radius:': self.radius,
+                     'clockwise:': self.clockwise, 'large:': self.large})
+
+    def __str__(self):
+        return ("Edge2(p1:" + str(self.p1) + ", p2:" + str(self.p2) + ", centre:" + str(self.centre) +
+                ", radius:" + str(self.radius) + ", clockwise:" + str(self.clockwise) +
+                ", large:" + str(self.large) + ")")
+
     def __eq__(self, other_edge):
         """
         Compares the equality of the edge and another 2D edge

@@ -41,6 +41,13 @@ class Matrix3:
             if not are_ints_or_floats(self.vals[0][0]) or are_ints_or_floats(self.vals[0][1]) or are_ints_or_floats(self.vals[0][2]):
                 raise TypeError("Matrix3 argument list must contain int or float")
 
+    def __repr__(self):
+        return repr({'vals': self.vals})
+
+    def __str__(self):
+        return ("Matrix3(vals:\n\t\t\t" + str(self.vals[0]) + "\n\t\t\t" + str(self.vals[1]) + "\n\t\t\t" +
+                str(self.vals[2]) + ")")
+
     def set_identity(self):
         """
         Converts the matrix to an identity matrix

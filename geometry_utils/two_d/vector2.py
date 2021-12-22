@@ -56,6 +56,12 @@ class Vector2:
         else:
             raise TypeError("Vector2 argument must be an int or float")
 
+    def __repr__(self):
+        return repr({'x': self.x, 'y': self.y})
+
+    def __str__(self):
+        return "Vector2(x:" + str("{:.2f}".format(self.x)) + ", y:" + str("{:.2f}".format(self.y)) + ")"
+
     def __add__(self, other_vector):
         """
         Calculates the addition of vector with another 2D vector

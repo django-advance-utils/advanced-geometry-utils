@@ -1,3 +1,4 @@
+
 from geometry_utils.two_d.point2 import is_point2
 from geometry_utils.two_d.vector2 import Vector2, is_vector2
 
@@ -42,6 +43,12 @@ class AxisAlignedBox2:
             self.max = maximum
         else:
             raise TypeError("AxisAlignedBox2 must be objects of type Point2")
+
+    def __repr__(self):
+        return repr({'min:': self.min, 'max:': self.max})
+
+    def __str__(self):
+        return "AxisAlignedBox2(min:" + str(self.min) + ", max:" + str(self.max)
 
     def include(self, other):
         """

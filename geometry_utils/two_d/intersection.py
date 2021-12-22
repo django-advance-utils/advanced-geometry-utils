@@ -43,6 +43,16 @@ class Intersection:
         self.end_of_line = False
         self.point = Point2()
 
+    def __repr__(self):
+        return repr({'Point:': self.point, 'Vectors Intersect:': self.vectors_intersect,
+                     'On First Segment:': self.on_first_segment, 'On Second Segment:': self.on_second_segment,
+                     'Collinear:': self.collinear, 'End Of Line:': self.end_of_line})
+
+    def __str__(self):
+        return ("Intersection(point:" + str(self.point) + ", Vectors Intersect:" + str(self.vectors_intersect) +
+                ", On First Segment:" + str(self.on_first_segment) +
+                ", On Second Segment:" + str(self.on_second_segment) + ", Collinear:" + str(self.collinear))
+
     def intersect(self, first_edge, second_edge):
         """
         Creates the intersection of the edge with another edge and appends the list of intersections
@@ -51,7 +61,7 @@ class Intersection:
         if is_edge2(first_edge) and is_edge2(second_edge):
             if second_edge.is_arc():
                 if second_edge.is_circle():
-                    intersection, next_intersection = self.intersect_line_circle(first_edge, second_edge)
+                    intersection = self.intersect_line_circle(first_edge, second_edge)
                     return intersection
                 else:
                     intersection = self.intersect_line_arc(first_edge, second_edge)
@@ -59,7 +69,6 @@ class Intersection:
             else:
                 intersection = self.intersect_lines(first_edge, second_edge)
                 return intersection
-
 
         else:
             if not is_edge2(first_edge) or not is_edge2(second_edge):

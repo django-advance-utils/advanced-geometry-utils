@@ -34,6 +34,19 @@ class Path2:
     def __init__(self):
         self.list_of_edges = []
 
+    def __repr__(self):
+        return repr({'list of edges': self.list_of_edges})
+
+    def __str__(self):
+        self.print_edges()
+        return ""
+
+    def print_edges(self):
+        print "Path2(list of edges: "
+        for index, edge in enumerate(self.list_of_edges):
+            print ("\t" + str(index) + "\t" + str(edge))
+        print ")"
+
     def __eq__(self, other_path):
         if is_path2(other_path) and self.path_length == other_path.path_length:
             for index in range(self.path_length):
@@ -270,10 +283,14 @@ class Path2:
     def get_points_orientation(self, list_of_point_indices):
         # https://www.geeksforgeeks.org/convex-hull-set-1-jarviss-algorithm-or-wrapping/
         if is_list(list_of_point_indices):
-            val = (((self.list_of_edges[list_of_point_indices[1]].minimum_y() - self.list_of_edges[list_of_point_indices[0]].minimum_y()) *
-                    (self.list_of_edges[list_of_point_indices[2]].minimum_x() - self.list_of_edges[list_of_point_indices[1]].minimum_x())) -
-                   ((self.list_of_edges[list_of_point_indices[1]].minimum_x() - self.list_of_edges[list_of_point_indices[0]].minimum_x()) *
-                    (self.list_of_edges[list_of_point_indices[2]].minimum_y() - self.list_of_edges[list_of_point_indices[1]].minimum_y())))
+            val = (((self.list_of_edges[list_of_point_indices[1]].minimum_y() - self.list_of_edges[
+                list_of_point_indices[0]].minimum_y()) *
+                    (self.list_of_edges[list_of_point_indices[2]].minimum_x() - self.list_of_edges[
+                        list_of_point_indices[1]].minimum_x())) -
+                   ((self.list_of_edges[list_of_point_indices[1]].minimum_x() - self.list_of_edges[
+                       list_of_point_indices[0]].minimum_x()) *
+                    (self.list_of_edges[list_of_point_indices[2]].minimum_y() - self.list_of_edges[
+                        list_of_point_indices[1]].minimum_y())))
 
             if val == 0:
                 return "Collinear"
@@ -369,6 +386,7 @@ class Path2:
             for edge in self.list_of_edges:
                 diff = 
 '''
+
 
 def is_path2(input_variable):
     return isinstance(input_variable, Path2)
