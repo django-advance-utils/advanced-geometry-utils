@@ -56,14 +56,36 @@ class Edge3:
             self.radius = radius
             self.clockwise = clockwise
             self.large = large
-            self.arc_centre = self.calculate_arc_centre()
+            self.centre = self.calculate_centre()
         else:
             if not is_point3(p1) or not is_point3(p2) or not is_point3(via):
                 raise TypeError("First, second and third arguments must be objects of Point2")
             if not is_int_or_float(radius):
                 raise TypeError("Fourth argument must be an int or float")
 
-    def calculate_arc_centre(self):
+    def __str__(self):
+        return ("Edge3(p1:" + str(self.p1) + ", p2:" + str(self.p2) + ", via:" + str(self.via) +
+                ", centre:" + str(self.centre) + ", radius:" + str(self.radius) + ", clockwise:" + str(self.clockwise) +
+                ", large:" + str(self.large) + ")")
+
+    def __eq__(self, other_edge):
+        """
+        Compares the equality of the edge and another 3D edge
+
+        :param   other_edge: the other 3D point
+        :type    other_edge: Edge3
+        :return: the edge equality
+        :rtype:  bool
+        :raises: TypeError: Wrong argument type
+        """
+        if is_edge3(other_edge):
+            equality = (self.p1 == other_edge.p1 and self.p2 == other_edge.p2 and self.via == self.via and
+                        self.radius == other_edge.radius and self.large == other_edge.large and
+                        self.centre == other_edge.centre and self.clockwise == other_edge.clockwise)
+            return equality
+        raise TypeError("Comparison must be with another object of Edge3")
+
+    def calculate_centre(self):
         """
         Calculates the centre of the arc
 
@@ -134,7 +156,7 @@ class Edge3:
         """
         p1_vector = self.p1.to_vector3()
         p2_vector = self.p2.to_vector3()
-        return (p2_vector - p1_vector).normalise()
+        return (p2_vector - p1_vector).normalised()
 
     def get_edge_bounds(self):
         """
