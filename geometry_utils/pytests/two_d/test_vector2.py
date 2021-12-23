@@ -129,12 +129,12 @@ def test_vector2_length_arithmetic(test_vector2_1):
 
 
 def test_vector2_normalised_return_type(test_vector2_1):
-    assert isinstance(test_vector2_1.normalise(), Vector2)
+    assert isinstance(test_vector2_1.normalised(), Vector2)
 
 
 def test_vector2_normalised_arithmetic(test_vector2_1, test_vector2_4):
-    assert test_vector2_1.normalise() == Vector2(1 / sqrt(2.0), 1 / sqrt(2.0))
-    assert test_vector2_4.normalise() == test_vector2_4
+    assert test_vector2_1.normalised() == Vector2(1 / sqrt(2.0), 1 / sqrt(2.0))
+    assert test_vector2_4.normalised() == test_vector2_4
 
 
 '''

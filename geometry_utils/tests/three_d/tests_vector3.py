@@ -82,11 +82,11 @@ class TestVector3(unittest.TestCase):
         self.assertEqual(test_vector3_1.length(), sqrt(3.0))
 
     def test_vector3_normalised_return_type(self):
-        self.assertIsInstance(test_vector3_1.normalise(), Vector3)
+        self.assertIsInstance(test_vector3_1.normalised(), Vector3)
 
     def test_vector3_normalised_arithmetic(self):
-        self.assertEqual(test_vector3_1.normalise(), Vector3(1 / sqrt(3), 1 / sqrt(3), 1 / sqrt(3)))
-        self.assertEqual(test_vector3_4.normalise(), test_vector3_4)
+        self.assertEqual(test_vector3_1.normalised(), Vector3(1 / sqrt(3), 1 / sqrt(3), 1 / sqrt(3)))
+        self.assertEqual(test_vector3_4.normalised(), test_vector3_4)
 
     def test_reversed_vector3_return_type(self):
         self.assertIsInstance(test_vector3_1, Vector3)

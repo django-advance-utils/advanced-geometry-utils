@@ -110,11 +110,11 @@ class TestVector2(unittest.TestCase):
 
     # Vector Normalise Tests
     def test_vector2_normalised_return_type(self):
-        self.assertIsInstance(test_vector2_1.normalise(), Vector2)
+        self.assertIsInstance(test_vector2_1.normalised(), Vector2)
 
     def test_vector2_normalised_arithmetic(self):
-        self.assertEqual(test_vector2_1.normalise(), Vector2(1 / math.sqrt(2.0), 1 / math.sqrt(2.0)))
-        self.assertEqual(test_vector2_4.normalise(), test_vector2_4)
+        self.assertEqual(test_vector2_1.normalised(), Vector2(1 / math.sqrt(2.0), 1 / math.sqrt(2.0)))
+        self.assertEqual(test_vector2_4.normalised(), test_vector2_4)
 
     # Vector Reverse Tests
     def test_reversed_vector2_return_type(self):

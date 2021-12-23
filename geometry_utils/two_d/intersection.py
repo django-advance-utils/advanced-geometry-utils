@@ -43,10 +43,10 @@ class Intersection:
         self.end_of_line = False
         self.point = Point2()
 
-    def __repr__(self):
-        return repr({'Point:': self.point, 'Vectors Intersect:': self.vectors_intersect,
-                     'On First Segment:': self.on_first_segment, 'On Second Segment:': self.on_second_segment,
-                     'Collinear:': self.collinear, 'End Of Line:': self.end_of_line})
+    # def __repr__(self):
+        # return repr({'Point:': self.point, 'Vectors Intersect:': self.vectors_intersect,
+                     # 'On First Segment:': self.on_first_segment, 'On Second Segment:': self.on_second_segment,
+                     # 'Collinear:': self.collinear, 'End Of Line:': self.end_of_line})
 
     def __str__(self):
         return ("Intersection(point:" + str(self.point) + ", Vectors Intersect:" + str(self.vectors_intersect) +
@@ -105,8 +105,8 @@ class Intersection:
                 self.point = first_edge.p1
                 self.do_collinear_test = True
 
-                w_normalised = w.normalise()
-                u_normalised = u.normalise()
+                w_normalised = w.normalised()
+                u_normalised = u.normalised()
                 det = (w_normalised.x * u_normalised.y) - (w_normalised.y * u_normalised.x)
 
                 if floats_are_close(det, 0.0):

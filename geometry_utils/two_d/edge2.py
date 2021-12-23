@@ -9,6 +9,7 @@ from geometry_utils.two_d.ellipse import Ellipse
 from geometry_utils.two_d.point2 import Point2, is_point2
 from geometry_utils.two_d.vector2 import is_vector2
 from geometry_utils.two_d.matrix3 import Matrix3
+from geometry_utils.two_d.vector2 import Vector2
 
 
 class Edge2:
@@ -197,8 +198,8 @@ class Edge2:
                     if self.large:
                         centre_to_arc_centre_distance = centre_to_arc_centre_distance.reverse()
 
-                point_to_centre_distance = point_to_centre_distance.normalise()
-                centre_to_arc_centre_distance = centre_to_arc_centre_distance.normalise()
+                point_to_centre_distance.normalise()
+                centre_to_arc_centre_distance.normalise()
 
                 dot_product = centre_to_arc_centre_distance.dot(point_to_centre_distance)
                 determinant = (centre_to_arc_centre_distance.x * point_to_centre_distance.y) - \
@@ -225,7 +226,7 @@ class Edge2:
     def get_normal(self, point):
         if is_point2(point):
             if self.is_arc():
-                return (self.centre - point).normalise()
+                return (self.centre - point).normalised()
             return self.get_tangent(point).get_perpendicular()
         raise TypeError("Input argument must be an object of Point2")
 
@@ -242,7 +243,7 @@ class Edge2:
                     return self.get_normal(point).get_perpendicular()
                 else:
                     return self.get_normal(point).get_perpendicular().inverse()
-            return (self.p2 - self.p1).normalise()
+            return (self.p2 - self.p1).normalised()
         raise TypeError("Input argument must be an object of Point2")
 
     def get_sweep_angle(self):
@@ -483,6 +484,7 @@ class Edge2:
         phi = (((self.centre.x - self.p1.x) * (self.p2.y - self.p1.y)) -
                ((self.centre.y - self.p1.y) * (self.p2.x - self.p1.x)))
         return phi < 0
+
 
 def is_edge2(input_variable):
     return isinstance(input_variable, Edge2)
