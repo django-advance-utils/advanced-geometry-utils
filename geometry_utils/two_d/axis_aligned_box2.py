@@ -1,5 +1,4 @@
-
-from geometry_utils.two_d.point2 import is_point2
+from geometry_utils.two_d.point2 import Point2, is_point2
 from geometry_utils.two_d.vector2 import Vector2, is_vector2
 
 
@@ -139,7 +138,7 @@ class AxisAlignedBox2:
         :return:the box centre
         :rtype: Vector2
         """
-        return Vector2((self.min.x + self.max.x) * 0.5, (self.min.y + self.max.y) * 0.5)
+        return Point2((self.min.x + self.max.x) * 0.5, (self.min.y + self.max.y) * 0.5)
 
     def __add__(self, vector):
         """
