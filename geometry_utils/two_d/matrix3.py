@@ -38,7 +38,8 @@ class Matrix3:
                 raise TypeError("Matrix3 argument must be a list")
             if not len(vals) == 3 or not len(vals[0]) == 3:
                 raise AttributeError("Input Matrix must be 3 x 3")
-            if not are_ints_or_floats(self.vals[0][0]) or are_ints_or_floats(self.vals[0][1]) or are_ints_or_floats(self.vals[0][2]):
+            if not are_ints_or_floats(self.vals[0][0]) or are_ints_or_floats(self.vals[0][1]) or are_ints_or_floats(
+                    self.vals[0][2]):
                 raise TypeError("Matrix3 argument list must contain int or float")
 
     def __repr__(self):
@@ -101,7 +102,8 @@ class Matrix3:
             return [[True if i == j else False for i in self.vals] for j in other.vals]
         raise TypeError("Comparison must be with another object of Matrix3")
 
-    def make_translation(self, vector):
+    @classmethod
+    def translation(cls, vector):
         """
         Creates a translation matrix using the 2D vector
 
@@ -112,13 +114,15 @@ class Matrix3:
         :raises: TypeError: Wrong argument type
         """
         if is_vector2(vector):
-            self.vals = [[1.0, 0.0, vector.x],
-                         [0.0, 1.0, vector.y],
-                         [0.0, 0.0, 1.0]]
-            return self
+            mat = cls
+            mat.vals = [[1.0, 0.0, vector.x],
+                        [0.0, 1.0, vector.y],
+                        [0.0, 0.0, 1.0]]
+            return mat
         raise TypeError("Translation must be with an object of Vector2")
 
-    def make_rotation(self, theta):
+    @classmethod
+    def rotation(cls, theta):
         """
         Creates a rotation matrix using an angle
 
@@ -130,12 +134,13 @@ class Matrix3:
         """
 
         if is_float(theta):
+            mat = cls
             cos_theta = cos(theta)
             sin_theta = sin(theta)
-            self.vals = [[cos_theta, -sin_theta, 0.0],
-                         [sin_theta, cos_theta, 0.0],
-                         [0.0, 0.0, 1.0]]
-            return self
+            mat.vals = [[cos_theta, -sin_theta, 0.0],
+                        [sin_theta, cos_theta, 0.0],
+                        [0.0, 0.0, 1.0]]
+            return mat
         raise TypeError("Rotation must be with a float")
 
 
