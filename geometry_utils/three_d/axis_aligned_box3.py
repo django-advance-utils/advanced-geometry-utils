@@ -37,26 +37,37 @@ class AxisAlignedBox3:
         Tests if the 3D box is empty
     """
 
-    def __init__(self, minimum=Point3(0.0, 0.0, 0.0), maximum=Point3(0.0, 0.0, 0.0)):
-        if is_point3(minimum) and is_point3(maximum):
+    def __init__(self, minimum=None, maximum=None):
+        if (is_point3(minimum) and is_point3(maximum)) or (minimum is None and maximum is None):
             self.min = minimum
             self.max = maximum
         else:
             raise TypeError("AxisAlignedBox3 arguments must be objects of Point3")
 
+    def __str__(self):
+        return "AxisAlignedBox3(min:" + str(self.min) + ", max:" + str(self.max)
+
     def include(self, other):
         if is_point3(other):
-            self.max.x = max(self.max.x, other.x)
-            self.min.x = min(self.min.x, other.x)
-            self.max.y = max(self.max.y, other.y)
-            self.min.y = min(self.min.y, other.y)
-            self.max.z = max(self.max.z, other.z)
-            self.min.z = min(self.min.z, other.z)
+            if not self.is_valid():
+                self.min = other
+                self.max = other
+            else:
+                self.max.x = max(self.max.x, other.x)
+                self.min.x = min(self.min.x, other.x)
+                self.max.y = max(self.max.y, other.y)
+                self.min.y = min(self.min.y, other.y)
+                self.max.z = max(self.max.z, other.z)
+                self.min.z = min(self.min.z, other.z)
         elif is_box3(other):
-            self.include(other.min)
-            self.include(other.max)
+            if not self.is_valid():
+                self.min = other.min
+                self.max = other.max
+            else:
+                self.include(other.min)
+                self.include(other.max)
         else:
-            raise TypeError("Inclusion must be with an object of Point3 or AxisAlignedBox3")
+            raise TypeError("Inclusion must be with an object of Point2 or AxisAlignedBox2")
 
     def __contains__(self, item):
         """
@@ -70,8 +81,8 @@ class AxisAlignedBox3:
         """
         if is_point3(item):
             return self.min <= item <= self.max
-        if isinstance(item, AxisAlignedBox3):
-            return self.__contains__(item.min) and self.__contains__(item.max)
+        if is_box3(item):
+            return item.min in self and item.max in self
         raise TypeError("Variable must be an object of Point3 or AxisAlignedBox3")
 
     def intersects(self, item):
@@ -168,7 +179,12 @@ class AxisAlignedBox3:
         :return:the emptiness of the box
         :rtype: bool
         """
+        if not self.is_valid():
+            return True
         return self.size() == Vector3(0.0, 0.0, 0.0)
+
+    def is_valid(self):
+        return self.min is not None and self.max is not None
 
 
 def is_box3(input_variable):
