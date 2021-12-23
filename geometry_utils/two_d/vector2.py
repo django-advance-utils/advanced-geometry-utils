@@ -56,8 +56,8 @@ class Vector2:
         else:
             raise TypeError("Vector2 argument must be an int or float")
 
-    def __repr__(self):
-        return repr({'x': self.x, 'y': self.y})
+    # def __repr__(self):
+        # return repr({'x': self.x, 'y': self.y})
 
     def __str__(self):
         return "Vector2(x:" + str("{:.2f}".format(self.x)) + ", y:" + str("{:.2f}".format(self.y)) + ")"
@@ -158,7 +158,7 @@ class Vector2:
         """
         return Vector2(-self.x, -self.y)
 
-    def normalise(self):
+    def normalised(self):
         """
         Calculates the normal vector of the vector
 
@@ -169,6 +169,12 @@ class Vector2:
         if vector_length == 0:
             return self
         return self / vector_length
+
+    def normalise(self):
+        vector_length = self.length()
+        self.x /= vector_length
+        self.y /= vector_length
+        return self
 
     def length(self):
         """
@@ -256,8 +262,8 @@ class Vector2:
             raise TypeError("Angle of rotation must be a float or int")
 
     def angle_between(self, other_vector):
-        self_unit_vector = self.normalise()
-        other_unit_vector = other_vector.normalise()
+        self_unit_vector = self.normalised()
+        other_unit_vector = other_vector.normalised()
         dot_product = self_unit_vector.dot(other_unit_vector)
         angle = acos(dot_product)
         return angle
