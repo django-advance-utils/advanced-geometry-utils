@@ -5,7 +5,7 @@ from geometry_utils.maths_utility import is_int_or_float, is_list
 from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
 from geometry_utils.two_d.edge2 import Edge2
 from geometry_utils.two_d.vector2 import is_vector2, Vector2
-from geometry_utils.two_d.point2 import Point2, is_point2
+from geometry_utils.two_d.point2 import Point2
 
 
 class Path2:
