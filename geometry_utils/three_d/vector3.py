@@ -1,6 +1,6 @@
 from math import sqrt
 
-from geometry_utils.maths_utility import is_int_or_float, are_ints_or_floats
+from geometry_utils.maths_utility import is_int_or_float, are_ints_or_floats, floats_are_close
 
 
 class Vector3:
@@ -52,6 +52,11 @@ class Vector3:
             self.w = w
         else:
             raise TypeError("Vector3 argument must be an int or float")
+
+    def __str__(self):
+        return ("Vector3(x:" + str("{:.2f}".format(self.x)) +
+                ", y:" + str("{:.2f}".format(self.y)) +
+                ", z:" + str("{:.2f}".format(self.z)) + ")")
 
     def __add__(self, other_vector):
         """
@@ -123,7 +128,9 @@ class Vector3:
         :raises:TypeError: Wrong argument type
         """
         if is_vector3(other_vector):
-            return self.x == other_vector.x and self.y == other_vector.y and self.z == other_vector.z
+            return (floats_are_close(self.x, other_vector.x) and
+                    floats_are_close(self.y, other_vector.y) and
+                    floats_are_close(self.y, other_vector.y))
         raise TypeError("Comparison must be with another object of Vector3")
 
     def __ne__(self, other_vector):
@@ -137,7 +144,9 @@ class Vector3:
         :raises:TypeError: Wrong argument type
         """
         if is_vector3(other_vector):
-            return self.x != other_vector.x or self.y != other_vector.y or self.z != other_vector.z
+            return (not floats_are_close(self.x, other_vector.x) or
+                    not floats_are_close(self.y, other_vector.y) or
+                    not floats_are_close(self.y, other_vector.y))
         raise TypeError("Comparison must be with another object of Vector3")
 
     def reverse(self):
@@ -147,9 +156,9 @@ class Vector3:
         :return: the reverse vector
         :rtype: Vector3
         """
-        return Vector3(self.x * -1, self.y * -1, self.z * -1)
+        return Vector3(-self.x, -self.y, -self.z)
 
-    def normalise(self):
+    def normalised(self):
         """
         Calculates the normal vector of the vector
 
@@ -160,6 +169,13 @@ class Vector3:
         if vector_length == 0:
             return self
         return self / vector_length
+
+    def normalise(self):
+        vector_length = self.length()
+        self.x /= vector_length
+        self.y /= vector_length
+        self.z /= vector_length
+        return self
 
     def length(self):
         """
