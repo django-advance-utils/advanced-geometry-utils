@@ -47,6 +47,11 @@ class Point3:
         else:
             raise TypeError("Point3 argument must be an int or float")
 
+    def __str__(self):
+        return ("Point3(x:" + str("{:.2f}".format(self.x)) +
+                ", y:" + str("{:.2f}".format(self.y)) +
+                ", z:" + str("{:.2f}".format(self.z)) + ")")
+
     def __add__(self, vector):
         """
         Translates point by the 3D vector value
@@ -88,9 +93,9 @@ class Point3:
         :raises: TypeError: Wrong argument type
         """
         if is_point3(other_point):
-            return floats_are_close(self.x, other_point.x) and \
-                   floats_are_close(self.y, other_point.y) and \
-                   floats_are_close(self.z, other_point.z)
+            return (floats_are_close(self.x, other_point.x) and
+                    floats_are_close(self.y, other_point.y) and
+                    floats_are_close(self.z, other_point.z))
         raise TypeError("Comparison must be done with another object of Point3")
 
     def __ne__(self, other_point):
@@ -104,9 +109,9 @@ class Point3:
         :raises: TypeError: Wrong argument type
         """
         if is_point3(other_point):
-            return not floats_are_close(self.x, other_point.x) or \
-                   not floats_are_close(self.y, other_point.y) or \
-                   not floats_are_close(self.z, other_point.z)
+            return (not floats_are_close(self.x, other_point.x) or
+                    not floats_are_close(self.y, other_point.y) or
+                    not floats_are_close(self.z, other_point.z))
         raise TypeError("Comparison must be done with another object of Point3")
 
     def __le__(self, other_point):
@@ -135,6 +140,16 @@ class Point3:
         """
         if is_point3(other_point):
             return self.x >= other_point.x and self.y >= other_point.y and self.z >= other_point.z
+        raise TypeError("Comparison must be done with another object of Point3")
+
+    def __lt__(self, other_point):
+        if is_point3(other_point):
+            return self.x < other_point.x and self.y < other_point.y and self.z < other_point.z
+        raise TypeError("Comparison must be done with another object of Point3")
+
+    def __gt__(self, other_point):
+        if is_point3(other_point):
+            return self.x > other_point.x and self.y > other_point.y and self.z > other_point.z
         raise TypeError("Comparison must be done with another object of Point3")
 
     def to_vector3(self):
