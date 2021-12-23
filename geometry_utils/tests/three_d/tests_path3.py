@@ -27,7 +27,7 @@ class MyTestCase(unittest.TestCase):
         self.assert_(path3_1.is_closed())
 
     def test_get_path3_bounds(self):
-        self.assertEqual(path3_1.get_path_bounds(), AxisAlignedBox3(Point3(0.0, 0.0, 0.0), Point3(2.0, 2.0, 2.0)))
+        self.assertEqual(path3_1.get_bounds(), AxisAlignedBox3(Point3(0.0, 0.0, 0.0), Point3(2.0, 2.0, 2.0)))
 
 
 if __name__ == '__main__':
