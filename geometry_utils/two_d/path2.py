@@ -34,9 +34,6 @@ class Path2:
     def __init__(self):
         self.list_of_edges = []
 
-    def __repr__(self):
-        return repr({'list of edges': self.list_of_edges})
-
     def __str__(self):
         self.print_edges()
         return ""

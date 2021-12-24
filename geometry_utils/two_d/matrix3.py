@@ -42,9 +42,6 @@ class Matrix3:
                     self.vals[0][2]):
                 raise TypeError("Matrix3 argument list must contain int or float")
 
-    def __repr__(self):
-        return repr({'vals': self.vals})
-
     def __str__(self):
         return ("Matrix3(vals:\n\t\t\t" + str(self.vals[0]) + "\n\t\t\t" + str(self.vals[1]) + "\n\t\t\t" +
                 str(self.vals[2]) + ")")
@@ -114,7 +111,7 @@ class Matrix3:
         :raises: TypeError: Wrong argument type
         """
         if is_vector2(vector):
-            mat = cls
+            mat = cls()
             mat.vals = [[1.0, 0.0, vector.x],
                         [0.0, 1.0, vector.y],
                         [0.0, 0.0, 1.0]]
@@ -134,7 +131,7 @@ class Matrix3:
         """
 
         if is_float(theta):
-            mat = cls
+            mat = cls()
             cos_theta = cos(theta)
             sin_theta = sin(theta)
             mat.vals = [[cos_theta, -sin_theta, 0.0],

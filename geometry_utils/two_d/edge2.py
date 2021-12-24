@@ -70,10 +70,6 @@ class Edge2:
             if not is_int_or_float(radius):
                 raise TypeError("Radius must be an int or float")
 
-    def __repr__(self):
-        return repr({'p1:': self.p1, 'p2:': self.p2, 'centre:': self.centre, 'radius:': self.radius,
-                     'clockwise:': self.clockwise, 'large:': self.large})
-
     def __str__(self):
         return ("Edge2(p1:" + str(self.p1) + ", p2:" + str(self.p2) + ", centre:" + str(self.centre) +
                 ", radius:" + str(self.radius) + ", clockwise:" + str(self.clockwise) +
@@ -184,19 +180,18 @@ class Edge2:
                 p1_vector = self.p1.to_vector2()
                 p2_vector = self.p2.to_vector2()
 
-                point_to_centre_distance = (point - self.centre)
+                point_to_centre_distance = point - self.centre
                 centre_to_arc_centre_distance = (((p1_vector + p2_vector)/2.0) - self.centre.to_vector2())
 
-                if floats_are_close(centre_to_arc_centre_distance.x, 0.0) and \
-                        floats_are_close(centre_to_arc_centre_distance.y, 0.0):
+                if centre_to_arc_centre_distance == Vector2(0.0, 0.0):
                     centre_to_arc_centre_distance = (self.p2 - self.p1).get_perpendicular()
 
                     if not self.clockwise:
-                        centre_to_arc_centre_distance = centre_to_arc_centre_distance.reverse()
+                        centre_to_arc_centre_distance.invert()
 
                 else:
                     if self.large:
-                        centre_to_arc_centre_distance = centre_to_arc_centre_distance.reverse()
+                        centre_to_arc_centre_distance.invert()
 
                 point_to_centre_distance.normalise()
                 centre_to_arc_centre_distance.normalise()
@@ -257,7 +252,7 @@ class Edge2:
             return 0.0
 
         ellipse = Ellipse(start=self.p1, centre=self.centre, end=self.p2, major_radius=self.radius,
-                          minor_radius=self.radius, clockwise=self.clockwise, angle=270.0)
+                          minor_radius=self.radius, clockwise=self.clockwise, angle=0.0)
         return ellipse.get_arc_sweep()
 
     def get_edge_bounds(self):
@@ -285,24 +280,6 @@ class Edge2:
             self.centre = self.calculate_centre()
         else:
             raise TypeError("Edge offset is done by an object of Vector2")
-
-    def flip_x(self):
-        """
-        Flips the x coordinate of the edge about the origin
-
-        """
-        self.p1.x *= -1
-        self.p2.x *= -1
-        return self
-
-    def flip_y(self):
-        """
-        Flips the x coordinate of the edge about the origin
-
-        """
-        self.p1.y *= -1
-        self.p2.y *= -1
-        return self
 
     def reverse(self):
         tmp = self.p1
@@ -375,8 +352,7 @@ class Edge2:
         if is_float(rotation_angle):
             rotation_angle_in_radians = degrees_to_radians(rotation_angle)
 
-            rotation_matrix = Matrix3()
-            rotation_matrix.make_rotation(rotation_angle_in_radians)
+            rotation_matrix = Matrix3.rotation(rotation_angle_in_radians)
 
             self.p1 = rotation_matrix * self.p1
             self.p2 = rotation_matrix * self.p2
@@ -479,11 +455,7 @@ class Edge2:
     def transform(self, transformation_matrix):
         self.p1 = transformation_matrix * self.p1
         self.p2 = transformation_matrix * self.p2
-
-    def is_clockwise(self):
-        phi = (((self.centre.x - self.p1.x) * (self.p2.y - self.p1.y)) -
-               ((self.centre.y - self.p1.y) * (self.p2.x - self.p1.x)))
-        return phi < 0
+        self.centre = self.calculate_centre()
 
 
 def is_edge2(input_variable):

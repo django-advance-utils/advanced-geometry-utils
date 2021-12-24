@@ -1,6 +1,5 @@
-from math import sqrt, cos, sin, acos, atan2
-
-from geometry_utils.maths_utility import are_ints_or_floats, is_int_or_float, floats_are_close, radians_to_degrees
+import math
+import geometry_utils.maths_utility as maths_utility
 
 
 class Vector2:
@@ -49,15 +48,12 @@ class Vector2:
         Returns the rotation of the vector at angle theta with respect to 2D vector origin
     """
     def __init__(self, x=0, y=0, w=0):
-        if are_ints_or_floats([x, y, w]):
+        if maths_utility.are_ints_or_floats([x, y, w]):
             self.x = x
             self.y = y
             self.w = w
         else:
             raise TypeError("Vector2 argument must be an int or float")
-
-    # def __repr__(self):
-        # return repr({'x': self.x, 'y': self.y})
 
     def __str__(self):
         return "Vector2(x:" + str("{:.2f}".format(self.x)) + ", y:" + str("{:.2f}".format(self.y)) + ")"
@@ -100,7 +96,7 @@ class Vector2:
         :rtype:  Vector2
         :raises: TypeError: wrong argument type
         """
-        if is_int_or_float(scalar):
+        if maths_utility.is_int_or_float(scalar):
             return Vector2(self.x * scalar, self.y * scalar)
         raise TypeError("Multiplication must be by a scalar of type int or float")
 
@@ -114,7 +110,7 @@ class Vector2:
         :rtype:  Vector2
         :raises: TypeError: wrong argument type
         """
-        if is_int_or_float(scalar):
+        if maths_utility.is_int_or_float(scalar):
             return Vector2(self.x / scalar, self.y / scalar)
         raise TypeError("Division must be by a scalar of type int or float")
 
@@ -132,7 +128,8 @@ class Vector2:
         :raises:TypeError: Wrong argument type
         """
         if is_vector2(other_vector):
-            return floats_are_close(self.x, other_vector.x) and floats_are_close(self.y, other_vector.y)
+            return (maths_utility.floats_are_close(self.x, other_vector.x) and
+                    maths_utility.floats_are_close(self.y, other_vector.y))
         raise TypeError("Comparison must be with another object of Vector2")
 
     def __ne__(self, other_vector):
@@ -146,17 +143,9 @@ class Vector2:
         :raises:TypeError: Wrong argument type
         """
         if is_vector2(other_vector):
-            return not floats_are_close(self.x, other_vector.x) or not floats_are_close(self.y, other_vector.y)
+            return (not maths_utility.floats_are_close(self.x, other_vector.x) or
+                    not maths_utility.floats_are_close(self.y, other_vector.y))
         raise TypeError("Comparison must be with another object of Vector2")
-
-    def reverse(self):
-        """
-        Calculates the reverse vector of the vector
-
-        :return: the reverse vector
-        :rtype: Vector2
-        """
-        return Vector2(-self.x, -self.y)
 
     def normalised(self):
         """
@@ -166,12 +155,14 @@ class Vector2:
         :rtype: Vector2
         """
         vector_length = self.length()
-        if vector_length == 0:
+        if maths_utility.floats_are_close(vector_length, 0.0):
             return self
         return self / vector_length
 
     def normalise(self):
         vector_length = self.length()
+        if maths_utility.floats_are_close(vector_length, 0.0):
+            return self
         self.x /= vector_length
         self.y /= vector_length
         return self
@@ -183,7 +174,10 @@ class Vector2:
         :return: the vector length
         :rtype: int/float
         """
-        return sqrt(self.dot(self))
+        return math.sqrt(self.square_length())
+
+    def square_length(self):
+        return self.dot(self)
 
     def dot(self, other_vector):
         """
@@ -230,6 +224,11 @@ class Vector2:
         :return:the inverse vector
         :rtype: Vector2
         """
+        self.x *= -1
+        self.y *= -1
+        return self
+
+    def inverted(self):
         return Vector2(-self.x, -self.y)
 
     def rotate(self, origin, theta):
@@ -244,9 +243,9 @@ class Vector2:
         :rtype: Vector2
         :raises:TypeError: Wrong argument type
         """
-        if is_vector2(origin) and is_int_or_float(theta):
-            cos_theta = cos(theta)
-            sin_theta = sin(theta)
+        if is_vector2(origin) and maths_utility.is_int_or_float(theta):
+            cos_theta = math.cos(theta)
+            sin_theta = math.sin(theta)
 
             self_origin_difference = self - origin
             result = Vector2()
@@ -258,22 +257,22 @@ class Vector2:
 
         if not is_vector2(origin):
             raise TypeError("Origin of rotation must be an object of Vector2")
-        if not is_int_or_float(theta):
+        if not maths_utility.is_int_or_float(theta):
             raise TypeError("Angle of rotation must be a float or int")
 
-    def angle_between(self, other_vector):
+    def angle_to(self, other_vector):
         self_unit_vector = self.normalised()
         other_unit_vector = other_vector.normalised()
         dot_product = self_unit_vector.dot(other_unit_vector)
-        angle = acos(dot_product)
+        angle = math.acos(dot_product)
         return angle
 
-    def signed_angle_between(self, other_vector):
+    def signed_angle_to(self, other_vector):
         if is_vector2(other_vector):
-            return self.angle_to_x_axis() - other_vector.angle_to_x_axis
+            return self.angle_to_x_axis() - other_vector.angle_to_x_axis()
 
     def angle_to_x_axis(self):
-        return atan2(self.y, self.x)
+        return math.atan2(self.y, self.x)
 
 
 def is_vector2(input_variable):

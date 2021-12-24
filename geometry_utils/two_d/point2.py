@@ -1,4 +1,5 @@
-from geometry_utils.maths_utility import are_ints_or_floats, floats_are_close
+import geometry_utils.maths_utility as maths_utility
+
 from geometry_utils.two_d.vector2 import Vector2, is_vector2
 
 
@@ -37,15 +38,12 @@ class Point2:
     """
 
     def __init__(self, x=0, y=0, w=1):
-        if are_ints_or_floats([x, y, w]):
+        if maths_utility.are_ints_or_floats([x, y, w]):
             self.x = x
             self.y = y
             self.w = w
         else:
             raise TypeError("Point2 argument must be an int or float")
-
-    def __repr__(self):
-        return repr({'x': self.x, 'y': self.y})
 
     def __str__(self):
         return "Point2(x:" + str("{:.2f}".format(self.x)) + ", y:" + str("{:.2f}".format(self.y)) + ")"
@@ -91,7 +89,8 @@ class Point2:
         :raises: TypeError: Wrong argument type
         """
         if is_point2(other_point):
-            return floats_are_close(self.x, other_point.x) and floats_are_close(self.y, other_point.y)
+            return (maths_utility.floats_are_close(self.x, other_point.x) and
+                    maths_utility.floats_are_close(self.y, other_point.y))
         raise TypeError("Comparison must be done with another object of Point2")
 
     def __ne__(self, other_point):
@@ -105,7 +104,8 @@ class Point2:
         :raises: TypeError: Wrong argument type
         """
         if is_point2(other_point):
-            return not floats_are_close(self.x, other_point.x) or not floats_are_close(self.y, other_point.y)
+            return (not maths_utility.floats_are_close(self.x, other_point.x) or
+                    not maths_utility.floats_are_close(self.y, other_point.y))
         raise TypeError("Comparison must be done with another object of Point2")
 
     def __le__(self, other_point):
