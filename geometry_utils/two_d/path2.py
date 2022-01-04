@@ -348,18 +348,16 @@ class Path2:
             edge.transform(transformation_matrix)
 
     def generate_points(self):
-        if self.is_continuous:
-            for count, edge in enumerate(self.list_of_edges):
-                yield edge.p1
+        for count, edge in enumerate(self.list_of_edges):
+            yield edge.p1
+            if count + 1 == self.path_length:
+                count = - 1
 
-                if count + 1 == self.path_length:
-                    count = - 1
-                    
-                next_edge = self.list_of_edges[count + 1]
-                if edge.p2 == next_edge.p1:
-                    continue
-                else:
-                    yield edge.p2
+            next_edge = self.list_of_edges[count + 1]
+            if edge.p2 == next_edge.p1:
+                continue
+            else:
+                yield edge.p2
 
 
 '''
