@@ -352,12 +352,173 @@ class Path2:
             yield edge.p1
             if count + 1 == self.path_length:
                 count = - 1
-
             next_edge = self.list_of_edges[count + 1]
             if edge.p2 == next_edge.p1:
                 continue
             else:
                 yield edge.p2
+
+    def get_list_of_points(self):
+        list_of_points = []
+        for count, edge in enumerate(self.list_of_edges):
+            list_of_points.append(edge.p1)
+            if count + 1 == self.path_length:
+                count = - 1
+            next_edge = self.list_of_edges[count + 1]
+            if edge.p2 == next_edge.p2:
+                continue
+            else:
+                list_of_points.append(edge.p2)
+
+        return list_of_points
+
+    def get_oriented_bounding_box(self):
+        class Box:
+            def __init__(self):
+                self.U = [Vector2(), Vector2()]
+                self.index = [0, 0, 0, 0]
+                self.min_square_length = 0.0
+                self.area = 0.0
+
+        def smallest_box():
+            box = Box()
+
+            points_generator = self.generate_points()
+
+            first_point = next(points_generator)
+
+            point = copy.deepcopy(first_point)
+            for point in points_generator:
+                pass
+            last_point = copy.deepcopy(point)
+
+            box.U[0] = first_point - last_point
+            box.U[1] = box.U[0].get_perpendicular()
+
+            box.min_square_length = box.U[0].square_length()
+
+            origin = copy.deepcopy(first_point)
+            support = []
+
+            for index in range(4):
+                support.append(Point2())
+
+            index = 0
+            points_generator = self.generate_points()
+            for point in points_generator:
+                diff = point - origin
+                v = Point2(box.U[0].dot(diff), box.U[1].dot(diff))
+
+                if v.x > support[1].x or (v.x == support[1].x and v.y > support[1].y):
+                    box.index[1] = index
+                    support[1] = v
+
+                if v.y > support[2].y or (v.y == support[2].y and v.x < support[2].x):
+                    box.index[2] = index
+                    support[2] = v
+
+                if v.x < support[3].x or (v.x == support[3].x and v.y < support[3].y):
+                    box.index[3] = index
+                    support[3] = v
+
+                index += 1
+
+            scaled_width = support[1].x - support[3].x
+            scaled_height = support[2].y
+            box.area = (scaled_height * scaled_width) / box.min_square_length
+
+            return box
+
+        def compute_angles(box, a):
+            num_a = 0
+            k0 = 3
+            k1 = 0
+
+            while k1 < 4:
+                if box.index[k0] != box.index[k1]:
+                    d = box.U[k0 & 1].invert() if k0 & 2 else box.U[k0 & 1]
+
+                    j0 = box.index[k0]
+                    j1 = j0 + 1
+
+                    list_of_points = self.get_list_of_points()
+                    number_of_points = len(list_of_points)
+                    if j1 == number_of_points:
+                        j1 = 0
+                    e = list_of_points[j1] - list_of_points[j0]
+                    dp = d.dot(e.get_perpendicular().invert())
+                    e_square_length = e.dot(e)
+                    sin_theta_square = (dp * dp) / e_square_length
+                    a[num_a] = (sin_theta_square, k0)
+                    num_a += 1
+                k0 = k1
+                k1 += 1
+
+            return num_a > 0
+
+        def sort_angles(a, num_a):
+            sort = [0, 1, 2, 3]
+            if num_a > 1:
+                if num_a == 2:
+                    if a[sort[0]][0] > a[sort[1]][0]:
+                        sort = [sort[1], sort[0], sort[2], sort[3]]
+                elif num_a == 3:
+                    if a[sort[0]][0] > a[sort[1]][0]:
+                        sort = [sort[1], sort[0], sort[2], sort[3]]
+                    if a[sort[0]][0] > a[sort[2]][0]:
+                        sort = [sort[2], sort[1], sort[0], sort[3]]
+                    if a[sort[1]][0] > a[sort[2]][0]:
+                        sort = [sort[0], sort[2], sort[1], sort[3]]
+                else:
+                    if a[sort[0]][0] > a[sort[1]][0]:
+                        sort = [sort[1], sort[0], sort[2], sort[3]]
+                    if a[sort[2]][0] > a[sort[3]][0]:
+                        sort = [sort[0], sort[1], sort[3], sort[2]]
+                    if a[sort[0]][0] > a[sort[2]][0]:
+                        sort = [sort[2], sort[1], sort[0], sort[3]]
+                    if a[sort[1]][0] > a[sort[3]][0]:
+                        sort = [sort[0], sort[3], sort[2], sort[1]]
+                    if a[sort[1]][0] > a[sort[2]][0]:
+                        sort = [sort[0], sort[2], sort[1], sort[3]]
+
+            return sort
+
+        def update_support(a, num_a, sort, list_of_points, visited, box):
+            number_of_points = len(list_of_points)
+            a_min = a[sort[0]]
+            for k in range(num_a):
+                a_var = a[sort[k]]
+                if a_var[0] == a_min[0]:
+                    box.index[a[1]] += 1
+                    if box.index[a[1]] == number_of_points:
+                        box.index[a[1]] = 0
+                else:
+                    break
+
+            bottom = box.index[a_min[1]]
+            if bottom in visited:
+                return False
+            visited.append(bottom)
+            next_index = [0, 0, 0, 0]
+            for k in range(4):
+                next_index[k] = box.index[(a_min[1] + k) % 4]
+
+            box.index = next_index
+
+            j1 = box.index[0]
+            j0 = j1 - 1
+            if j0 < 0:
+                j0 = number_of_points - 1
+
+            box.U[0] = list_of_points[j1] - list_of_points[j0]
+            box.U[1] = box.U[0].get_perpendicular()
+            box.min_square_length = box.U[0].square_length()
+
+            diff = [list_of_points[box.index[1]] - list_of_points[box.index[3]],
+                    list_of_points[box.index[2]] - list_of_points[box.index[0]]
+                     ]
+            box.area = box.U[0].dot(diff[0]) * box.U[1].dot(diff[1]) / box.min_square_length
+            return True, box
 
 
 '''
@@ -381,24 +542,8 @@ class Path2:
         def sub(point1, point2):
             if is_point2(point1) and is_point2(point2):
                 return Point2(point1.x - point2.x, point1.y - point2.y)
-
-        def smallest_box(start_index, end_index):
-            box = Box()
-            box.U0 = self.list_of_edges[end_index].p2 - self.list_of_edges[start_index].p1
-            box.U1 = box.U0.get_perpendicular()
-            box.index = [end_index, end_index, end_index, end_index]
-            box.sqr_len_min = box.U0.dot(box.U0)
-
-            origin = self.list_of_edges[end_index]
-            support = []
-
-            for index in range(4):
-                support.append(Point2())
-
-            index = 0
-            for edge in self.list_of_edges:
-                diff = 
 '''
+
 
 
 def is_path2(input_variable):
