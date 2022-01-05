@@ -32,13 +32,13 @@ class TestMatrix3(unittest.TestCase):
         self.assertEqual(test_matrix3_1, test_matrix3_2)
 
     def test_matrix3_make_translation(self):
-        test_translation_matrix = test_matrix3_1.make_translation(test_vector2_1)
+        test_translation_matrix = Matrix3.translation(test_vector2_1)
         self.assertEqual(test_translation_matrix, Matrix3([[1.0, 0.0, 1.0],
                                                            [0.0, 1.0, 1.0],
                                                            [0.0, 0.0, 1.0]]))
 
     def test_matrix3_make_rotation(self):
-        test_rotation_matrix = test_matrix3_1.make_rotation(0.0)
+        test_rotation_matrix = Matrix3.rotation(0.0)
         self.assertEqual(test_rotation_matrix, Matrix3())
 
     def test_matrix3_to_matrix3_multiplication(self):

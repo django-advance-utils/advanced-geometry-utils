@@ -21,8 +21,8 @@ def test_edge3_get_tangent(test_edge3_2):
     assert test_edge3_2.get_tangent() == Vector3(2.0/sqrt(12.0), 2.0/sqrt(12.0), 2.0/sqrt(12.0))
 
 
-def test_edge3_get_arc_centre(test_edge3_2):
-    assert test_edge3_2.get_arc_centre() == Point3(1.0, 1.0, 1.0)
+def test_edge3_calculate_centre(test_edge3_2):
+    assert test_edge3_2.calculate_centre() == Point3(1.0, 1.0, 1.0)
 
 
 def test_edge3_get_edge_bounds(test_edge3_2):
