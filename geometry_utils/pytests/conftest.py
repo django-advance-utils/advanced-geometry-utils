@@ -36,6 +36,16 @@ def test_point2_3():
     return Point2(1.0, 1.0)
 
 
+@pytest.fixture(scope="session")
+def test_point2_4():
+    return Point2(0.0, 0.0)
+
+
+@pytest.fixture(scope="session")
+def test_point2_5():
+    return Point2(0.0, 1.0)
+
+
 '''
 Point3
 '''
@@ -79,6 +89,16 @@ def test_vector2_3():
 @pytest.fixture(scope="session")
 def test_vector2_4():
     return Vector2(0.0, 0.0)
+
+
+@pytest.fixture(scope="session")
+def test_vector2_5():
+    return Vector2(0.0, 1.0)
+
+
+@pytest.fixture(scope="session")
+def test_vector2_6():
+    return Vector2(1.0, 0.0)
 
 
 '''
