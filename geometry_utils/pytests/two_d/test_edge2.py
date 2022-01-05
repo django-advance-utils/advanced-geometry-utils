@@ -75,7 +75,7 @@ def test_edge2_parametric_point(test_edge2_2):
 
 
 def test_edge2_get_tangent(test_edge2_2):
-    assert test_edge2_2.get_tangent() == Vector2(2.0/sqrt(8.0), 2.0/sqrt(8.0))
+    assert test_edge2_2.get_line_tangent() == Vector2(2.0/sqrt(8.0), 2.0/sqrt(8.0))
 
 
 def test_edge2_calculate_arc_centre(test_edge2_2):
@@ -84,9 +84,3 @@ def test_edge2_calculate_arc_centre(test_edge2_2):
 
 def test_edge2_get_edge_bounds(test_edge2_2):
     assert test_edge2_2.get_edge_bounds() == AxisAlignedBox2(Point2(0.0, 0.0), Point2(2.0, 2.0))
-
-
-def test_edge2_intersect_edge2(test_edge2_2, test_edge2_3):
-    list_of_intersects = []
-    test_edge2_2.intersect(test_edge2_3, list_of_intersects)
-    assert list_of_intersects[-1].point == Point2(0.0, 0.0)

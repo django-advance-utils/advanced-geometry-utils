@@ -9,7 +9,7 @@ def test_matrix4_make_translation(test_matrix4_1, test_vector3_1):
                                                [0.0, 0.0, 0.0, 1.0]])
 
 
-def test_matrix4_make_x_rotation():
+def test_matrix4_x_rotation():
     test_x_rotation_matrix = Matrix4.x_rotation(0.0)
     assert test_x_rotation_matrix == Matrix4([[1.0, 0.0, 0.0, 0.0],
                                               [0.0, 1.0, 0.0, 0.0],

@@ -225,7 +225,7 @@ class Edge2:
             return self.get_tangent(point).get_perpendicular()
         raise TypeError("Input argument must be an object of Point2")
 
-    def get_tangent(self, point):
+    def get_arc_tangent(self, point):
         """
         Calculates the tangent of the edge
 
@@ -238,8 +238,13 @@ class Edge2:
                     return self.get_normal(point).get_perpendicular()
                 else:
                     return self.get_normal(point).get_perpendicular().inverse()
-            return (self.p2 - self.p1).normalised()
+            raise TypeError("Arc tangent can not be derived for a line")
         raise TypeError("Input argument must be an object of Point2")
+
+    def get_line_tangent(self):
+        if self.is_arc():
+            raise TypeError("Line tangent can not be derived for an arc")
+        return (self.p2 - self.p1).normalised
 
     def get_sweep_angle(self):
         """
