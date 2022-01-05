@@ -26,16 +26,6 @@ class Path3:
     def __init__(self):
         self.list_of_edges = []
 
-    def print_edges(self):
-        print "Path3(list of edges: "
-        for index, edge in enumerate(self.list_of_edges):
-            print ("\t" + str(index) + "\t" + str(edge))
-        print ")"
-
-    def __str__(self):
-        self.print_edges()
-        return ""
-
     def __eq__(self, other_path):
         if is_path3(other_path) and self.path_length == other_path.path_length:
             for index in range(self.path_length):

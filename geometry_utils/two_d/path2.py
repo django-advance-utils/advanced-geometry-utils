@@ -38,12 +38,6 @@ class Path2:
         self.print_edges()
         return ""
 
-    def print_edges(self):
-        print "Path2(list of edges: "
-        for index, edge in enumerate(self.list_of_edges):
-            print ("\t" + str(index) + "\t" + str(edge))
-        print ")"
-
     def __eq__(self, other_path):
         if is_path2(other_path) and self.path_length == other_path.path_length:
             for index in range(self.path_length):
@@ -326,7 +320,8 @@ class Path2:
             second_point_index = (first_point_index + 1) % number_of_points
 
             for i in range(number_of_points):
-                if self.get_points_orientation([first_point_index, i, second_point_index], path_points) == "Counterclockwise":
+                if (self.get_points_orientation([first_point_index, i, second_point_index], path_points) ==
+                        "Counterclockwise"):
                     second_point_index = i
 
             first_point_index = second_point_index
@@ -338,7 +333,6 @@ class Path2:
                 count = - 1
             convex_hull.list_of_edges.append(Edge2(point, convex_hull_list_of_points[count + 1]))
         convex_hull.close_path()
-        convex_hull.list_of_edges
         return convex_hull
 
     def reverse(self):
