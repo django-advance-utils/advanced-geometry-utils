@@ -43,11 +43,8 @@ class AxisAlignedBox2:
         else:
             raise TypeError("AxisAlignedBox2 must be objects of type Point2")
 
-    def __repr__(self):
-        return repr({'min:': self.min, 'max:': self.max})
-
     def __str__(self):
-        return "AxisAlignedBox2(min:" + str(self.min) + ", max:" + str(self.max)
+        return "AxisAlignedBox2(min:" + str(self.min) + ", max:" + str(self.max) + ")"
 
     def include(self, other):
         """
