@@ -1,3 +1,5 @@
+import copy
+
 from geometry_utils.three_d.point3 import Point3, is_point3
 from geometry_utils.three_d.vector3 import Vector3, is_vector3
 
@@ -50,8 +52,8 @@ class AxisAlignedBox3:
     def include(self, other):
         if is_point3(other):
             if not self.is_valid():
-                self.min = other
-                self.max = other
+                self.min = copy.deepcopy(other)
+                self.max = copy.deepcopy(other)
             else:
                 self.max.x = max(self.max.x, other.x)
                 self.min.x = min(self.min.x, other.x)
@@ -61,8 +63,8 @@ class AxisAlignedBox3:
                 self.min.z = min(self.min.z, other.z)
         elif is_box3(other):
             if not self.is_valid():
-                self.min = other.min
-                self.max = other.max
+                self.min = copy.deepcopy(other.min)
+                self.max = copy.deepcopy(other.max)
             else:
                 self.include(other.min)
                 self.include(other.max)

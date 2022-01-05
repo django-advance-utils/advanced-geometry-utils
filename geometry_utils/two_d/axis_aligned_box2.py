@@ -1,3 +1,5 @@
+import copy
+
 from geometry_utils.two_d.point2 import Point2, is_point2
 from geometry_utils.two_d.vector2 import Vector2, is_vector2
 
@@ -58,8 +60,8 @@ class AxisAlignedBox2:
         """
         if is_point2(other):
             if not self.is_valid():
-                self.min = other
-                self.max = other
+                self.min = copy.deepcopy(other)
+                self.max = copy.deepcopy(other)
             else:
                 self.max.x = max(self.max.x, other.x)
                 self.min.x = min(self.min.x, other.x)
@@ -67,8 +69,8 @@ class AxisAlignedBox2:
                 self.min.y = min(self.min.y, other.y)
         elif is_box2(other):
             if not self.is_valid():
-                self.min = other.min
-                self.max = other.max
+                self.min = copy.deepcopy(other.min)
+                self.max = copy.deepcopy(other.max)
             else:
                 self.include(other.min)
                 self.include(other.max)
