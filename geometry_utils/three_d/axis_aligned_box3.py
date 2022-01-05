@@ -158,6 +158,7 @@ class AxisAlignedBox3:
         :raises:TypeError: Wrong argument type
         """
         if is_box3(box):
+            x = self.max == box.max and self.min == box.min
             return self.max == box.max and self.min == box.min
 
     def __ne__(self, box):

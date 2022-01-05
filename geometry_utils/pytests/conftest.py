@@ -306,9 +306,9 @@ Path3
 @pytest.fixture(scope="session")
 def path3_1():
     path = Path3()
-    path.list_of_edges =[Edge3(Point3(0.0, 0.0, 0.0), Point3(1.0, 1.0, 1.0)),
-                  Edge3(Point3(1.0, 1.0, 1.0), Point3(2.0, 2.0, 2.0)),
-                  Edge3(Point3(2.0, 2.0, 2.0), Point3(0.0, 0.0, 0.0))]
+    path.list_of_edges = [Edge3(Point3(0.0, 0.0, 0.0), Point3(1.0, 1.0, 1.0)),
+                          Edge3(Point3(1.0, 1.0, 1.0), Point3(2.0, 2.0, 2.0)),
+                          Edge3(Point3(2.0, 2.0, 2.0), Point3(0.0, 0.0, 0.0))]
     return path
 
 
@@ -316,8 +316,8 @@ def path3_1():
 def path3_2():
     path = Path3()
     path.list_of_edges = [Edge3(Point3(1.0, 1.0, 1.0), Point3(2.0, 2.0, 2.0)),
-                  Edge3(Point3(2.0, 2.0, 2.0), Point3(3.0, 3.0, 3.0)),
-                  Edge3(Point3(3.0, 3.0, 3.0), Point3(4.0, 4.0, 4.0))]
+                          Edge3(Point3(2.0, 2.0, 2.0), Point3(3.0, 3.0, 3.0)),
+                          Edge3(Point3(3.0, 3.0, 3.0), Point3(4.0, 4.0, 4.0))]
     return path
 
 
@@ -325,8 +325,8 @@ def path3_2():
 def path3_3():
     path = Path2()
     path.list_of_edges = [Edge3(Point3(1.0, 1.0, 1.0), Point3(2.0, 2.0, 2.0)),
-                  Edge3(Point3(2.0, 2.0, 2.0), Point3(3.0, 3.0, 3.0)),
-                  Edge3(Point3(4.0, 4.0, 4.0), Point3(5.0, 5.0, 5.0))]
+                          Edge3(Point3(2.0, 2.0, 2.0), Point3(3.0, 3.0, 3.0)),
+                          Edge3(Point3(4.0, 4.0, 4.0), Point3(5.0, 5.0, 5.0))]
     return path
 
 

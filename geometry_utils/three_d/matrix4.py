@@ -103,9 +103,13 @@ class Matrix4:
         :rtype:  bool
         :raises: TypeError: Wrong argument type
         """
-        if is_matrix4(other):
-            return [[True if i == j else False for i in self.vals] for j in other.vals]
-        raise TypeError("Comparison must be with another object of Matrix4")
+        #if is_matrix4(other):
+        for row in range(4):
+            for column in range(4):
+                if self.vals[row][column] != other.vals[row][column]:
+                    return False
+        return True
+        #raise TypeError("Comparison must be with another object of Matrix4")
 
     @classmethod
     def translation(cls, vector):
