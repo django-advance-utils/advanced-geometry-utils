@@ -377,35 +377,28 @@ class Path2:
             def __init__(self):
                 self.U = [Vector2(), Vector2()]
                 self.index = [0, 0, 0, 0]
-                self.min_square_length = 0.0
+                self.U0_square_length = 0.0
                 self.area = 0.0
 
-        def smallest_box():
+        def smallest_box(first_point_index, last_point_index, list_of_points):
             box = Box()
 
-            points_generator = self.generate_points()
+            first_point = list_of_points[first_point_index]
+            last_point = list_of_points[last_point_index]
 
-            first_point = next(points_generator)
-
-            point = copy.deepcopy(first_point)
-            for point in points_generator:
-                pass
-            last_point = copy.deepcopy(point)
-
-            box.U[0] = first_point - last_point
+            box.U[0] = last_point - first_point
             box.U[1] = box.U[0].get_perpendicular()
+            box.U0_square_length = box.U[0].square_length()
+            box.index = [last_point_index, last_point_index, last_point_index, last_point_index]
 
-            box.min_square_length = box.U[0].square_length()
-
-            origin = copy.deepcopy(first_point)
+            origin = copy.deepcopy(last_point)
             support = []
 
             for index in range(4):
                 support.append(Point2())
 
             index = 0
-            points_generator = self.generate_points()
-            for point in points_generator:
+            for point in list_of_points:
                 diff = point - origin
                 v = Point2(box.U[0].dot(diff), box.U[1].dot(diff))
 
@@ -425,11 +418,12 @@ class Path2:
 
             scaled_width = support[1].x - support[3].x
             scaled_height = support[2].y
-            box.area = (scaled_height * scaled_width) / box.min_square_length
+            box.area = (scaled_height * scaled_width) / box.U0_square_length
 
             return box
 
-        def compute_angles(box, a):
+        def compute_angles(list_of_points, box, a, num_a):
+            number_of_points = len(list_of_points)
             num_a = 0
             k0 = 3
             k1 = 0
@@ -441,20 +435,19 @@ class Path2:
                     j0 = box.index[k0]
                     j1 = j0 + 1
 
-                    list_of_points = self.get_list_of_points()
-                    number_of_points = len(list_of_points)
                     if j1 == number_of_points:
                         j1 = 0
+
                     e = list_of_points[j1] - list_of_points[j0]
                     dp = d.dot(e.get_perpendicular().invert())
-                    e_square_length = e.dot(e)
+                    e_square_length = e.square_length()
                     sin_theta_square = (dp * dp) / e_square_length
                     a[num_a] = (sin_theta_square, k0)
                     num_a += 1
                 k0 = k1
                 k1 += 1
 
-            return num_a > 0
+            return num_a > 0, num_a
 
         def sort_angles(a, num_a):
             sort = [0, 1, 2, 3]
@@ -497,12 +490,11 @@ class Path2:
 
             bottom = box.index[a_min[1]]
             if bottom in visited:
-                return False
+                return False, box
             visited.append(bottom)
             next_index = [0, 0, 0, 0]
             for k in range(4):
                 next_index[k] = box.index[(a_min[1] + k) % 4]
-
             box.index = next_index
 
             j1 = box.index[0]
@@ -512,38 +504,50 @@ class Path2:
 
             box.U[0] = list_of_points[j1] - list_of_points[j0]
             box.U[1] = box.U[0].get_perpendicular()
-            box.min_square_length = box.U[0].square_length()
+            box.U0_square_length = box.U[0].square_length()
 
             diff = [list_of_points[box.index[1]] - list_of_points[box.index[3]],
-                    list_of_points[box.index[2]] - list_of_points[box.index[0]]
-                     ]
-            box.area = box.U[0].dot(diff[0]) * box.U[1].dot(diff[1]) / box.min_square_length
+                    list_of_points[box.index[2]] - list_of_points[box.index[0]]]
+            box.area = (box.U[0].dot(diff[0]) * box.U[1].dot(diff[1])) / box.U0_square_length
             return True, box
 
+        path_points = self.get_convex_hull().get_list_of_points()
 
-'''
-    def get_oriented_bounding_box(self):
-        class Box:
-            def __init__(self):
-                self.U0 = Vector2()
-                self.U1 = Vector2()
-                self.index = [0, 0, 0, 0]
-                self.sqr_len_min = 0.0
-                self.area = 0.0
+        new_path_points = []
+        number_of_new_path_points = len(new_path_points)
+        for point in path_points:
+            if number_of_new_path_points == 0:
+                new_path_points.append(point)
+                continue
+            if point == new_path_points[-1]:
+                continue
+            new_path_points.append(point)
 
-        def perp(point):
-            if is_point2(point):
-                return Point2(point.y, -point.x)
+        path_points = new_path_points
+        number_of_path_points = len(path_points)
 
-        def inv(point):
-            if is_point2(point):
-                return Point2(-point.x, -point.y)
+        visited = []
 
-        def sub(point1, point2):
-            if is_point2(point1) and is_point2(point2):
-                return Point2(point1.x - point2.x, point1.y - point2.y)
-'''
+        min_box = smallest_box(number_of_path_points - 1, 0, path_points)
+        visited.append(min_box.index[0])
 
+        box = copy.deepcopy(min_box)
+        for i in range(number_of_path_points - 1):
+            a = [None, None, None, None]
+            num_a = 0
+            res, num_a = compute_angles(path_points, box, a, num_a)
+            if not res:
+                break
+
+            sort = sort_angles(a, num_a)
+            res, box = update_support(a, num_a, sort, path_points, visited, box)
+            if not res:
+                break
+
+            if box.area < min_box.area:
+                min_box = copy.deepcopy(box)
+
+        return min_box
 
 
 def is_path2(input_variable):
