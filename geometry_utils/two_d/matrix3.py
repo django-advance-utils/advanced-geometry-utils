@@ -43,7 +43,7 @@ class Matrix3:
                 raise TypeError("Matrix3 argument list must contain int or float")
 
     def __str__(self):
-        return ("Matrix3(vals:\n\t\t\t" + str(self.vals[0]) + "\n\t\t\t" + str(self.vals[1]) + "\n\t\t\t" +
+        return ("Matrix3(vals:" + str(self.vals[0]) + "\n\t\t\t" + str(self.vals[1]) + "\n\t\t\t" +
                 str(self.vals[2]) + ")")
 
     def set_identity(self):
@@ -65,6 +65,13 @@ class Matrix3:
         :rtype:  Matrix3/Vector2
         :raises: TypeError: wrong argument type
         """
+        if is_int_or_float(other):
+            result = Matrix3()
+            for row in range(3):
+                for column in range(3):
+                    result.vals[row][column] = self.vals[row][column] * other
+            return result
+
         if is_matrix3(other):
             result = Matrix3()
             for i in range(3):
@@ -83,7 +90,7 @@ class Matrix3:
             result.w = self.vals[2][0] * other.x + self.vals[2][1] * other.y + self.vals[2][2] * other.w
             return result
 
-        raise TypeError("Multiplication must be done with a 3 x 3 matrix or 2D vector")
+        raise TypeError("Multiplication must be done with another 3 x 3 matrix, a 2D vector, a 2D point or a scalar")
 
     def __eq__(self, other):
         """
