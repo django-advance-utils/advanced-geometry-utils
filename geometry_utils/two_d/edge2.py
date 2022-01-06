@@ -283,6 +283,7 @@ class Edge2:
             self.p1 += vector
             self.p2 += vector
             self.centre = self.calculate_centre()
+            return self
         else:
             raise TypeError("Edge offset is done by an object of Vector2")
 
