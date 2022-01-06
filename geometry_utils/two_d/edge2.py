@@ -244,7 +244,7 @@ class Edge2:
     def get_line_tangent(self):
         if self.is_arc():
             raise TypeError("Line tangent can not be derived for an arc")
-        return (self.p2 - self.p1).normalised
+        return (self.p2 - self.p1).normalised()
 
     def get_sweep_angle(self):
         """
