@@ -178,15 +178,5 @@ class Point2:
         return self
 
 
-def is_list_of_points(input_list):
-    if isinstance(input_list, list):
-        for input_variable in input_list:
-            if not is_point2(input_variable):
-                return False
-        return True
-    else:
-        raise TypeError("Input argument must be a list")
-
-
 def is_point2(input_variable):
     return isinstance(input_variable, Point2)
