@@ -143,9 +143,9 @@ Vector Reverse Tests
 
 
 def test_reversed_vector2_return_type(test_vector2_1):
-    assert isinstance(test_vector2_1, Vector2)
+    assert isinstance(test_vector2_1.inverted(), Vector2)
 
 
 def test_reversed_vector2_arithmetic(test_vector2_1, test_vector2_4):
-    assert test_vector2_1.reverse() == Vector2(-1.0, -1.0)
-    assert test_vector2_4.reverse() == test_vector2_4
+    assert test_vector2_1.inverted() == Vector2(-1.0, -1.0)
+    assert test_vector2_4.inverted() == test_vector2_4

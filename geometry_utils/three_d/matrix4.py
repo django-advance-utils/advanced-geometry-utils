@@ -58,6 +58,12 @@ class Matrix4:
         """
         self.vals = [[1 if i == j else 0.0 for i in range(4)] for j in range(4)]
 
+    def zeros(self):
+        self.vals = [[0.0, 0.0, 0.0, 0.0],
+                     [0.0, 0.0, 0.0, 0.0],
+                     [0.0, 0.0, 0.0, 0.0],
+                     [0.0, 0.0, 0.0, 0.0]]
+
     def __mul__(self, other):
         """
         Calculates the multiplication of the matrix with another 4 x 4 matrix or a 3D vector
@@ -70,6 +76,7 @@ class Matrix4:
         """
         if is_matrix4(other):
             result = Matrix4()
+            result.zeros()
             for i in range(4):
                 for j in range(4):
                     for k in range(4):
@@ -103,13 +110,13 @@ class Matrix4:
         :rtype:  bool
         :raises: TypeError: Wrong argument type
         """
-        #if is_matrix4(other):
+        # if is_matrix4(other):
         for row in range(4):
             for column in range(4):
                 if self.vals[row][column] != other.vals[row][column]:
                     return False
         return True
-        #raise TypeError("Comparison must be with another object of Matrix4")
+        # raise TypeError("Comparison must be with another object of Matrix4")
 
     @classmethod
     def translation(cls, vector):

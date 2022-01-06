@@ -156,7 +156,7 @@ class Edge2:
                 p1_vector = self.p1.to_vector2()
                 arc_centre_vector = self.centre.to_vector2()
                 return p1_vector.rotate(arc_centre_vector, t)
-            tangent = self.get_tangent(self.p1)
+            tangent = self.get_arc_tangent(self.p1)
             p1_p2_distance = self.p1.distance_to(self.p2)
             vector = tangent * (s * p1_p2_distance)
             return self.p1 + vector
@@ -211,7 +211,7 @@ class Edge2:
 
                 return point_to_arc_centre_point_angle + 0.5
 
-            tangent = self.get_tangent(self.p1)
+            tangent = self.get_arc_tangent(self.p1)
             point_p1_difference = (point - self.p1)
             p1_to_p2_distance = self.p1.distance_to(self.p2)
             distance = tangent.dot(point_p1_difference)

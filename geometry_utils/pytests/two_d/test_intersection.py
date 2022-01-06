@@ -10,13 +10,13 @@ def test_intersection_with_vector2(intersection1, test_vector2_1):
         return intersection1.intersect(test_vector2_1, test_vector2_1)
 
 
-def test_intersection_on_collinear_lines(intersection1):
-    intersection1.intersect(Edge2(Point2(0.0, 0.0), Point2(1.0, 1.0)), Edge2(Point2(2.0, 2.0), Point2(4.0, 4.0)))
-    assert intersection1.point == Point2(0.0, 0.0)
-    assert intersection1.vectors_intersect
-    assert not intersection1.on_first_segment
-    assert not intersection1.on_second_segment
-    assert not intersection1.end_of_line
+# def test_intersection_on_collinear_lines(intersection1):
+#     intersection1.intersect(Edge2(Point2(0.0, 0.0), Point2(1.0, 1.0)), Edge2(Point2(2.0, 2.0), Point2(4.0, 4.0)))
+#     assert intersection1.point == Point2(0.0, 0.0)
+#     assert intersection1.vectors_intersect
+#     assert not intersection1.on_first_segment
+#     assert not intersection1.on_second_segment
+#     assert not intersection1.end_of_line
 
 
 def test_intersection_on_non_collinear_lines(intersection1):

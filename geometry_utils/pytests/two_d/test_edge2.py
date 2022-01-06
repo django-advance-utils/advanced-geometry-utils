@@ -74,10 +74,6 @@ def test_edge2_parametric_point(test_edge2_2):
     assert floats_are_close(test_edge2_2.parametric_point(test_edge2_2.p2), 1.0)
 
 
-def test_edge2_get_tangent(test_edge2_2):
-    assert test_edge2_2.get_line_tangent() == Vector2(2.0/sqrt(8.0), 2.0/sqrt(8.0))
-
-
 def test_edge2_calculate_arc_centre(test_edge2_2):
     assert test_edge2_2.calculate_centre() == Point2(1.0, 1.0)
 
