@@ -151,6 +151,27 @@ def test_edge2_3():
 
 
 @pytest.fixture(scope="session")
+def test_edge2_4():
+    p1 = Point2(0.0, 0.0)
+    p2 = Point2(2.0, 2.0)
+    return Edge2(p1, p2)
+
+
+@pytest.fixture(scope="session")
+def test_edge2_5():
+    p1 = Point2(0.0, 0.0)
+    p2 = Point2(2.0, 2.0)
+    return Edge2(p1, p2, 2.0)
+
+
+@pytest.fixture(scope="session")
+def test_edge2_6():
+    p1 = Point2(0.0, 0.0)
+    p2 = Point2(0.0, 0.0)
+    return Edge2(p1, p2, 5.0)
+
+
+@pytest.fixture(scope="session")
 def test_circle_points_1():
     # this just generates a list of points in a circle at 1 degree increments at a radius of 600
     radius = 600.0

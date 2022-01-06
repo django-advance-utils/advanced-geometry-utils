@@ -13,6 +13,10 @@ def test_point2_with_string_inputs():
         return Point2("0", "0", "0")
 
 
+def test_point2_print_string(test_point2_1):
+    assert test_point2_1.__str__() == "Point2(x:1.00, y:1.00)"
+
+
 '''
 Point2 Addition Tests
 '''
@@ -114,6 +118,7 @@ def test_point2_greater_than_or_equal_to_float(test_point2_1):
     with pytest.raises(TypeError):
         return test_point2_1 >= 9.0
 
+
 '''
 Less Than Tests
 '''
@@ -125,7 +130,7 @@ def test_point2_less_than_point2(test_point2_1, test_point2_4):
 
 def test_point2_less_than_float(test_point2_1):
     with pytest.raises(TypeError):
-        return test_point2_1 <= 9.0
+        return test_point2_1 < 9.0
 
 
 '''
@@ -134,7 +139,7 @@ Greater Than Tests
 
 
 def test_point2_greater_than_point2(test_point2_1, test_point2_4):
-    assert test_point2_1 >= test_point2_4
+    assert test_point2_1 > test_point2_4
 
 
 def test_point2_greater_than_float(test_point2_1):

@@ -1,19 +1,81 @@
+import pytest
+import math
+
 from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
+from geometry_utils.two_d.matrix3 import Matrix3
 from geometry_utils.two_d.point2 import Point2
 from geometry_utils.two_d.vector2 import Vector2
 from geometry_utils.two_d.edge2 import Edge2
-from geometry_utils.maths_utility import floats_are_close
-
-from math import sqrt
+from geometry_utils.maths_utility import floats_are_close, HALF_PI, QUARTER_PI
 
 
-def test_edge2_point_parametric(test_edge2_1, test_edge2_2):
+def test_edge2_string_point_arguments():
+    with pytest.raises(TypeError):
+        return Edge2("Point2(0.0, 0.0)", "Point2(0.0, 0.0)")
+
+
+def test_edge2_string_radius_argument():
+    with pytest.raises(TypeError):
+        return Edge2(Point2(0.0, 0.0), Point2(0.0, 0.0), "0.0")
+
+
+def test_edge2_print_string(test_edge2_1):
+    assert (test_edge2_1.__str__() == "Edge2(p1:Point2(x:0.00, y:0.00), p2:Point2(x:0.00, y:0.00), "
+                                      "centre:Point2(x:0.00, y:0.00), radius:0.0, clockwise:False, "
+                                      "large:False)")
+
+
+def test_edge2_to_edge2_equality(test_edge2_1):
+    assert test_edge2_1 == Edge2()
+
+
+def test_edge2_to_float_equality(test_edge2_1):
+    with pytest.raises(TypeError):
+        assert test_edge2_1 == 9.0
+
+
+def test_edge2_to_edge2_inequality(test_edge2_1, test_edge2_2):
+    assert test_edge2_1 != test_edge2_2
+
+
+def test_edge2_to_float_inequality(test_edge2_1):
+    with pytest.raises(TypeError):
+        return test_edge2_1 != 9.0
+
+
+def test_edge2_is_arc(test_edge2_2, test_edge2_5):
+    assert not test_edge2_2.is_arc()
+    assert test_edge2_5.is_arc()
+
+
+def test_edge2_get_sweep_angle_return_type(test_edge2_1):
+    assert isinstance(test_edge2_1.get_sweep_angle(), float)
+
+
+def test_edge2_get_sweep_angle_arithmetic(test_edge2_5):
+    assert test_edge2_5.get_sweep_angle() == HALF_PI
+
+
+def test_edge2_point_parametric_return_type(test_edge2_1):
+    assert isinstance(test_edge2_1.point_parametric(0.0), Point2)
+
+
+def test_edge2_line_point_parametric_arithmetic(test_edge2_1, test_edge2_2):
     assert test_edge2_2.point_parametric(0.0) == test_edge2_2.p1
     assert test_edge2_2.point_parametric(1.0) == test_edge2_2.p2
-    assert test_edge2_1.point_parametric(0.5) == test_edge2_1.p1  # p1 = p2
+    assert test_edge2_1.point_parametric(0.5) == test_edge2_1.p1
 
 
-def test_edge2_parametric_point_arcs(test_circle_points_1):
+def test_edge2_point_parametric_with_point_argument(test_edge2_1, test_point2_1):
+    with pytest.raises(TypeError):
+        return test_edge2_1.point_parametric(test_point2_1)
+
+
+def test_edge2_parametric_point_return_type(test_edge2_1, test_point2_1):
+    assert isinstance(test_edge2_1.parametric_point(test_point2_1), float)
+
+
+def test_edge2_parametric_point_arcs_arithmetic(test_circle_points_1):
     # anticlockwise 10 deg
     e1 = Edge2(test_circle_points_1[10], test_circle_points_1[0], 600.0, False, False)
 
@@ -69,9 +131,170 @@ def test_edge2_parametric_point_arcs(test_circle_points_1):
     assert floats_are_close(e7.parametric_point(test_circle_points_1[180]), 0.0)
 
 
-def test_edge2_parametric_point(test_edge2_2):
+def test_edge2_line_parametric_point(test_edge2_2):
     assert test_edge2_2.parametric_point(test_edge2_2.p1) == 0.0
     assert floats_are_close(test_edge2_2.parametric_point(test_edge2_2.p2), 1.0)
+
+
+def test_edge2_parametric_point_with_float_argument(test_edge2_1):
+    with pytest.raises(TypeError):
+        return test_edge2_1.parametric_point(9.0)
+
+
+def test_edge2_get_normal_return_type(test_edge2_6, test_point2_1):
+    assert isinstance(test_edge2_6.get_normal(test_point2_1), Vector2)
+
+
+def test_edge2_get_normal_arithmetic(test_edge2_6):
+    assert test_edge2_6.get_normal(Point2(5.0, 0.0)) == Vector2(-1.0, 0.0)
+    assert test_edge2_6.get_normal(Point2(0.0, 5.0)) == Vector2(0.0, -1.0)
+
+
+def test_edge2_get_line_tangent_return_type(test_edge2_4, test_edge2_2):
+    assert isinstance(test_edge2_4.get_line_tangent(), Vector2)
+
+
+def test_edge2_get_line_tangent_arithmetic(test_edge2_4, test_edge2_2):
+    assert test_edge2_4.get_line_tangent(test_edge2_2.p1) == Vector2(2.0 / math.sqrt(8.0), 2.0 / math.sqrt(8.0))
+
+
+def test_edge2_calculate_centre_return_type(test_edge2_1):
+    assert isinstance(test_edge2_1.calculate_centre(), Point2)
+
+
+def test_edge2_calculate_centre_arithmetic(test_edge2_2, test_edge2_5, test_edge2_6, test_point2_1):
+    assert test_edge2_2.calculate_centre() == test_point2_1
+    assert test_edge2_5.calculate_centre() == Point2(0.0, 2.0)
+    assert test_edge2_6.calculate_centre() == test_edge2_6.p2
+
+
+def test_edge2_get_edge_bounds_return_type(test_edge2_1):
+    assert isinstance(test_edge2_1.get_edge_bounds(), AxisAlignedBox2)
+
+
+def test_edge2_get_edge_bounds_arithmetic(test_edge2_2, test_box2_1):
+    assert test_edge2_2.get_edge_bounds() == test_box2_1
+
+
+def test_edge2_offset_edge_arithmetic(test_vector2_1):
+    assert (Edge2(Point2(0.0, 0.0), Point2(0.0, 0.0)).offset_edge(test_vector2_1) ==
+            Edge2(Point2(1.0, 1.0), Point2(1.0, 1.0)))
+
+
+def test_edge2_offset_edge_with_float(test_edge2_1):
+    with pytest.raises(TypeError):
+        return test_edge2_1.offset_edge(9.0)
+
+
+def test_edge2_reverse():
+    assert Edge2(Point2(1.0, 0.0), Point2(0.0, 1.0)).reverse() == Edge2(Point2(0.0, 1.0), Point2(1.0, 0.0))
+
+
+def test_edge2_mirror_y():
+    assert Edge2(Point2(1, 0), Point2(2, 3)).mirror_y() == Edge2(Point2(-1, 0), Point2(-2, 3))
+
+
+def test_edge2_is_circle(test_edge2_6):
+    assert test_edge2_6.is_circle()
+
+
+def test_edge2_get_arc_start_angle(test_edge2_5):
+    assert test_edge2_5.get_arc_start_angle() == -HALF_PI
+
+
+def test_edge2_get_arc_end_angle(test_edge2_5):
+    assert test_edge2_5.get_arc_end_angle() == 0.0
+
+
+def test_edge2_flatten_arc(test_edge2_5):
+    list_of_arc_edges = test_edge2_5.flatten_arc()
+    arc = False
+    for edge in list_of_arc_edges:
+        if edge.is_arc():
+            arc = True
+
+    assert not arc
+    assert list_of_arc_edges[0].p1 == test_edge2_5.p1
+    assert list_of_arc_edges[-1].p2 == test_edge2_5.p2
+
+
+def test_edge2_rotate():
+    assert Edge2(Point2(0, 0), Point2(1, 0)).rotate(90.0) == Edge2(Point2(0, 0), Point2(0, 1))
+
+
+def test_edge2_rotate_with_string(test_edge2_5):
+    with pytest.raises(TypeError):
+        return test_edge2_5.rotate("0")
+
+
+def test_edge2_parallel_to_edge(test_edge2_4):
+    assert Edge2(Point2(1, 1), Point2(3, 3)).is_parallel_to(test_edge2_4)
+
+
+def test_edge2_parallel_to_float(test_edge2_1):
+    with pytest.raises(TypeError):
+        test_edge2_1.is_parallel_to(9.0)
+
+
+def test_edge2_perpendicular_to_edge():
+    assert Edge2(Point2(-1.0, 0.0), Point2(1.0, 0.0)).is_perpendicular_to(Edge2(Point2(0.0, 0.0), Point2(0.0, 1.0)))
+
+
+def test_edge2_perpendicular_to_float(test_edge2_1):
+    with pytest.raises(TypeError):
+        return test_edge2_1.is_perpendicular_to(9.0)
+
+
+def test_edge2_get_slope(test_edge2_4):
+    assert test_edge2_4.get_slope() == 1.0
+
+
+def test_edge2_get_slope_vertical():
+    assert Edge2(Point2(1, 1), Point2(1, 2)).get_slope() == "Vertical"
+
+
+def test_edge2_get_slope_arc(test_edge2_5):
+    with pytest.raises(TypeError):
+        return test_edge2_5.get_slope()
+
+
+def test_edge2_edge_length(test_edge2_2):
+    assert floats_are_close(test_edge2_2.edge_length(), 2.828427)
+
+
+def test_edge2_angle_to_x_axis(test_edge2_2):
+    assert test_edge2_2.angle_to_x_axis() == QUARTER_PI
+
+
+def test_edge2_angle_to_edge(test_edge2_2, test_edge2_4):
+    assert test_edge2_2.angle_to_edge(test_edge2_4) == 0.0
+
+
+def test_edge2_angle_to_edge_arc(test_edge2_4, test_edge2_5):
+    with pytest.raises(TypeError):
+        return test_edge2_5.angle_to_edge(test_edge2_4)
+
+
+def test_edge2_minimum_y(test_edge2_4):
+    assert test_edge2_4.minimum_y() == 0.0
+
+
+def test_edge2_maximum_y(test_edge2_2):
+    assert test_edge2_2.maximum_y() == 2.0
+
+
+def test_edge2_vector_within_arc(test_edge2_6):
+    assert test_edge2_6.vector_within_arc(Vector2(5.0, 0.0))
+
+
+def test_edge2_transform():
+    edge_to_be_transformed = Edge2(Point2(0, 0), Point2(1, 0))
+    transformation_matrix = Matrix3.translation(Vector2(0.0, -1.0))
+
+    edge_to_be_transformed.transform(transformation_matrix)
+    transformed_edge = Edge2(Point2(0.0, -1.0), Point2(1.0, -1.0))
+
+    assert edge_to_be_transformed == transformed_edge
 
 
 def test_edge2_calculate_arc_centre(test_edge2_2):
