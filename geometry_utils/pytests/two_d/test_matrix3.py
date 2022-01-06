@@ -16,14 +16,14 @@ def test_matrix3_length_of_vals():
 
 
 def test_matrix3_vals_string_parameter():
-    with pytest.raises(TypeError):
+    with pytest.raises(AttributeError):
         return Matrix3([["1.0", 1.0, 1.0],
                         [1.0, "1.0", 1.0],
                         [1.0, 1.0, 1.0]])
 
 
 def test_matrix3_print_string(test_matrix3_1):
-    assert test_matrix3_1.__str__() == "Matrix3(vals:\n\t\t\t[1, 0, 0]\n\t\t\t[0, 1, 0]\n\t\t\t[0, 0, 1])"
+    assert test_matrix3_1.__str__() == "Matrix3(vals:[1, 0, 0]\n\t\t\t[0, 1, 0]\n\t\t\t[0, 0, 1])"
 
 
 def test_matrix3_matrix3_equality(test_matrix3_1):

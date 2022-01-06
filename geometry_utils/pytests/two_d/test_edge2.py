@@ -155,7 +155,7 @@ def test_edge2_get_line_tangent_return_type(test_edge2_4, test_edge2_2):
 
 
 def test_edge2_get_line_tangent_arithmetic(test_edge2_4, test_edge2_2):
-    assert test_edge2_4.get_line_tangent(test_edge2_2.p1) == Vector2(2.0 / math.sqrt(8.0), 2.0 / math.sqrt(8.0))
+    assert test_edge2_4.get_line_tangent() == Vector2(2.0 / math.sqrt(8.0), 2.0 / math.sqrt(8.0))
 
 
 def test_edge2_calculate_centre_return_type(test_edge2_1):
