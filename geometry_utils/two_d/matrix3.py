@@ -31,15 +31,15 @@ class Matrix3:
     def __init__(self, vals=None):
         if vals is None:
             self.set_identity()
-        elif is_list(vals) and len(vals) == 3 and len(vals[0]) == 3 and is_int_or_float(vals[0][0]):
+        elif is_list(vals) and len(vals) == 3 and len(vals[0]) == 3 and are_ints_or_floats(vals[0]) and \
+                are_ints_or_floats(vals[0]) and are_ints_or_floats(vals[0]):
             self.vals = vals
         else:
             if not is_list(vals):
                 raise TypeError("Matrix3 argument must be a list")
             if not len(vals) == 3 or not len(vals[0]) == 3:
                 raise AttributeError("Input Matrix must be 3 x 3")
-            if not are_ints_or_floats(self.vals[0][0]) or are_ints_or_floats(self.vals[0][1]) or are_ints_or_floats(
-                    self.vals[0][2]):
+            if not are_ints_or_floats(vals[0]) or are_ints_or_floats(vals[0]) or are_ints_or_floats(vals[0]):
                 raise TypeError("Matrix3 argument list must contain int or float")
 
     def __str__(self):

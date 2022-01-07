@@ -553,9 +553,12 @@ def is_int_or_float(input_variable):
 
 
 def are_ints_or_floats(input_list):
+    check = True
     if isinstance(input_list, list):
         for input_variable in input_list:
-            return is_int_or_float(input_variable)
+            if not is_int_or_float(input_variable):
+                check = False
+        return check
     else:
         raise TypeError("Input argument must be a list")
 

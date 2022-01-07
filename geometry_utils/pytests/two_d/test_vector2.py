@@ -140,6 +140,11 @@ def test_vector2_cross_vector2_arithmetic(test_vector2_1, test_vector2_2):
     assert test_vector2_2.cross(test_vector2_1) == Vector2(1.0, -1.0)
 
 
+def test_vector2_cross_float(test_vector2_1):
+    with pytest.raises(TypeError):
+        return test_vector2_1.cross(9.0)
+
+
 '''
 Vector Length and Normalise Tests
 '''

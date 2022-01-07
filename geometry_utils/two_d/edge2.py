@@ -155,7 +155,8 @@ class Edge2:
                     t *= -1
                 p1_vector = self.p1.to_vector2()
                 arc_centre_vector = self.centre.to_vector2()
-                return p1_vector.rotate(arc_centre_vector, t)
+                rotated_p1 = p1_vector.rotate(arc_centre_vector, t)
+                return Point2(rotated_p1.x, rotated_p1.y)
             tangent = self.get_line_tangent()
             p1_p2_distance = self.p1.distance_to(self.p2)
             vector = tangent * (s * p1_p2_distance)
@@ -218,11 +219,11 @@ class Edge2:
             return distance / p1_to_p2_distance
         raise TypeError("Argument must be an object of Point2")
 
-    def get_normal(self, point):
+    def get_arc_normal(self, point):
         if is_point2(point):
             if self.is_arc():
                 return (self.centre - point).normalised()
-            return self.get_tangent(point).get_perpendicular()
+            return self.get_line_tangent().get_perpendicular()
         raise TypeError("Input argument must be an object of Point2")
 
     def get_arc_tangent(self, point):
@@ -235,9 +236,9 @@ class Edge2:
         if is_point2(point):
             if self.is_arc():
                 if self.clockwise:
-                    return self.get_normal(point).get_perpendicular()
+                    return self.get_arc_normal(point).get_perpendicular()
                 else:
-                    return self.get_normal(point).get_perpendicular().inverse()
+                    return self.get_arc_normal(point).get_perpendicular().inverse()
             raise TypeError("Arc tangent can not be derived for a line")
         raise TypeError("Input argument must be an object of Point2")
 
