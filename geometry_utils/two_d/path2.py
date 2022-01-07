@@ -50,13 +50,11 @@ class Path2:
             if self.path_length != other_path.path_length:
                 raise IndexError("Comparison must be done with another path of equal number of edges")
 
-    @property
     def get_first_edge(self):
         if self.path_length >= 1:
             return self.list_of_edges[0]
         raise IndexError("Can not find the first edge of an empty list of edges")
 
-    @property
     def get_last_edge(self):
         if self.path_length >= 1:
             return self.list_of_edges[-1]
@@ -102,7 +100,6 @@ class Path2:
                     continuity = False
         return continuity
 
-    @property
     def get_bounds(self):
         """
         Derives the AxisAlignedBox2 containing the bounds of the path

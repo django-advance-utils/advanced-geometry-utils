@@ -223,8 +223,13 @@ class Edge2:
         if is_point2(point):
             if self.is_arc():
                 return (self.centre - point).normalised()
-            return self.get_line_tangent().get_perpendicular()
+            raise TypeError("Get Arc Normal can not be derived for an arc")
         raise TypeError("Input argument must be an object of Point2")
+
+    def get_line_normal(self):
+        if not self.is_arc():
+            return self.get_line_tangent().get_perpendicular()
+        raise TypeError("Get Line Normal can not be derived for an arc")
 
     def get_arc_tangent(self, point):
         """
