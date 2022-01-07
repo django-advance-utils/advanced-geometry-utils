@@ -68,9 +68,9 @@ def test_edge2_line_point_parametric_arithmetic(test_edge2_1, test_edge2_2):
 
 def test_edge2_arc_point_parametric_arithmetic(test_edge2_5):
     assert test_edge2_5.point_parametric(0.00) == test_edge2_5.p1
-    assert test_edge2_5.point_parametric(0.25) == Point2(0.71, 0.29)
+    assert test_edge2_5.point_parametric(0.25) == Point2(0.29, 0.71)
     assert test_edge2_5.point_parametric(0.50) == Point2(1.00, 1.00)
-    assert test_edge2_5.point_parametric(0.75) == Point2(0.71, 1.71)
+    assert test_edge2_5.point_parametric(0.75) == Point2(1.71, 0.71)
     assert test_edge2_5.point_parametric(1.00) == test_edge2_5.p2
 
 
@@ -139,7 +139,7 @@ def test_edge2_parametric_point_arcs_arithmetic(test_circle_points_1, test_edge2
     assert floats_are_close(e7.parametric_point(test_circle_points_1[180]), 0.0)
 
     # clockwise arc across three quadrants
-    assert floats_are_close(test_edge2_7.parametric_point(Point2(2, 0)), 0.0)
+    assert floats_are_close(test_edge2_7.parametric_point(Point2(0, 0)), 0.0)
     assert floats_are_close(test_edge2_7.parametric_point(Point2(1, 1)), 0.33)
     assert floats_are_close(test_edge2_7.parametric_point(Point2(2, 0)), 0.67)
     assert floats_are_close(test_edge2_7.parametric_point(Point2(1, -1)), 1.0)
@@ -178,7 +178,7 @@ def test_edge2_calculate_centre_return_type(test_edge2_1):
 
 def test_edge2_calculate_centre_arithmetic(test_edge2_2, test_edge2_5, test_edge2_6, test_point2_1):
     assert test_edge2_2.calculate_centre() == test_point2_1
-    assert test_edge2_5.calculate_centre() == Point2(0.0, 1.0)
+    assert test_edge2_5.calculate_centre() == Point2(1.0, 0.0)
     assert test_edge2_6.calculate_centre() == test_edge2_6.p2
 
 
@@ -213,11 +213,11 @@ def test_edge2_is_circle(test_edge2_6):
 
 
 def test_edge2_get_arc_start_angle(test_edge2_5):
-    assert test_edge2_5.get_arc_start_angle() == -HALF_PI
+    assert test_edge2_5.get_arc_start_angle() == PI
 
 
 def test_edge2_get_arc_end_angle(test_edge2_5):
-    assert test_edge2_5.get_arc_end_angle() == HALF_PI
+    assert test_edge2_5.get_arc_end_angle() == 0.0
 
 
 def test_edge2_flatten_arc(test_edge2_5):

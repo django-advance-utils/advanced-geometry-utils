@@ -160,15 +160,15 @@ def test_edge2_4():
 @pytest.fixture(scope="session")
 def test_edge2_5():
     p1 = Point2(0.0, 0.0)
-    p2 = Point2(0.0, 2.0)
-    return Edge2(p1, p2, 1.0)
+    p2 = Point2(2.0, 0.0)
+    return Edge2(p1, p2, 1.0, True)
 
 
 @pytest.fixture(scope="session")
 def test_edge2_6():
     p1 = Point2(0.0, 0.0)
     p2 = Point2(0.0, 0.0)
-    return Edge2(p1, p2, 5.0)
+    return Edge2(p1, p2, 5.0, True)
 
 
 @pytest.fixture(scope="session")

@@ -16,7 +16,7 @@ def test_matrix3_length_of_vals():
 
 
 def test_matrix3_vals_string_parameter():
-    with pytest.raises(AttributeError):
+    with pytest.raises(TypeError):
         return Matrix3([["1.0", 1.0, 1.0],
                         [1.0, "1.0", 1.0],
                         [1.0, 1.0, 1.0]])
