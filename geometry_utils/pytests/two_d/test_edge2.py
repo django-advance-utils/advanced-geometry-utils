@@ -68,9 +68,9 @@ def test_edge2_line_point_parametric_arithmetic(test_edge2_1, test_edge2_2):
 
 def test_edge2_arc_point_parametric_arithmetic(test_edge2_5):
     assert test_edge2_5.point_parametric(0.00) == test_edge2_5.p1
-    assert test_edge2_5.point_parametric(0.25) == Point2(0.29, 0.71)
+    assert test_edge2_5.point_parametric(0.25) == Point2(0.2929, 0.7071)
     assert test_edge2_5.point_parametric(0.50) == Point2(1.00, 1.00)
-    assert test_edge2_5.point_parametric(0.75) == Point2(1.71, 0.71)
+    assert test_edge2_5.point_parametric(0.75) == Point2(1.7071, 0.7071)
     assert test_edge2_5.point_parametric(1.00) == test_edge2_5.p2
 
 
@@ -140,8 +140,8 @@ def test_edge2_parametric_point_arcs_arithmetic(test_circle_points_1, test_edge2
 
     # clockwise arc across three quadrants
     assert floats_are_close(test_edge2_7.parametric_point(Point2(0, 0)), 0.0)
-    assert floats_are_close(test_edge2_7.parametric_point(Point2(1, 1)), 0.33)
-    assert floats_are_close(test_edge2_7.parametric_point(Point2(2, 0)), 0.67)
+    assert floats_are_close(test_edge2_7.parametric_point(Point2(1, 1)), 0.3333)
+    assert floats_are_close(test_edge2_7.parametric_point(Point2(2, 0)), 0.6667)
     assert floats_are_close(test_edge2_7.parametric_point(Point2(1, -1)), 1.0)
 
 
