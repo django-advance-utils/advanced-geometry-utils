@@ -42,6 +42,7 @@ class Point2:
             self.x = x
             self.y = y
             self.w = w
+            self.name = ""
         else:
             raise TypeError("Point2 argument must be an int or float")
 

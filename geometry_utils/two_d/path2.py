@@ -3,7 +3,7 @@ from copy import deepcopy
 
 from geometry_utils.maths_utility import is_int_or_float, is_list
 from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
-from geometry_utils.two_d.edge2 import Edge2
+from geometry_utils.two_d.edge2 import Edge2, is_edge2
 from geometry_utils.two_d.vector2 import is_vector2, Vector2
 from geometry_utils.two_d.point2 import Point2
 
@@ -33,6 +33,9 @@ class Path2:
 
     def __init__(self):
         self.list_of_edges = []
+        self.fill = ""
+        self.name = ""
+        self.layers = []
 
     def __str__(self):
         self.print_edges()
@@ -59,6 +62,14 @@ class Path2:
         if self.path_length >= 1:
             return self.list_of_edges[-1]
         raise IndexError("Can not find the last edge of an empty list of edges")
+
+    def is_first_edge(self, edge):
+        if is_edge2(edge):
+            return edge is self.get_first_edge()
+
+    def is_last_edge(self, edge):
+        if is_edge2(edge):
+            return edge is self.get_last_edge()
 
     @property
     def path_length(self):

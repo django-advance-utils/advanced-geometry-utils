@@ -64,6 +64,8 @@ class Edge2:
             self.clockwise = clockwise
             self.large = large
             self.centre = self.calculate_centre()
+            self.name = ""
+            self.style = ""
         else:
             if not is_point2(p1) or not is_point2(p2):
                 raise TypeError("First and second arguments must be objects of Point2")
