@@ -127,14 +127,57 @@ class PathFieldInterpreter(Path2, object):
                 delimiter_buffer = ""
                 if index == 0 or edge.p1 != path.list_of_edges[index - 1].p2:
                     last, delimiter_buffer = add_point(index, path_length, edge.p1, last, delimiter_buffer, is_3d)
-
+                    # if format_num(edge.p1.x) != last_x:
+                    #     self.write_buffer += format_num(edge.p1.x)
+                    #     last_x = format_num(edge.p1.x)
+                    # elif index == 0 and path.path_length == 1:
+                    #     self.write_buffer += format_num(edge.p1.x)
+                    #
+                    # delimiter_buffer += self.POINT_ELEMENT_SEPERATOR
+                    #
+                    # if format_num(edge.p1.y) != last_y:
+                    #     self.write_buffer += delimiter_buffer + format_num(edge.p1.y)
+                    #     last_y = format_num(edge.p1.y)
+                    #     delimiter_buffer = self.POINT_ELEMENT_SEPERATOR
+                    # elif index == 0 and path.path_length == 1:
+                    #     self.write_buffer += delimiter_buffer + last_y
+                    #     delimiter_buffer = self.POINT_ELEMENT_SEPERATOR
+                    # else:
+                    #     delimiter_buffer += self.POINT_ELEMENT_SEPERATOR
+                    #
+                    # if is_3d:
+                    #     if format_num(edge.p1.z) != last_z:
+                    #         self.write_buffer += delimiter_buffer + format_num(edge.p1.z)
+                    #         last_z = format_num(edge.p1.z)
                     if index != (path.path_length - 1):
                          self.write_buffer += self.POINT_SEPERATOR
 
                 delimiter_buffer = ""
                 last, delimiter_buffer = add_point(index, path_length, edge.p2, last, delimiter_buffer, is_3d)
 
-               
+                # if format_num(edge.p2.x) != last_x:
+                #     self.write_buffer += format_num(edge.p2.x)
+                #     last_x = format_num(edge.p2.x)
+                #
+                # elif index == 0 and path.path_length == 1:
+                #     self.write_buffer += format_num(edge.p2.x)
+                #
+                # delimiter_buffer += self.POINT_ELEMENT_SEPERATOR
+                #
+                # if format_num(edge.p2.y) != last_y:
+                #     self.write_buffer += delimiter_buffer + format_num(edge.p2.y)
+                #     last_y = format_num(edge.p1.y)
+                #     delimiter_buffer = self.POINT_ELEMENT_SEPERATOR
+                # elif index == 0 and path.path_length == 1:
+                #     self.write_buffer += delimiter_buffer + last_y
+                #     delimiter_buffer = self.POINT_ELEMENT_SEPERATOR
+                # else:
+                #     delimiter_buffer += self.POINT_ELEMENT_SEPERATOR
+                #
+                # if is_3d:
+                #     if format_num(edge.p2.z) != last_z:
+                #         self.write_buffer += delimiter_buffer + format_num(edge.p2.z)
+                #         last_z = format_num(edge.p2.z)
 
             if edge.is_arc():
                 self.write_buffer += get_curve_indicator(edge)
