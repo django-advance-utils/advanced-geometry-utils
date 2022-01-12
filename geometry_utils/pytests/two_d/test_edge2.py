@@ -6,7 +6,7 @@ from geometry_utils.two_d.matrix3 import Matrix3
 from geometry_utils.two_d.point2 import Point2
 from geometry_utils.two_d.vector2 import Vector2
 from geometry_utils.two_d.edge2 import Edge2
-from geometry_utils.maths_utility import floats_are_close, HALF_PI, QUARTER_PI, PI
+from geometry_utils.maths_utility import floats_are_close, QUARTER_PI, PI
 
 
 def test_edge2_string_point_arguments():

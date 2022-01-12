@@ -33,9 +33,12 @@ class Path2:
 
     def __init__(self):
         self.list_of_edges = []
+
         self.fill = ""
         self.name = ""
+        self.type = ""
         self.layers = []
+        self.attributes = {}
 
     def __str__(self):
         self.print_edges()
@@ -347,6 +350,7 @@ class Path2:
         self.list_of_edges.reverse()
         for edge in self.list_of_edges:
             edge.reverse()
+        return self
 
     def transform(self, transformation_matrix):
         for edge in self.list_of_edges:
@@ -553,6 +557,50 @@ class Path2:
                 min_box = copy.deepcopy(box)
 
         return min_box
+
+    def flip_vertical_centre(self):
+        minimum_y = min(edge.minimum_y() for edge in self.list_of_edges)
+        maximum_y = max(edge.maximum_y() for edge in self.list_of_edges)
+
+        y_range = maximum_y - minimum_y
+        mid = minimum_y + (y_range / 2.0)
+
+        for edge in self.list_of_edges:
+            p1_offset = edge.p1.y - mid
+            p2_offset = edge.p2.y - mid
+
+            edge.p1.y -= p1_offset * 2
+            edge.p2.y -= p2_offset * 2
+            if edge.is_arc:
+                edge.clockwise = not edge.clockwise
+
+    def flip_vertical(self, offset_y=0):
+        self.reverse()
+        maximum_y = max(edge.maximum_y() for edge in self.list_of_edges)
+
+        for index, edge in enumerate(reversed(self.list_of_edges)):
+            edge.p1.y = -edge.p1.y + maximum_y + offset_y
+            edge.p2.y = -edge.p2.y + maximum_y + offset_y
+
+            if edge.is_arc:
+                edge.clockwise = not edge.clockwise
+
+    def flip_horizontal_center(self):
+        minimum_x = min(edge.minimum_x() for edge in self.list_of_edges)
+        maximum_x = max(edge.maximum_x() for edge in self.list_of_edges)
+
+        x_range = maximum_x - minimum_x
+        mid = minimum_x + (x_range / 2.0)
+
+        for edge in self.list_of_edges:
+            p1_offset = edge.p1.x - mid
+            p2_offset = edge.p2.x - mid
+
+            edge.p1.x -= p1_offset * 2
+            edge.p2.x -= p2_offset * 2
+
+            if edge.is_arc:
+                edge.clockwise = not edge.clockwise
 
 
 def is_path2(input_variable):
