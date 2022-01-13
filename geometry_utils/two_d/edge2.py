@@ -66,6 +66,7 @@ class Edge2:
             self.centre = self.calculate_centre()
             self.name = ""
             self.style = ""
+            self.type = ""
         else:
             if not is_point2(p1) or not is_point2(p2):
                 raise TypeError("First and second arguments must be objects of Point2")
@@ -280,7 +281,7 @@ class Edge2:
         bounds.include(self.p2)
         return bounds
 
-    def offset_edge(self, vector):
+    def offset(self, vector):
         """
         Offsets the edge by the provided 2D vector
 
@@ -303,9 +304,25 @@ class Edge2:
             self.clockwise = not self.clockwise
         return self
 
+    def mirror_x(self):
+        self.p1.mirror_x()
+        self.p2.mirror_x()
+        self.centre = self.calculate_centre()
+        if self.clockwise:
+            self.clockwise = False
+        return self
+
     def mirror_y(self):
         self.p1.mirror_y()
         self.p2.mirror_y()
+        self.centre = self.calculate_centre()
+        if self.clockwise:
+            self.clockwise = False
+        return self
+
+    def mirror_origin(self):
+        self.p1.mirror_origin()
+        self.p2.mirror_origin()
         self.centre = self.calculate_centre()
         if self.clockwise:
             self.clockwise = False

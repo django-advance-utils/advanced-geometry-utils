@@ -178,6 +178,15 @@ class Point2:
         self.x = -self.x
         return self
 
+    def mirror_x(self):
+        self.y = -self.y
+        return self
+
+    def mirror_origin(self):
+        self.x = -self.x
+        self.y = -self.y
+        return self
+
 
 def is_point2(input_variable):
     return isinstance(input_variable, Point2)

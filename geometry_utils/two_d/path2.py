@@ -34,15 +34,12 @@ class Path2:
     def __init__(self):
         self.list_of_edges = []
 
-        self.fill = ""
-        self.name = ""
-        self.type = ""
+        self.fill = ''
+        self.name = ''
+        self.type = ''
         self.layers = []
+        self.closed = None
         self.attributes = {}
-
-    def __str__(self):
-        self.print_edges()
-        return ""
 
     def __eq__(self, other_path):
         if is_path2(other_path) and self.path_length == other_path.path_length:
@@ -55,6 +52,12 @@ class Path2:
                 raise TypeError("Comparison must be done with another object of Path2")
             if self.path_length != other_path.path_length:
                 raise IndexError("Comparison must be done with another path of equal number of edges")
+
+    def set_edges(self, list_of_edges):
+        for edge in list_of_edges:
+            if not is_edge2(edge):
+                raise TypeError('Input has to be list of Edge2 objects')
+        self.list_of_edges = list_of_edges
 
     def get_first_edge(self):
         if self.path_length >= 1:
@@ -171,16 +174,36 @@ class Path2:
             del self.list_of_edges[index]
         return self
 
+    def mirror_x(self):
+        for edge in self.list_of_edges:
+            edge.mirror_x()
+        return self
+
     def mirror_y(self):
         for edge in self.list_of_edges:
             edge.mirror_y()
         return self
 
-    def offset_path(self, vector):
+    def mirror_origin(self):
+        for edge in self.list_of_edges:
+            edge.mirror_origin()
+        return self
+
+    def offset_path(self, vector, point_type=None):
         if is_vector2(vector):
-            for edge in self.list_of_edges:
-                edge.offset_edge(vector)
-            return self
+            if point_type is None or point_type.lower() == 'pp':
+                for edge in self.list_of_edges:
+                    edge.offset(vector)
+                return self
+            elif point_type.lower() == 'mm':
+                for edge in self.list_of_edges:
+                    edge.mirror_origin().offset(vector)
+            elif point_type.lower() == 'pm':
+                for edge in self.list_of_edges:
+                    edge.mirror_y().offset(vector)
+            elif point_type.lower() == 'mp':
+                for edge in self.list_of_edges:
+                    edge.mirror_x().offset(vector)
         else:
             raise TypeError("Path offset must be done with a vector")
 
