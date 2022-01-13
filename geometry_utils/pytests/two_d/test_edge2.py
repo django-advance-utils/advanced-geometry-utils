@@ -191,13 +191,13 @@ def test_edge2_get_edge_bounds_arithmetic(test_edge2_2, test_box2_1):
 
 
 def test_edge2_offset_edge_arithmetic(test_vector2_1):
-    assert (Edge2(Point2(0.0, 0.0), Point2(0.0, 0.0)).offset_edge(test_vector2_1) ==
+    assert (Edge2(Point2(0.0, 0.0), Point2(0.0, 0.0)).offset(test_vector2_1) ==
             Edge2(Point2(1.0, 1.0), Point2(1.0, 1.0)))
 
 
 def test_edge2_offset_edge_with_float(test_edge2_1):
     with pytest.raises(TypeError):
-        return test_edge2_1.offset_edge(9.0)
+        return test_edge2_1.offset(9.0)
 
 
 def test_edge2_reverse():
