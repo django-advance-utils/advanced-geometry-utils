@@ -53,6 +53,11 @@ class Path2:
             if self.path_length != other_path.path_length:
                 raise IndexError("Comparison must be done with another path of equal number of edges")
 
+    def __add__(self, other_path):
+        path = Path2()
+        path.list_of_edges = self.list_of_edges + other_path.list_of_edges
+        return path
+
     def set_edges(self, list_of_edges):
         for edge in list_of_edges:
             if not is_edge2(edge):
@@ -189,7 +194,7 @@ class Path2:
             edge.mirror_origin()
         return self
 
-    def offset_path(self, vector, point_type=None):
+    def offset(self, vector, point_type=None):
         if is_vector2(vector):
             if point_type is None or point_type.lower() == 'pp':
                 for edge in self.list_of_edges:
@@ -210,9 +215,9 @@ class Path2:
     def rotate_around(self, rotation_vector, rotation_angle):
         if is_vector2(rotation_vector) and is_int_or_float(rotation_angle):
             reversed_rotation_vector = rotation_vector.reverse()
-            self.offset_path(reversed_rotation_vector)
+            self.offset(reversed_rotation_vector)
             self.rotate(rotation_angle)
-            self.offset_path(rotation_vector)
+            self.offset(rotation_vector)
         return self
 
     def rotate(self, rotation_angle):

@@ -67,6 +67,8 @@ class Edge2:
             self.name = ""
             self.style = ""
             self.type = ""
+            self.left_name = ""
+            self.right_name = ""
         else:
             if not is_point2(p1) or not is_point2(p2):
                 raise TypeError("First and second arguments must be objects of Point2")
