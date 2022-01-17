@@ -630,6 +630,10 @@ class Path2:
             if edge.is_arc:
                 edge.clockwise = not edge.clockwise
 
+    def update_path(self):
+        for edge in self.list_of_edges:
+            edge.centre = edge.calculate_centre()
+
 
 def is_path2(input_variable):
     return isinstance(input_variable, Path2)

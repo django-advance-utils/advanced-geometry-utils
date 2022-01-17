@@ -1,8 +1,9 @@
-from geometry_utils.two_d.path2 import Path2, is_path2
-from geometry_utils.three_d.path3 import Path3, is_path3
+import copy
+
+from geometry_utils.two_d.path2 import Path2
+from geometry_utils.three_d.path3 import is_path3
 from geometry_utils.two_d.edge2 import Edge2
 from geometry_utils.two_d.point2 import Point2
-from geometry_utils.two_d.vector2 import Vector2
 
 
 class PathFieldInterpreter(Path2, object):
@@ -280,17 +281,18 @@ class PathFieldInterpreter(Path2, object):
 
                 if point.startswith(self.INCLUDE_START):
                     if self.process_include_tag(point, path, last_edge, edit_mode):
-                        last_edge.p2.x = float(path.list_of_edges[-1].p2.x)
-                        last_edge.p2.y = float(path.list_of_edges[-1].p2.y)
-                        if is_path3(path):
-                            last_edge.p2.z = float(path.list_of_edges[-1].p2.z)
+                        last_edge = path.list_of_edges[-1]
+                        # last_edge.p2.y = float(path.list_of_edges[-1].p2.y)
+                        # if is_path3(path):
+                        #     last_edge.p2.z = float(path.list_of_edges[-1].p2.z)
                 elif point.startswith(self.FUNCTION_CHAR):
                     path_field_functions = PathFieldFunctions()
                     path_field_functions.process(point, path)
-                    last_edge.p2.x = float(path.list_of_edges[-1].p2.x)
-                    last_edge.p2.y = float(path.list_of_edges[-1].p2.y)
-                    if is_path3(path):
-                        last_edge.p2.z = float(path.list_of_edges[-1].p2.z)
+                    last_edge = path.list_of_edges[-1]
+                    # last_edge.p2.x = float(path.list_of_edges[-1].p2.x)
+                    # last_edge.p2.y = float(path.list_of_edges[-1].p2.y)
+                    # if is_path3(path):
+                    #     last_edge.p2.z = float(path.list_of_edges[-1].p2.z)
 
                 elif is_closed and point is points[len(points) - 1]:
                     self.process_closed_point(point, edge_d, path, last_edge, edit_mode)
@@ -314,7 +316,12 @@ class PathFieldInterpreter(Path2, object):
                     self.process_normal_point(point, edge_d, path, last_edge,
                                               edit_mode, default_point_name,
                                               round_value=round_value)
-            out_paths.append(path)
+
+            # dont forget to revisit as well as account for the edge attributes and name and style when processing
+            # the last edge
+            if not path.is_closed:
+                path.list_of_edges[-2].p2 = copy.deepcopy(path.list_of_edges[-1].p1)
+                del(path.list_of_edges[-1])
 
             if return_single is not None and path.name == return_single:
                 return path
@@ -327,7 +334,7 @@ class PathFieldInterpreter(Path2, object):
     def process_include_tag(self, tag, path, last_edge, edit_mode):
         function_data = tag.lstrip(self.INCLUDE_START)
         point_type = 'pp'
-        offset_vector = Vector2(last_edge.p2.x, last_edge.p2.y)
+        offset_vector = last_edge.p2.to_vector2()
         valid = True
         main_include_data = function_data.split(self.INCLUDE_CONDITION_DELIMITER)
 
@@ -355,10 +362,11 @@ class PathFieldInterpreter(Path2, object):
                 offset_vector.y = include_data[3]
 
         if edit_mode:
-            edge = Edge2(Point2(), Point2(offset_vector.x, offset_vector.y))
+            edge = Edge2(Point2(offset_vector.x, offset_vector.y), Point2())
             edge.name = variable_name
             edge.type = point_type
             path.list_of_edges.append(edge)
+            last_edge.p2 = copy.deepcopy(edge.p1)
             return False
 
         if valid:
@@ -368,15 +376,72 @@ class PathFieldInterpreter(Path2, object):
             path += result
             return True
         else:
-            path.list_of_edges.append(Edge2(Point2(), Point2(offset_vector.x, offset_vector.y)))
+            path.list_of_edges.append(Edge2(Point2(offset_vector.x, offset_vector.y, Point2())))
             return True
 
     def process_mirrored_points(self, point, edge_d, path, last_edge, mirrored_point, edit_mode, default_point_name,
-                               round_value):
+                                round_value):
         self.process_normal_point(point[:-1], edge_d, path, last_edge, edit_mode, default_point_name, round_value)
+        if edit_mode:
+            # path.list_of_edges.append('mirror')
+            return
+        local_path_edges = copy.deepcopy(path.list_of_edges)
+        if (path.list_of_edges[0].p1.y == path.list_of_edges[mirrored_point].p1.y or
+                path.list_of_edges[0].p1.x == path.list_of_edges[mirrored_point].p1.x):
+            held_arc = None
+            if path.list_of_edges[0].p1.x == path.list_of_edges[mirrored_point].p1.x:
+                offset = path.list_of_edges[0].p1.x * 2
+                mirror_x = True
+            else:
+                offset = path.list_of_edges[0].p1.y * 2
+                mirror_x = False
+            if mirrored_point != -1:
+                end_point_x = path.list_of_edges[-1].p2.x  # why not end_edge
+                end_point_y = path.list_of_edges[-1].p2.y
+                for local_path_edge in reversed(local_path_edges[:mirrored_point]):
+                    mirrored_point -= 1
+                    if (not mirror_x and offset - local_path_edge.p2.y == end_point_y and
+                            local_path_edge.p2.x == end_point_x):
+                        break
+                    elif (mirror_x and local_path_edge.p2.y == end_point_y and
+                          offset - local_path_edge.p2.x == end_point_x):
+                        break
+
+                for local_path_edge in reversed(local_path_edges[:mirrored_point]):
+                    if mirror_x:
+                        edge_d.p1.x = offset - local_path_edge.p1.x
+                        edge_d.p1.y = local_path_edge.p1.y
+                        edge_d.p2.x = offset - local_path_edge.p2.x
+                        edge_d.p2.y = local_path_edge.p2.y
+                    else:
+                        edge_d.p1.x = local_path_edge.p1.x
+                        edge_d.p1.y = offset - local_path_edge.p1.y
+                        edge_d.p2.x = local_path_edge.p2.x
+                        edge_d.p2.y = offset - local_path_edge.p2.y
+                    if is_path3(path):
+                        edge_d.p1.z = local_path_edge.p1.z
+                        edge_d.p2.z = local_path_edge.p2.z
+
+                    if held_arc is not None:
+                        edge_d.radius = held_arc.radius
+                        edge_d.clockwise = held_arc.clockwise
+                        edge_d.large = held_arc.large
+
+                        # arc_to_point_data = edge_d.flatten_arc()
+                        # path.list_of_edges.append(arc_to_point_data)
+                        # edge_d = path.list_of_edges[-1]
+
+                        held_arc = None
+
+                    if local_path_edge.radius:
+                        held_arc = local_path_edge
+
+                    path.list_of_edges.append(edge_d)
+            else:
+                return
 
     def process_closed_point(self, point, edge_d, path, last_edge, edit_mode):
-        edge_d = path.list_of_edges[0]
+        edge_d = Edge2(path.list_of_edges[-1].p2, path.list_of_edges[0].p1)
         if len(point) == 1:
             path.list_of_edges.append(edge_d)
             return
@@ -495,19 +560,16 @@ class PathFieldInterpreter(Path2, object):
         while len(xyz) < 3:
             xyz.append('')
 
-        edge_d.p2.x = self.get_value(xyz[0], last_edge.p2.x, round_value)
-        edge_d.p2.y = self.get_value(xyz[1], last_edge.p2.y, round_value)
+        edge_d.p1.x = self.get_value(xyz[0], last_edge.p1.x, round_value)
+        edge_d.p1.y = self.get_value(xyz[1], last_edge.p1.y, round_value)
         if is_path3(path):
-            edge_d.p2.z = self.get_value(xyz[2], last_edge.z, round_value)
-
+            edge_d.p1.z = self.get_value(xyz[2], last_edge.p1.z, round_value)
+        last_edge.p2 = copy.deepcopy(edge_d.p1)
         # Now process the curve definition if there is one
         if len(point) == 0:
+            edge_d.p1.name = default_point_name
             path.list_of_edges.append(edge_d)
-            edge_d.p2.name = default_point_name
-            last_edge.p2.x = edge_d.p2.x
-            last_edge.p2.y = edge_d.p2.y
-            if is_path3(path):
-                last_edge.p2.z = edge_d.p2.z
+            last_edge = edge_d
             return
 
         # Look for a curve definition, it should be terminated either by a comma or be the whole string
@@ -532,10 +594,9 @@ class PathFieldInterpreter(Path2, object):
                 edge_d.radius = last_edge.radius
             else:
                 edge_d.radius = radius
-            edge_d.p1 = last_edge.p2
-            arc_to_point_data = edge_d.flatten_arc()
-            path.list_of_edges.append(arc_to_point_data)
-            edge_d = path.list_of_edges[-1]
+            # arc_to_point_data = edge_d.flatten_arc()
+            # path.list_of_edges.append(arc_to_point_data)
+            # edge_d = path.list_of_edges[-1]
 
         last_edge = edge_d
 
@@ -550,9 +611,9 @@ class PathFieldInterpreter(Path2, object):
         parts = point.split(',')
 
         if parts[0] != '':
-            edge_d.p2.name = parts[0]
+            edge_d.p1.name = parts[0]
         else:
-            edge_d.p2.name = default_point_name
+            edge_d.p1.name = default_point_name
 
         if len(parts) > 1 and self.LINE_STYLE_INDICATOR in parts[1]:
             edge_def = parts[1].split(self.LINE_STYLE_INDICATOR)
@@ -567,7 +628,6 @@ class PathFieldInterpreter(Path2, object):
             edge_d.right_name = parts[3]
 
         path.list_of_edges.append(edge_d)
-        path.remove_duplicate_edges()
 
     def get_value(self, in_value, last_value, round_value):
         if in_value == '':
@@ -585,3 +645,55 @@ class PathFieldInterpreter(Path2, object):
         except ValueError:
             r_value = in_value
         return r_value
+
+
+class PathFieldFunctions:
+    def __init__(self):
+        pass
+
+    def process(self, point, path):
+        arguments = point.split(',')
+        function_type = arguments[0][1:].upper()
+        if function_type == 'STR':
+            return self.swept_top_rail(arguments[1:], path)
+        else:
+            assert False, 'unknown function type'
+
+    def swept_top_rail(self, arguments, path):
+        current_edge = path.list_of_edges[-1]
+
+        end_style = arguments[0]
+        chord_height = float(arguments[1])
+        end_x = float(arguments[2])
+        if len(arguments) > 3:
+            number_of_inclusive_bars = float(arguments[3])
+            inclusive_bars_width = float(arguments[4])
+        else:
+            number_of_inclusive_bars = 0
+            inclusive_bars_width = 0
+        if end_style == "":
+            chord_width = ((end_x - current_edge.p1.x - number_of_inclusive_bars * inclusive_bars_width) /
+                           (number_of_inclusive_bars + 1))
+            if chord_height > chord_width / 2:
+                chord_height = chord_width / 2
+            new_x = current_edge.p1.x + chord_width
+            radius = radius_of_chord(chord_width / 2, chord_height)
+            current_edge.p1.x = new_x
+            current_edge.clockwise = True
+            current_edge.large = False
+            path.points.append({'x': new_x, 'y': current_edge.y, 'z': current_z, 'r': radius, 'c': True, 'l': False}) # continue 17/01
+            while number_of_inclusive_bars > 0:
+                new_x += inclusive_bars_width
+                path.points.append({'x': new_x, 'y': current_y, 'z': current_z})
+                new_x += chord_width
+                path.points.append({'x': new_x, 'y': current_y, 'z': current_z, 'r': radius, 'c': True, 'l': False})
+                number_of_inclusive_bars -= 1
+        elif end_style in ('l', 'L', 'r', 'R'):
+            chord_width = (end_x - current_x) * 2
+            if chord_height > chord_width:
+                chord_height = chord_width
+            radius = radius_of_chord(chord_width / 2, chord_height)
+            if end_style in ('r', 'R'):
+                chord_height = - chord_height
+            end_y = current_y + chord_height
+            path.points.append({'x': end_x, 'y': end_y, 'z': current_z, 'r': radius, 'c': True, 'l': False})
