@@ -233,8 +233,23 @@ class Path2:
                         continue
                     if self.list_of_edges[index - 1].p2 != edge.p1:
                         self.list_of_edges.insert(index, Edge2(self.list_of_edges[index - 1].p2, edge.p1))
-                        index += 1
             self.list_of_edges.append(Edge2(deepcopy(self.list_of_edges[-1].p2), deepcopy(self.list_of_edges[0].p1)))
+        return self
+
+    def make_continuous(self):
+        if self.path_length > 1 and not self.is_continuous:
+            for index in range(self.path_length - 1):
+                if self.list_of_edges[index].p2 != self.list_of_edges[index + 1].p1:
+                    self.list_of_edges[index].p2 = copy.deepcopy(self.list_of_edges[index + 1].p1)
+                    if self.list_of_edges[index + 1].is_arc():
+                        self.list_of_edges[index].radius = self.list_of_edges[index + 1].radius
+                        self.list_of_edges[index].clockwise = self.list_of_edges[index + 1].clockwise
+                        self.list_of_edges[index].large = self.list_of_edges[index + 1].large
+
+                        self.list_of_edges[index + 1].radius = 0
+                        self.list_of_edges[index + 1].clockwise = False
+                        self.list_of_edges[index + 1].large = False
+            self.update_path()
         return self
 
     def is_circle(self):
