@@ -1,9 +1,11 @@
 import copy
 
+from geometry_utils.three_d.edge3 import is_edge3
+from geometry_utils.three_d.point3 import is_point3
 from geometry_utils.two_d.path2 import Path2
 from geometry_utils.three_d.path3 import is_path3
-from geometry_utils.two_d.edge2 import Edge2
-from geometry_utils.two_d.point2 import Point2
+from geometry_utils.two_d.edge2 import Edge2, is_edge2
+from geometry_utils.two_d.point2 import Point2, is_point2
 
 
 class PathFieldInterpreter(Path2, object):
@@ -38,6 +40,7 @@ class PathFieldInterpreter(Path2, object):
         self.write_buffer = ""
         self.read_buffer = ""
         self.variables = {}
+        self.paths = []
 
     def clear_path(self):
         self.write_buffer = ""
@@ -53,6 +56,15 @@ class PathFieldInterpreter(Path2, object):
             if str_num == '0.00':
                 return '0'
             return str_num.rstrip('0').rstrip('.')
+
+        def format_point(point):
+            if is_point2(point):
+                point_string = [format_num(point.x), format_num(point.y)]
+                return point_string
+            if is_point3(point):
+                point_string = [format_num(point.x), format_num(point.y), format_num(point.z)]
+                return point_string
+            raise TypeError('Argument must be a type of Point2 or Point3')
 
         def get_curve_indicator(edge):
             """
@@ -71,18 +83,19 @@ class PathFieldInterpreter(Path2, object):
                 return self.CURVE_SMALL_ANTICLOCK
 
         def add_point(index, path_length, point, last):
-            delimiter_buffer = ""
-            if format_num(point.x) != last[0]:
-                self.write_buffer += format_num(point.x)
-                last[0] = format_num(point.x)
+            delimiter_buffer = ''
+            point_string = format_point(point)
+            if point_string[0] != last[0]:
+                self.write_buffer += point_string[0]
+                last[0] = point_string[0]
             elif index == 0 and path_length == 1:
-                self.write_buffer += format_num(point.x)
+                self.write_buffer += last[0]
 
             delimiter_buffer += self.POINT_ELEMENT_SEPERATOR
 
-            if format_num(point.y) != last[1]:
-                self.write_buffer += delimiter_buffer + format_num(point.y)
-                last[1] = format_num(point.y)
+            if point_string[1] != last[1]:
+                self.write_buffer += delimiter_buffer + point_string[1]
+                last[1] = point_string[1]
                 delimiter_buffer = self.POINT_ELEMENT_SEPERATOR
             elif index == 0 and path_length == 1:
                 self.write_buffer += delimiter_buffer + last[1]
@@ -97,29 +110,29 @@ class PathFieldInterpreter(Path2, object):
 
             return last
 
-        if self.write_buffer != "":
+        if self.write_buffer != '':
             self.write_buffer += self.NEW_PATH_CHAR
 
         if path.layers:
             first = True
             for layer in path.layers:
                 if not first:
-                    self.write_buffer += ","
+                    self.write_buffer += ','
                 self.write_buffer += layer
                 first = False
 
             self.write_buffer += self.LAYER_CHAR
 
-        if path.name != "":
+        if path.name != '':
             self.write_buffer += path.name + self.NAME_CHAR
 
-        last = ["0", "0", "0"]
+        last = ['0', '0', '0']
         last_r = '0'
-        indicator_buffer = ""
+        indicator_buffer = ''
         path_length = path.path_length
         last_index = path_length - 1
         for index, edge in enumerate(path.list_of_edges):
-            if path.is_closed and index == (path.path_length - 1):
+            if path.is_closed and index == last_index:
                 self.write_buffer += self.CLOSED_PATH_INDICATOR
             else:
                 if index == 0 or edge.p1 != path.list_of_edges[index - 1].p2:
@@ -136,27 +149,27 @@ class PathFieldInterpreter(Path2, object):
                     self.write_buffer += format_num(edge.radius)
                     last_r = format_num(edge.radius)
 
-            indicator_buffer = ""
+            indicator_buffer = ''
 
-            if not (index == (path.path_length - 1) and path.is_closed):
-                indicator_buffer += ","
+            if not (index == last_index and path.is_closed):
+                indicator_buffer += ','
                 if edge.p2.name:
                     self.write_buffer += indicator_buffer + edge.p2.name
-                    indicator_buffer = ""
+                    indicator_buffer = ''
 
-            indicator_buffer += ","
+            indicator_buffer += ','
             if edge.name:
                 self.write_buffer += indicator_buffer + edge.name
 
             if edge.style:
                 self.write_buffer += indicator_buffer + self.LINE_STYLE_INDICATOR + edge.style
-                indicator_buffer = ""
+                indicator_buffer = ''
 
-            if index != (path.path_length - 1):
+            if index != last_index:
                 self.write_buffer += self.POINT_SEPERATOR
 
         if path.fill:
-            if indicator_buffer != "":
+            if indicator_buffer != '':
                 if edge.is_arc():
                     self.write_buffer += indicator_buffer + self.FILL_INDICATOR
                 self.write_buffer += path.fill
@@ -235,29 +248,28 @@ class PathFieldInterpreter(Path2, object):
                 path_str = path_str[index + 1:]  # strip off the name now we've processed it
 
             # Check for special shapes
+            if path_str.startswith(self.SPECIAL_SHAPES):
+                point_separator = path_str.find(';')
+                if point_separator == -1:
+                    function_data = path_str[1:]
+                    path_str = ''
+                else:
+                    function_data = path_str[1:point_separator]
+                    path_str = path_str[point_separator + 1:]
 
-            # if path_str.startswith(self.SPECIAL_SHAPES):
-            #     point_separator = path_str.find(';')
-            #     if point_separator == -1:
-            #         function_data = path_str[1:]
-            #         path_str = ''
-            #     else:
-            #         function_data = path_str[1:point_separator]
-            #         path_str = path_str[point_separator + 1:]
-            #
-            #     special_paths = PathFieldShapes.process_special_functions(path_field_interpreter=self,
-            #                                                               function_data=function_data,
-            #                                                               path2=path,
-            #                                                               previous_paths=out_paths,
-            #                                                               override_data=override_data,
-            #                                                               enlarge_offset=enlarge_offset)
-            #     for special_path in special_paths:
-            #         out_paths.append(special_path)
-            #         if return_single is not None and special_path.name == return_single:
-            #             return special_path
-            #
-            #     if path_str in ('', ';'):
-            #         continue
+                special_paths = PathFieldShapes.process_special_functions(path_field_interpreter=self,
+                                                                          function_data=function_data,
+                                                                          path2=path,
+                                                                          previous_paths=out_paths,
+                                                                          override_data=override_data,
+                                                                          enlarge_offset=enlarge_offset)
+                for special_path in special_paths:
+                    out_paths.append(special_path)
+                    if return_single is not None and special_path.name == return_single:
+                        return special_path
+
+                if path_str in ('', ';'):
+                    continue
 
             points = path_str.split(self.POINT_SEPERATOR)
 
@@ -270,7 +282,7 @@ class PathFieldInterpreter(Path2, object):
             mirrored_point = -1
             if self.CLOSED_PATH_INDICATOR in points[len(points) - 1]:  # Check if path is closed
                 is_closed = True
-            elif self.MIRRORED_PATH_INDICATOR in points[len(points) - 1]:  # Check if path is mirrored
+            if self.MIRRORED_PATH_INDICATOR in points[len(points) - 1]:  # Check if path is mirrored
                 is_mirrored = True
 
             for index, point in enumerate(points):
@@ -286,7 +298,6 @@ class PathFieldInterpreter(Path2, object):
                 elif point.startswith(self.FUNCTION_CHAR):
                     path_field_functions = PathFieldFunctions()
                     path_field_functions.process(point, path)
-                    last_edge = path.list_of_edges[-1]
 
                 elif is_closed and point is points[len(points) - 1]:
                     self.process_closed_point(point, edge_d, path, last_edge, edit_mode)
@@ -302,7 +313,7 @@ class PathFieldInterpreter(Path2, object):
                             mirrored_point = path.path_length - 1
                             point = point[1:]
                             # if edit_mode:
-                                # path.points[-1]['mirror'] = self.MIRRORED_PATH_POINT_INDICATOR
+                            # path.points[-1]['mirror'] = self.MIRRORED_PATH_POINT_INDICATOR
                         self.process_normal_point(point, edge_d, path, last_edge,
                                                   edit_mode, default_point_name,
                                                   round_value=round_value)
@@ -310,7 +321,7 @@ class PathFieldInterpreter(Path2, object):
                     self.process_normal_point(point, edge_d, path, last_edge,
                                               edit_mode, default_point_name,
                                               round_value=round_value)
-                    last_edge = path.list_of_edges[-1]
+                last_edge = path.list_of_edges[-1]
 
             # dont forget to revisit as well as account for the edge attributes and name and style when processing
             # the last edge
@@ -379,9 +390,6 @@ class PathFieldInterpreter(Path2, object):
     def process_mirrored_points(self, point, edge_d, path, last_edge, mirrored_point, edit_mode, default_point_name,
                                 round_value):
         self.process_normal_point(point[:-1], edge_d, path, last_edge, edit_mode, default_point_name, round_value)
-        if not path.is_closed:
-            path.list_of_edges[-2].p2 = copy.deepcopy(path.list_of_edges[-1].p1)
-            del (path.list_of_edges[-1])
         if edit_mode:
             # path.list_of_edges.append('mirror')
             return
@@ -572,7 +580,6 @@ class PathFieldInterpreter(Path2, object):
         if len(point) == 0:
             edge_d.p1.name = default_point_name
             path.list_of_edges.append(edge_d)
-            last_edge = copy.deepcopy(edge_d)
             return
 
         # Look for a curve definition, it should be terminated either by a comma or be the whole string
@@ -600,8 +607,6 @@ class PathFieldInterpreter(Path2, object):
             # arc_to_point_data = edge_d.flatten_arc()
             # path.list_of_edges.append(arc_to_point_data)
             # edge_d = path.list_of_edges[-1]
-
-        last_edge = edge_d
 
         point = point[1:]
 
