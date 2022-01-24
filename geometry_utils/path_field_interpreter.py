@@ -8,12 +8,12 @@ from geometry_utils.two_d.point2 import Point2, is_point2
 
 
 class PathFieldInterpreter(Path2, object):
-    # Symbols used in the pathfield
+    # Symbols used in the PathField
     NEW_PATH_CHAR = '|'
     LAYER_CHAR = '&'
     NAME_CHAR = '@'
-    POINT_SEPERATOR = ';'
-    POINT_ELEMENT_SEPERATOR = ':'
+    POINT_SEPARATOR = ';'
+    POINT_ELEMENT_SEPARATOR = ':'
     CLOSED_PATH_INDICATOR = '#'
     MIRRORED_PATH_INDICATOR = '^'
     MIRRORED_PATH_POINT_INDICATOR = '*'
@@ -47,7 +47,24 @@ class PathFieldInterpreter(Path2, object):
         self.list_of_edges = []
 
     def add_path(self, path):
+        """
+        Add a Path2() to the PathField and return the PathField string.
+        The paths accumulate in the buffer, so multiple calls to this function will
+        build up a PathField string containing multiple paths.
+        @param path: Path2() instance
+        @return: PathField string
+        """
         def format_num(num):
+            """
+            Formats a number to PathField spec:
+             - Rounded to 2dp.
+             - Any trailing 0's and .'s removed.
+             - eg: 12.00003535 -> 12
+             - eg: 12.300 -> 12.3
+             - eg: 12.000000 -> 12
+            @param num: float or integer.
+            @return: formatted number as string
+            """
             try:
                 str_num = "%.2f" % float(num)
             except ValueError:
@@ -66,52 +83,53 @@ class PathFieldInterpreter(Path2, object):
             else:
                 raise TypeError('Argument must be a type of Point2 or Point3')
 
-        def get_curve_indicator(edge):
+        def get_curve_indicator(_edge):
             """
             Retrieves the correct curve indicator given large and clockwise parameters
             for a curve.
-            @param edge:
+            @param _edge:
             @return:
             """
-            if edge.large and edge.clockwise:
+            if _edge.large and _edge.clockwise:
                 return self.CURVE_LARGE_CLOCK
-            elif edge.large and not edge.clockwise:
+            elif _edge.large and not _edge.clockwise:
                 return self.CURVE_LARGE_ANTICLOCK
-            elif not edge.large and edge.clockwise:
+            elif not _edge.large and _edge.clockwise:
                 return self.CURVE_SMALL_CLOCK
-            elif not edge.large and not edge.clockwise:
+            elif not _edge.large and not _edge.clockwise:
                 return self.CURVE_SMALL_ANTICLOCK
 
-        def add_point(index, point, last):
+        def add_point(_index, point, _last):
             delimiter_buffer = ''
             point_string = format_point(point)
-            if point_string[0] != last[0]:
+            if point_string[0] != _last[0]:
                 self.write_buffer += point_string[0]
-                last[0] = point_string[0]
-            elif index == 0 and self.path_length == 1:
-                self.write_buffer += last[0]
-            delimiter_buffer += self.POINT_ELEMENT_SEPERATOR
+                _last[0] = point_string[0]
+            elif _index == 0 and self.path_length == 1:
+                self.write_buffer += _last[0]
+            delimiter_buffer += self.POINT_ELEMENT_SEPARATOR
 
-            if point_string[1] != last[1]:
+            if point_string[1] != _last[1]:
                 self.write_buffer += delimiter_buffer + point_string[1]
-                last[1] = point_string[1]
-                delimiter_buffer = self.POINT_ELEMENT_SEPERATOR
-            elif index == 0 and self.path_length == 1:
-                self.write_buffer += delimiter_buffer + last[1]
-                delimiter_buffer = self.POINT_ELEMENT_SEPERATOR
+                _last[1] = point_string[1]
+                delimiter_buffer = self.POINT_ELEMENT_SEPARATOR
+            elif _index == 0 and self.path_length == 1:
+                self.write_buffer += delimiter_buffer + _last[1]
+                delimiter_buffer = self.POINT_ELEMENT_SEPARATOR
             else:
-                delimiter_buffer += self.POINT_ELEMENT_SEPERATOR
+                delimiter_buffer += self.POINT_ELEMENT_SEPARATOR
 
             if is_point3(point):
-                if point_string[2] != last[2]:
+                if point_string[2] != _last[2]:
                     self.write_buffer += delimiter_buffer + point_string[2]
-                    last[2] = format_num(point.z)
+                    _last[2] = format_num(point.z)
+            return _last
 
-            return last
-
+        # If there is already a path in the buffer, append the path separator first
         if self.write_buffer != '':
             self.write_buffer += self.NEW_PATH_CHAR
 
+        # Write out layer names if given
         if path.layers:
             first = True
             for layer in path.layers:
@@ -119,58 +137,69 @@ class PathFieldInterpreter(Path2, object):
                     self.write_buffer += ','
                 self.write_buffer += layer
                 first = False
-
             self.write_buffer += self.LAYER_CHAR
 
+        # Write out path name if given
         if path.name != '':
             self.write_buffer += path.name + self.NAME_CHAR
 
+        # State variables, initialised to 0 so if first point is 0, 0, 0 the values wont be written
+        # as required by the spec
         last = ['0', '0', '0']
         last_r = '0'
+
         indicator_buffer = ''
         path_length = path.path_length
         last_index = path_length - 1
+
+        # Loop through the points and write them out
         for index, edge in enumerate(path.list_of_edges):
+            # If this is the last point in a closed path, output the closed path indicator, rather than the xyz pos
             if path.is_closed and index == last_index:
                 self.write_buffer += self.CLOSED_PATH_INDICATOR
             else:
                 if index == 0 or edge.p1 != path.list_of_edges[index - 1].p2:
                     last = add_point(index, edge.p1, last)
                     if index != last_index:
-                        self.write_buffer += self.POINT_SEPERATOR
-
+                        self.write_buffer += self.POINT_SEPARATOR
                 last = add_point(index, edge.p2, last)
 
+            # Only a valid curve if all three curve parameters are present
             if edge.is_arc():
                 self.write_buffer += get_curve_indicator(edge)
-
                 if format_num(edge.radius) != last_r:
                     self.write_buffer += format_num(edge.radius)
                     last_r = format_num(edge.radius)
-
             indicator_buffer = ''
 
+            # Add point name if given
+            # Skip the point name if its the last point in a closed path, as path name is invalid
+            # and extra comma not needed
             if not (index == last_index and path.is_closed):
                 indicator_buffer += ','
-                if edge.p2.name:
+                if edge.p1.name:
                     self.write_buffer += indicator_buffer + edge.p1.name
-                    indicator_buffer = ''
+                elif edge.p2.name:
+                    self.write_buffer += indicator_buffer + edge.p2.name
+                indicator_buffer = ''
 
+            # Add edge name if given
             indicator_buffer += ','
             if edge.name:
                 self.write_buffer += indicator_buffer + edge.name
                 indicator_buffer = ''
 
+            # Add edge style if given
             if edge.style:
                 self.write_buffer += indicator_buffer + self.LINE_STYLE_INDICATOR + edge.style
                 indicator_buffer = ''
 
             if index != last_index:
-                self.write_buffer += self.POINT_SEPERATOR
+                self.write_buffer += self.POINT_SEPARATOR
 
-        if path.fill:
+        if path.fill != '':
             if indicator_buffer != '':
-                if edge.is_arc():
+                if path.list_of_edges[-1].is_arc():
                     self.write_buffer += indicator_buffer + self.FILL_INDICATOR
                 self.write_buffer += path.fill
             else:
@@ -181,6 +210,12 @@ class PathFieldInterpreter(Path2, object):
         return outbuf
 
     def parse_curve_def(self, curve_def, edit_mode):
+        """
+        Turns arc definition into clockwise, large and radius attributes.
+        @param curve_def: arc definition eg: '(10'
+        @param edit_mode:
+        @return: clockwise (bool), large (bool), radius (num) (if radius is not given, returns -1)
+        """
         if curve_def[0] == self.CURVE_LARGE_ANTICLOCK:
             clockwise = False
             large = True
@@ -207,19 +242,32 @@ class PathFieldInterpreter(Path2, object):
 
     def load_path(self, path_field, edit_mode=False, override_data=None, return_single=None,
                   point_name_prefix='', round_value=2, enlarge_offset=0):
+        """
+        Reads a PathField string and outputs a list of Path2s
+        @param path_field: string
+        @param edit_mode: boolean used for the shape editor
+        @param override_data:
+        @param return_single:
+        @return: [Path2]
+        @param point_name_prefix:
+
+        @param round_value: int required number of decimal places
+        @param enlarge_offset: enlarge_offset only works for pre-defined shapes ie rect / diamond etc
+        """
         if override_data is None:
             override_data = {}
 
         out_paths = []
 
         self.read_buffer = path_field
-
         path_fields = self.split_into_paths(self.read_buffer)
 
         for path_str in path_fields:
             if len(path_str) == 0:
                 continue
+
             path = Path2()
+
             if path_str[0] == self.TAG_START_CHAR:
                 index = path_str[1:].find(self.TAG_END_CHAR)
                 if index != 1:
@@ -232,12 +280,13 @@ class PathFieldInterpreter(Path2, object):
                     path.type = path_str[1:index + 1]
                     path_str = path_str[index + 2:]
 
+            # Check if layers are specified
             index = path_str.find(self.LAYER_CHAR)
             if index != -1:
                 path.layers = path_str[:index].split(',')
                 path_str = path_str[index + 1:]
 
-                # Check if a path name has been specified
+            # Check if a path name has been specified
             index = path_str.find(self.NAME_CHAR)
             if index != -1:
                 path.name = path_str[:index]
@@ -263,6 +312,7 @@ class PathFieldInterpreter(Path2, object):
                                                                           previous_paths=out_paths,
                                                                           override_data=override_data,
                                                                           enlarge_offset=enlarge_offset)
+
                 for special_path in special_paths:
                     out_paths.append(special_path)
                     if return_single is not None and special_path.name == return_single:
@@ -271,7 +321,7 @@ class PathFieldInterpreter(Path2, object):
                 if path_str in ('', ';'):
                     continue
 
-            points = path_str.split(self.POINT_SEPERATOR)
+            points = path_str.split(self.POINT_SEPARATOR)
 
             # State variables
             last_edge = Edge2()
@@ -287,26 +337,29 @@ class PathFieldInterpreter(Path2, object):
             for index, point in enumerate(points):
                 default_point_name = "%s%d" % (point_name_prefix, index)
                 edge_d = Edge2(Point2(), Point2(), 0, False, False)
+
                 # if the path is closed, process the last point differently as the format could be quite different,
-                # especially if there is a fill colour specified.
+                # especially if there is a fill colour specified
 
                 if point.startswith(self.INCLUDE_START):
                     if self.process_include_tag(point, path, last_edge, edit_mode):
-                        last_edge = path.list_of_edges[-1]
+                        continue
 
                 elif point.startswith(self.FUNCTION_CHAR):
                     path_field_functions = PathFieldFunctions()
                     path_field_functions.process(point, path)
 
-                elif is_closed and point is points[len(points) - 1]:
-                    self.process_closed_point(point, edge_d, path, last_edge, edit_mode)
+                elif is_closed and point is points[len(points) - 1]:  # last point of a closed path
+                    self.process_closed_point(point, path, last_edge, edit_mode)
                     break
+
                 elif is_mirrored:  # mirrored point
                     if point is points[len(points) - 1]:
                         self.process_mirrored_points(point, edge_d, path,
                                                      last_edge, mirrored_point, edit_mode, default_point_name,
                                                      round_value=round_value)
                         break
+
                     else:
                         if len(point) > 0 and point[0] == self.MIRRORED_PATH_POINT_INDICATOR:
                             mirrored_point = path.path_length - 1
@@ -320,10 +373,9 @@ class PathFieldInterpreter(Path2, object):
                     self.process_normal_point(point, edge_d, path, last_edge,
                                               edit_mode, default_point_name,
                                               round_value=round_value)
+
                 last_edge = path.list_of_edges[-1]
 
-            # dont forget to revisit as well as account for the edge attributes and name and style when processing
-            # the last edge
             path.make_continuous()
 
             if return_single is not None and path.name == return_single:
@@ -338,7 +390,8 @@ class PathFieldInterpreter(Path2, object):
     def process_include_tag(self, tag, path, last_edge, edit_mode):
         function_data = tag.lstrip(self.INCLUDE_START)
         edge_type = 'pp'
-        offset_vector = last_edge.p2.to_vector2()
+
+        offset_vector = last_edge.p1.to_vector2()
         valid = True
         main_include_data = function_data.split(self.INCLUDE_CONDITION_DELIMITER)
 
@@ -379,7 +432,7 @@ class PathFieldInterpreter(Path2, object):
             path += result
             return True
         else:
-            path.list_of_edges.append(Edge2(Point2(offset_vector.x, offset_vector.y, Point2())))
+            path.list_of_edges.append(Edge2(Point2(offset_vector.x, offset_vector.y), Point2()))
             return True
 
     def process_mirrored_points(self, point, edge_d, path, last_edge, mirrored_point, edit_mode, default_point_name,
@@ -399,7 +452,7 @@ class PathFieldInterpreter(Path2, object):
                 offset = path.list_of_edges[0].p1.y * 2
                 mirror_x = False
             if mirrored_point != -1:
-                end_point = path.list_of_edges[-1].p1  # why not end_edge
+                end_point = path.list_of_edges[-1].p1
                 for local_path_edge in reversed(local_path_edges[:mirrored_point]):
                     mirrored_point -= 1
                     if (not mirror_x and offset - local_path_edge.p1.y == end_point.y and
@@ -437,20 +490,31 @@ class PathFieldInterpreter(Path2, object):
             else:
                 return
 
-    def process_closed_point(self, point, edge_d, path, last_edge, edit_mode):
+    def process_closed_point(self, point, path, last_edge, edit_mode):
+        """
+        Closed path, last point xyz is same as first point
+        @param point:
+        @param path:
+        @param last_edge:
+        @param edit_mode:
+        """
         path.list_of_edges[-1].p2 = copy.deepcopy(path.list_of_edges[0].p1)
+
         if len(point) == 1:
             return
-        point = point[1:]
+
+        point = point[1:]  # Strip off the closed path indicator, now we've processed the position
 
         edge_d = path.list_of_edges[-1]
 
         if (point[0] == self.CURVE_SMALL_CLOCK or point[0] == self.CURVE_SMALL_ANTICLOCK or
                 point[0] == self.CURVE_LARGE_CLOCK or point[0] == self.CURVE_LARGE_ANTICLOCK):
             idx = point.find(',')
+
             if idx == -1:
                 curve_def = point
                 point = ''
+
             else:
                 curve_def = point[:idx]
                 point = point[idx + 1:]
@@ -458,8 +522,10 @@ class PathFieldInterpreter(Path2, object):
             clock, large, radius = self.parse_curve_def(curve_def, edit_mode)
             edge_d.clockwise = clock
             edge_d.large = large
+
             if radius == -1:
                 edge_d.radius = last_edge.radius
+
             else:
                 edge_d.radius = radius
                 last_edge.radius = edge_d.radius
@@ -467,24 +533,26 @@ class PathFieldInterpreter(Path2, object):
             if len(point) == 0:
                 path.list_of_edges.append(edge_d)
                 return
+
         if point[0] == ',':
             point = point[1:]
-
             idx = point.find(self.FILL_INDICATOR)
+
             if idx == -1:
                 edge_def = point
                 point = ''
+
             else:
                 edge_def = point[:idx]
                 point = point[idx + 1:]
 
             parts = edge_def.split(self.LINE_STYLE_INDICATOR)
+
             if parts[0] != '':
                 edge_d.name = parts[0]
+
             if len(parts) > 1 and parts[1] != '':
                 edge_d.style = parts[1]
-
-        # path.list_of_edges.append(edge_d)
 
         if len(point) > 0 and point[0] == self.FILL_INDICATOR:
             point = point[1:]
@@ -553,7 +621,7 @@ class PathFieldInterpreter(Path2, object):
             position = point
             point = ''
 
-        xyz = position.split(self.POINT_ELEMENT_SEPERATOR)
+        xyz = position.split(self.POINT_ELEMENT_SEPARATOR)
         while len(xyz) < 3:
             xyz.append('')
 
@@ -561,6 +629,7 @@ class PathFieldInterpreter(Path2, object):
         edge_d.p1.y = self.get_value(xyz[1], last_edge.p1.y, round_value)
         if is_path3(path):
             edge_d.p1.z = self.get_value(xyz[2], last_edge.p1.z, round_value)
+
         # Now process the curve definition if there is one
         if len(point) == 0:
             edge_d.p1.name = default_point_name
@@ -589,9 +658,6 @@ class PathFieldInterpreter(Path2, object):
                 edge_d.radius = last_edge.radius
             else:
                 edge_d.radius = radius
-            # arc_to_point_data = edge_d.flatten_arc()
-            # path.list_of_edges.append(arc_to_point_data)
-            # edge_d = path.list_of_edges[-1]
 
         point = point[1:]
 
@@ -654,10 +720,10 @@ class PathFieldFunctions:
 
     def swept_top_rail(self, arguments, path):
         current_edge = path.list_of_edges[-1]
-
         end_style = arguments[0]
         chord_height = float(arguments[1])
         end_x = float(arguments[2])
+
         if len(arguments) > 3:
             number_of_inclusive_bars = float(arguments[3])
             inclusive_bars_width = float(arguments[4])
@@ -672,19 +738,20 @@ class PathFieldFunctions:
             new_x = current_edge.p1.x + chord_width
             radius = radius_of_chord(chord_width / 2, chord_height)
             path.list_of_edges.append(Edge2(Point2(new_x, current_edge.y), Point2(), radius, True, False))
+
             while number_of_inclusive_bars > 0:
                 new_x += inclusive_bars_width
-                path.points.append(Edge2(Point2(new_x, current_edge.y)))
+                path.list_of_edges.append(Edge2(Point2(new_x, current_edge.y)))
                 new_x += chord_width
                 path.list_of_edges.append(Edge2(Point2(new_x, current_edge.y), Point2(), radius, True, False))
                 number_of_inclusive_bars -= 1
+
         elif end_style in ('l', 'L', 'r', 'R'):
-            chord_width = (end_x - current_edge.x) * 2
+            chord_width = (end_x - current_edge.p1.x) * 2
             if chord_height > chord_width:
                 chord_height = chord_width
             radius = radius_of_chord(chord_width / 2, chord_height)
             if end_style in ('r', 'R'):
                 chord_height = - chord_height
-            end_y = current_edge.y + chord_height
+            end_y = current_edge.p1.y + chord_height
             path.points.append(Edge2(Point2(end_x, end_y), Point2(), radius, True, False))
-            path.make_continuous()

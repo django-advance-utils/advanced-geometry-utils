@@ -16,10 +16,19 @@ class Path2:
     ___________
     list_of_edges: list
         the list of 2D edges to establish a path
-    first_edge: Edge2
-        the first 2D edge on the path
-    last_edge: Edge2
-        the last 2D edge on the path
+    fill: str
+        the color fill of the path
+    name: str
+        the name of the path
+    type: str
+        the path type to allow a component have different profiles along its length e.g extrude and lathe
+    layers: list
+        the names of the layers in the path
+    closed: bool
+        True if the path is closed and False otherwise
+    attributes: dict
+        dictionary of attributes of the path 
+
 
     Methods:
     ________
@@ -112,8 +121,6 @@ class Path2:
         :return:continuity of the path
         :rtype: bool
         """
-
-
         if self.path_length < 2:
             return False
         else:
