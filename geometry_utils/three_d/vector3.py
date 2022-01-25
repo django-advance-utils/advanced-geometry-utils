@@ -1,3 +1,4 @@
+import math
 from math import sqrt
 
 from geometry_utils.maths_utility import is_int_or_float, are_ints_or_floats, floats_are_close
@@ -44,7 +45,7 @@ class Vector3:
     cross(Vector3): Vector3
         Returns the cross product of vector with another 3D vector
     """
-    def __init__(self, x=0, y=0, z=0, w=0):
+    def __init__(self, x=0.0, y=0.0, z=0.0, w=0):
         if are_ints_or_floats([x, y, z, w]):
             self.x = x
             self.y = y
@@ -197,7 +198,7 @@ class Vector3:
         :raises:TypeError: Wrong argument type
         """
         if is_vector3(other_vector):
-            return self.x * other_vector.x + self.y * other_vector.y + self.z * other_vector.z
+            return float((self.x * other_vector.x) + (self.y * other_vector.y) + (self.z * other_vector.z))
         raise TypeError("Dot product must be with another object of Vector3")
 
     def cross(self, other_vector):
@@ -215,6 +216,18 @@ class Vector3:
                            self.z * other_vector.x - self.x * other_vector.z,
                            self.x * other_vector.y - self.y * other_vector.x)
         raise TypeError("Cross product must be with another object of Vector3")
+
+    @classmethod
+    def from_comma_string(cls, string):
+        v = string.split(',')
+        return cls(float(v[0]), float(v[1]), float(v[2]))
+
+    def angle_to(self, other_vector):
+        self_unit_vector = self.normalised()
+        other_unit_vector = other_vector.normalised()
+        dot_product = self_unit_vector.dot(other_unit_vector)
+        angle = math.acos(dot_product)
+        return angle
 
 
 def is_vector3(input_variable):

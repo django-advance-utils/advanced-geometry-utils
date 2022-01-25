@@ -1,3 +1,5 @@
+import math
+
 PI = float(3.141592653589793238)
 
 QUARTER_PI = float(PI * 1/4)
@@ -577,3 +579,9 @@ def ranges_overlap(range1_minimum, range1_maximum, range2_minimum, range2_maximu
            (is_in_range(range1_maximum, range2_minimum, range2_maximum)) or \
            (is_in_range(range2_minimum, range1_minimum, range1_maximum)) or \
            (is_in_range(range2_maximum, range1_minimum, range1_maximum))
+
+
+def chord_length_from_height_radius(h, r):
+    chord_angle = 2 * math.acos((r - h) / r)
+    chord_length = 2.0 * r * math.sin(chord_angle / 2.0)
+    return chord_length
