@@ -299,9 +299,7 @@ class Edge2:
             raise TypeError("Edge offset is done by an object of Vector2")
 
     def reverse(self):
-        tmp = self.p1
-        self.p1 = self.p2
-        self.p2 = tmp
+        self.p1, self.p2 = self.p2, self.p1
         if self.is_arc():
             self.clockwise = not self.clockwise
         return self

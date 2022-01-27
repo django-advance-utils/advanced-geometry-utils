@@ -323,14 +323,13 @@ class Path2:
             circle_centre.y = self.list_of_edges[0].centre.y
             circle_radius = self.list_of_edges[0].radius
 
-            circle_list_of_points = [
-                Point2(circle_centre.x - circle_radius, circle_centre.y),
-                Point2(circle_centre.x, circle_centre.y + circle_radius),
-                Point2(circle_centre.x + circle_radius, circle_centre.y),
-                Point2(circle_centre.x, circle_centre.y - circle_radius)
+            self.list_of_edges = [
+                Edge2(Point2(circle_centre.x, circle_centre.y + circle_radius),
+                      Point2(circle_centre.x, circle_centre.y - circle_radius), circle_radius, False),
+                Edge2(Point2(circle_centre.x, circle_centre.y - circle_radius),
+                      Point2(circle_centre.x, circle_centre.y + circle_radius), circle_radius, True)
             ]
-
-            return circle_list_of_points
+            return self
 
     def get_points_orientation(self, list_of_point_indices, list_of_points):
         # https://www.geeksforgeeks.org/convex-hull-set-1-jarviss-algorithm-or-wrapping/
