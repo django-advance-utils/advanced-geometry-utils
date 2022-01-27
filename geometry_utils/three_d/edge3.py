@@ -1,6 +1,12 @@
-from geometry_utils.maths_utility import floats_are_close, is_float, is_int_or_float, DOUBLE_EPSILON
+import math
+
+from geometry_utils.maths_utility import floats_are_close, is_float, is_int_or_float, DOUBLE_EPSILON, sqr
 from geometry_utils.three_d.axis_aligned_box3 import AxisAlignedBox3
 from geometry_utils.three_d.point3 import Point3, is_point3
+from geometry_utils.three_d.vector3 import Vector3
+from geometry_utils.two_d.edge2 import Edge2
+from geometry_utils.two_d.point2 import Point2
+from geometry_utils.two_d.vector2 import Vector2
 
 
 class Edge3:
@@ -45,23 +51,32 @@ class Edge3:
     def __init__(self,
                  p1=Point3(0.0, 0.0, 0.0),
                  p2=Point3(0.0, 0.0, 0.0),
-                 via=Point3(0.0, 0.0, 0.0),
+                 via=None,
                  radius=0.0,
                  clockwise=False,
                  large=False):
-        if is_point3(p1) and is_point3(p2) and is_point3(via) and is_float(radius):
+        if is_point3(p1) and is_point3(p2) and is_int_or_float(radius):
             self.p1 = p1
             self.p2 = p2
-            self.via = via
             self.radius = radius
             self.clockwise = clockwise
             self.large = large
+            if is_point3(via):
+                self.via = via
+            elif via is None:
+                self.via = self.get_via()
             self.centre = self.calculate_centre()
         else:
             if not is_point3(p1) or not is_point3(p2) or not is_point3(via):
                 raise TypeError("First, second and third arguments must be objects of Point2")
             if not is_int_or_float(radius):
                 raise TypeError("Fourth argument must be an int or float")
+
+    def get_via(self):
+        edge_2d = Edge2(Point2(self.p1.x, self.p1.y), Point2(self.p2.x, self.p2.y),
+                        self.radius, self.clockwise, self.large)
+        edge_2d_midpoint = edge_2d.point_parametric(0.5)
+        return Point3(edge_2d_midpoint.x, edge_2d_midpoint.y, self.p1.z)
 
     def __str__(self):
         return ("Edge3(p1:" + str(self.p1) + ", p2:" + str(self.p2) + ", via:" + str(self.via) +
@@ -94,6 +109,48 @@ class Edge3:
         """
         if floats_are_close(self.radius, 0.0):
             return Point3((self.p1.x + self.p2.x) * 0.5, (self.p1.y + self.p2.y) * 0.5, (self.p1.z + self.p2.z) * 0.5)
+        elif self.is_arc():
+            p1_vector = self.p1.to_vector3()
+            p2_vector = self.p2.to_vector3()
+            via_vector = self.via.to_vector3()
+
+            n = p1_vector.cross(via_vector) + via_vector.cross(p2_vector) + p2_vector.cross(p1_vector)
+            n.normalise()
+            s = (p2_vector - p1_vector)
+            u = s.cross(n).normalised()
+            v = n.cross(u).normalised()
+            d = n.dot(p1_vector)
+            a = Vector2()
+            b = Vector2()
+            c = Vector2()
+
+            a.x = (u.x * p1_vector.x) + (u.y * p1_vector.y) + (u.z * p1_vector.z)
+            a.y = (v.x * p1_vector.x) + (v.y * p1_vector.y) + (v.z * p1_vector.z)
+
+            b.x = (u.x * via_vector.x) + (u.y * via_vector.y) + (u.z * via_vector.z)
+            b.y = (v.x * via_vector.x) + (v.y * via_vector.y) + (v.z * via_vector.z)
+
+            c.x = (u.x * p2_vector.x) + (u.y * p2_vector.y) + (u.z * p2_vector.z)
+            c.y = (v.x * p2_vector.x) + (v.y * p2_vector.y) + (v.z * p2_vector.z)
+
+            sol = Vector2()
+            sol.x = ((sqr(b.x) + sqr(b.y)) - (sqr(a.x) + sqr(a.y))) / 2
+            sol.y = ((sqr(c.x) + sqr(c.y)) - (sqr(a.x) + sqr(a.y))) / 2
+
+            tol = Vector2(b.x - a.x, b.y - a.y)
+            yol = Vector2(c.x - a.x, c.y - a.y)
+
+            ans = Vector2()
+            ans.y = ((sol.x * yol.x) - (sol.y * tol.x))/((tol.y * yol.x) - (tol.x * yol.y))
+            ans.x = (sol.x - (tol.y * ans.y))/tol.x
+
+            ans_3d = Vector3()
+            ans_3d.x = (u.x * ans.x) + (v.x * ans.y)
+            ans_3d.y = (u.y * ans.x) + (v.y * ans.y)
+            ans_3d.z = (u.z * ans.x) + (v.z * ans.y)
+            m = n * d
+            q = m + ans_3d
+            return Point3(q.x, q.y, q.z)
 
     def is_arc(self):
         """
@@ -172,6 +229,12 @@ class Edge3:
 
     def is_circle(self):
         return self.is_arc() and self.p1 == self.p2
+
+    def reverse(self):
+        self.p1, self.p2 = self.p2, self.p1
+        if self.is_arc():
+            self.clockwise = not self.clockwise
+        return self
 
 
 def is_edge3(input_variable):
