@@ -1,4 +1,7 @@
 from geometry_utils.three_d.axis_aligned_box3 import AxisAlignedBox3
+from geometry_utils.three_d.edge3 import Edge3
+from geometry_utils.three_d.point3 import Point3
+from geometry_utils.three_d.vector3 import Vector3
 
 
 class Path3:
@@ -95,6 +98,75 @@ class Path3:
         path_bounds = AxisAlignedBox3()
         for edge in self.list_of_edges:
             path_bounds.include(edge.get_edge_bounds())
+        return path_bounds
+
+    def reverse(self):
+        self.list_of_edges.reverse()
+        for edge in self.list_of_edges:
+            edge.reverse()
+        return self
+
+    def is_circle(self):
+        return self.path_length == 1 and self.list_of_edges[0].is_circle()
+
+    def convert_circle_to_edges(self):
+        if self.is_circle():
+            circle_centre = Point3()
+            circle_centre.x = self.list_of_edges[0].centre.x
+            circle_centre.y = self.list_of_edges[0].centre.y
+            circle_centre.z = self.list_of_edges[0].centre.z
+            circle_radius = self.list_of_edges[0].radius
+
+            self.list_of_edges = [
+                Edge3(Point3(circle_centre.x, circle_centre.y + circle_radius, circle_centre.z),
+                      Point3(circle_centre.x, circle_centre.y - circle_radius, circle_centre.z), circle_radius, False),
+                Edge3(Point3(circle_centre.x, circle_centre.y - circle_radius, circle_centre.z),
+                      Point3(circle_centre.x, circle_centre.y + circle_radius, circle_centre.z), circle_radius, True)
+            ]
+            return self
+
+    def get_bounds(self):
+        """
+        Derives the AxisAlignedBox2 containing the bounds of the path
+
+        :return:the box containing the path bounds
+        :rtype: AxisAlignedBox2
+        """
+        path_bounds = AxisAlignedBox3()
+        for edge in self.list_of_edges:
+            path_bounds.include(edge.get_edge_bounds())
+
+            if edge.is_arc():
+                positive_x = edge.centre + Vector3(edge.radius, 0, 0)
+                positive_y = edge.centre + Vector3(0, edge.radius, 0)
+                positive_z = edge.centre + Vector3(0, 0, edge.radius)
+                negative_x = edge.centre + Vector3(-edge.radius, 0, 0)
+                negative_y = edge.centre + Vector3(0, -edge.radius, 0)
+                negative_z = edge.centre + Vector3(0, 0, -edge.radius)
+
+                parametric_positive_x = edge.parametric_point(positive_x)
+                parametric_positive_y = edge.parametric_point(positive_y)
+                parametric_positive_z = edge.parametric_point(positive_z)
+                parametric_negative_x = edge.parametric_point(negative_x)
+                parametric_negative_y = edge.parametric_point(negative_y)
+                parametric_negative_z = edge.parametric_point(negative_z)
+
+                lower_bound = -0.0001
+                upper_bound = 1.0001
+
+                if lower_bound < parametric_positive_x < upper_bound:
+                    path_bounds.include(positive_x)
+                if lower_bound < parametric_positive_y < upper_bound:
+                    path_bounds.include(positive_y)
+                if lower_bound < parametric_positive_z < upper_bound:
+                    path_bounds.include(positive_z)
+                if lower_bound < parametric_negative_x < upper_bound:
+                    path_bounds.include(negative_x)
+                if lower_bound < parametric_negative_y < upper_bound:
+                    path_bounds.include(negative_y)
+                if lower_bound < parametric_negative_z < upper_bound:
+                    path_bounds.include(negative_z)
+
         return path_bounds
 
 
