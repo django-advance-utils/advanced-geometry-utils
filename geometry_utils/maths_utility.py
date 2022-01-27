@@ -565,6 +565,10 @@ def are_ints_or_floats(input_list):
         raise TypeError("Input argument must be a list")
 
 
+def sqr(input_variable):
+    return math.pow(input_variable, 2)
+
+
 def floats_are_close(a, b, rel_tol=1e-9, abs_tol=DOUBLE_EPSILON):
     return abs(a - b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
 
