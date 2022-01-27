@@ -38,7 +38,7 @@ class Point3:
         Returns the pythagorean length of the difference between the point and another 3D point
     """
 
-    def __init__(self, x=0, y=0, z=0, w=1):
+    def __init__(self, x=0.0, y=0.0, z=0.0, w=1):
         if are_ints_or_floats([x, y, z, w]):
             self.x = x
             self.y = y
@@ -174,6 +174,11 @@ class Point3:
         if is_point3(other_point):
             return (self - other_point).length()
         raise TypeError("Argument must be an object of Point3")
+
+    @classmethod
+    def from_comma_string(cls, string):
+        v = string.split(',')
+        return cls(float(v[0]), float(v[1]), float(v[2]))
 
 
 def is_point3(input_variable):

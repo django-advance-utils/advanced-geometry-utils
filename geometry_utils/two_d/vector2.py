@@ -47,7 +47,7 @@ class Vector2:
     rotate(Vector2, int/float): Vector2
         Returns the rotation of the vector at angle theta with respect to 2D vector origin
     """
-    def __init__(self, x=0, y=0, w=0):
+    def __init__(self, x=0.0, y=0.0, w=0):
         if maths_utility.are_ints_or_floats([x, y, w]):
             self.x = x
             self.y = y
@@ -273,6 +273,11 @@ class Vector2:
 
     def angle_to_x_axis(self):
         return math.atan2(self.y, self.x)
+
+    @classmethod
+    def from_comma_string(cls, string):
+        v = string.split(',')
+        return cls(float(v[0]), float(v[1]))
 
 
 def is_vector2(input_variable):

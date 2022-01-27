@@ -37,7 +37,7 @@ class Point2:
         Returns the pythagorean length of the difference between the point and another 2D point
     """
 
-    def __init__(self, x=0, y=0, w=1):
+    def __init__(self, x=0.0, y=0.0, w=1):
         if maths_utility.are_ints_or_floats([x, y, w]):
             self.x = x
             self.y = y
@@ -186,6 +186,11 @@ class Point2:
         self.x = -self.x
         self.y = -self.y
         return self
+
+    @classmethod
+    def from_comma_string(cls, string):
+        v = string.split(',')
+        return cls(float(v[0]), float(v[1]))
 
 
 def is_point2(input_variable):
