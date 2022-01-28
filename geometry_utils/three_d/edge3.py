@@ -1,6 +1,6 @@
 import math
 
-from geometry_utils.maths_utility import floats_are_close, is_float, is_int_or_float, DOUBLE_EPSILON, sqr
+from geometry_utils.maths_utility import floats_are_close, is_int_or_float, DOUBLE_EPSILON, sqr, PI, TWO_PI
 from geometry_utils.three_d.axis_aligned_box3 import AxisAlignedBox3
 from geometry_utils.three_d.point3 import Point3, is_point3
 from geometry_utils.three_d.vector3 import Vector3
@@ -107,19 +107,17 @@ class Edge3:
         :return:the 3D point of the arc centre
         :rtype: Point3
         """
-        if floats_are_close(self.radius, 0.0):
-            return Point3((self.p1.x + self.p2.x) * 0.5, (self.p1.y + self.p2.y) * 0.5, (self.p1.z + self.p2.z) * 0.5)
-        elif self.is_arc():
+        if self.is_arc():
             p1_vector = self.p1.to_vector3()
             p2_vector = self.p2.to_vector3()
             via_vector = self.via.to_vector3()
 
-            n = p1_vector.cross(via_vector) + via_vector.cross(p2_vector) + p2_vector.cross(p1_vector)
-            n.normalise()
+            n = (p1_vector.cross(via_vector) + via_vector.cross(p2_vector) + p2_vector.cross(p1_vector)).normalised()
             s = (p2_vector - p1_vector)
             u = s.cross(n).normalised()
             v = n.cross(u).normalised()
             d = n.dot(p1_vector)
+
             a = Vector2()
             b = Vector2()
             c = Vector2()
@@ -151,6 +149,7 @@ class Edge3:
             m = n * d
             q = m + ans_3d
             return Point3(q.x, q.y, q.z)
+        return Point3((self.p1.x + self.p2.x) * 0.5, (self.p1.y + self.p2.y) * 0.5, (self.p1.z + self.p2.z) * 0.5)
 
     def is_arc(self):
         """
@@ -179,7 +178,7 @@ class Edge3:
             if self.p1 == self.p2:
                 return self.p1
 
-            tangent = self.get_tangent()  # vector
+            tangent = self.get_line_tangent()  # vector
             p1_p2_distance = self.p1.distance_to(self.p2)  # vector
             vector = tangent * (s * p1_p2_distance)  # vector
             return self.p1 + vector  # point
@@ -198,22 +197,84 @@ class Edge3:
         :raises:TypeError: wrong argument type
         """
         if is_point3(point):
-            tangent = self.get_tangent()  # vector
+            if self.p1 == self.p2:
+                return 0.5
+
+            if self.is_arc():
+                p1_vector = self.p1.to_vector3()
+                p2_vector = self.p2.to_vector3()
+
+                arc_norm = self.get_arc_normal(point)
+
+                v = point - self.centre
+                vc = ((p1_vector + p2_vector) / 2.0) - self.centre.to_vector3()
+
+                if vc == Vector3(0.0, 0.0, 0.0):
+                    perpendicular_1 = Vector3()
+                    perpendicular_2 = Vector3()
+                    perpendicular_1, perpendicular_2 = (self.p2 - self.p1).get_perpendicular(perpendicular_1, perpendicular_2)
+                    vc = perpendicular_1
+
+                    dp = vc.dot(self.via - self.p1)
+
+                    if dp < 0:
+                        vc.invert()
+                else:
+                    if self.large:
+                        vc.invert()
+
+                vc.normalise()
+                v.normalise()
+
+                # dot_product = vc.dot(v)
+                # determinant = (vc.x * v.y
+                # a = math.atan2(determinant, dot_product)
+                a = math.atan2(vc.cross(v).dot(arc_norm), v.dot(vc))
+
+                if a > PI:
+                    a -= TWO_PI
+
+                return a + 0.5
+
+            tangent = self.get_line_tangent()  # vector
             point_p1_difference = (point - self.p1)  # vector
             distance = tangent.dot(point_p1_difference)
             return distance / self.p1.distance_to(self.p2)
         raise TypeError("Argument must be an object of Point3")
 
-    def get_tangent(self):
+    def get_line_tangent(self):
         """
         Calculates the tangent of the edge
 
         :return:the resulting tangent of the edge
         :rtype: int/float
         """
-        p1_vector = self.p1.to_vector3()
-        p2_vector = self.p2.to_vector3()
-        return (p2_vector - p1_vector).normalised()
+        if self.is_arc():
+            raise TypeError("Line tangent can not be derived for an arc")
+        return (self.p2 - self.p1).normalised()
+
+    def get_arc_normal(self, point):
+        if is_point3(point):
+            if self.is_arc():
+                return (self.centre - point).normalised()
+            raise TypeError("Get Arc Normal can not be derived for a line")
+        raise TypeError("Input argument must be an object of Point2")
+
+    def get_arc_tangent(self, point):
+        """
+        Calculates the tangent of the edge
+
+        :return:the resulting tangent of the edge
+        :rtype: int/float
+        """
+        if is_point3(point):
+            if self.is_arc():
+                if self.clockwise:
+                    return self.get_arc_normal(point).get_perpendicular()
+                else:
+                    return self.get_arc_normal(point).get_perpendicular().inverse()
+            raise TypeError("Arc tangent can not be derived for a line")
+        raise TypeError("Input argument must be an object of Point3")
 
     def get_edge_bounds(self):
         """

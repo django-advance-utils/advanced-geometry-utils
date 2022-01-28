@@ -18,7 +18,7 @@ def test_edge3_parametric_point(test_edge3_2):
 
 
 def test_edge3_get_tangent(test_edge3_2):
-    assert test_edge3_2.get_tangent() == Vector3(2.0/sqrt(12.0), 2.0/sqrt(12.0), 2.0/sqrt(12.0))
+    assert test_edge3_2.get_line_tangent() == Vector3(2.0 / sqrt(12.0), 2.0 / sqrt(12.0), 2.0 / sqrt(12.0))
 
 
 def test_edge3_calculate_centre(test_edge3_2):

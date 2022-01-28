@@ -217,6 +217,34 @@ class Vector3:
                            self.x * other_vector.y - self.y * other_vector.x)
         raise TypeError("Cross product must be with another object of Vector3")
 
+    def get_perpendicular(self, vector_1, vector_2):
+        """
+        Calculates the 2D vector perpendicular to the vector
+
+        :return: the perpendicular vector
+        :rtype: Vector2
+        """
+        if self == Vector3():
+            return vector_1, vector_2
+        x_abs = abs(self.x)
+        y_abs = abs(self.y)
+        z_abs = abs(self.z)
+
+        cross_vector = Vector3(1.0, 0.0, 0.0)
+        if y_abs < x_abs:
+            cross_vector.x = 0.0
+            cross_vector.y = 1.0
+            cross_vector.z = 0.0
+        if z_abs < y_abs:
+            cross_vector.x = 0.0
+            cross_vector.y = 0.0
+            cross_vector.z = 1.0
+
+        vector_1 = self.cross(cross_vector)
+        vector_2 = self.cross(vector_1)
+
+        return vector_1, vector_2
+
     @classmethod
     def from_comma_string(cls, string):
         v = string.split(',')
@@ -228,6 +256,15 @@ class Vector3:
         dot_product = self_unit_vector.dot(other_unit_vector)
         angle = math.acos(dot_product)
         return angle
+
+    def invert(self):
+        self.x *= -1
+        self.y *= -1
+        self.z *= -1
+        return self
+
+    def inverted(self):
+        return Vector3(-self.x, -self.y, -self.z)
 
 
 def is_vector3(input_variable):

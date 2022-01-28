@@ -228,7 +228,7 @@ class Edge2:
         if is_point2(point):
             if self.is_arc():
                 return (self.centre - point).normalised()
-            raise TypeError("Get Arc Normal can not be derived for an arc")
+            raise TypeError("Get Arc Normal can not be derived for a line")
         raise TypeError("Input argument must be an object of Point2")
 
     def get_line_normal(self):
