@@ -179,7 +179,7 @@ class Edge2:
         :raises:TypeError: wrong argument type
         """
         if is_point2(point):
-            if self.p1 == self.p2:
+            if self.is_circle():
                 return 0.5
 
             if self.is_arc():
@@ -208,7 +208,6 @@ class Edge2:
                 point_to_arc_centre_point_angle = atan2(determinant, dot_product)
 
                 if self.clockwise:
-
                     point_to_arc_centre_point_angle = -point_to_arc_centre_point_angle
 
                 if point_to_arc_centre_point_angle > PI:
@@ -330,6 +329,9 @@ class Edge2:
 
     def is_circle(self):
         return self.is_arc() and self.p1 == self.p2
+
+    def is_line(self):
+        return not self.is_arc and not self.p1 == self.p2
 
     def get_arc_start_angle(self):
         return atan2(self.p1.y - self.centre.y, self.p1.x - self.centre.x)

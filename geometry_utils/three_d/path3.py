@@ -139,17 +139,15 @@ class Path3:
             if edge.is_arc():
                 positive_x = edge.centre + Vector3(edge.radius, 0, 0)
                 positive_y = edge.centre + Vector3(0, edge.radius, 0)
-                positive_z = edge.centre + Vector3(0, 0, edge.radius)
+
                 negative_x = edge.centre + Vector3(-edge.radius, 0, 0)
                 negative_y = edge.centre + Vector3(0, -edge.radius, 0)
-                negative_z = edge.centre + Vector3(0, 0, -edge.radius)
 
                 parametric_positive_x = edge.parametric_point(positive_x)
                 parametric_positive_y = edge.parametric_point(positive_y)
-                parametric_positive_z = edge.parametric_point(positive_z)
+
                 parametric_negative_x = edge.parametric_point(negative_x)
                 parametric_negative_y = edge.parametric_point(negative_y)
-                parametric_negative_z = edge.parametric_point(negative_z)
 
                 lower_bound = -0.0001
                 upper_bound = 1.0001
@@ -158,14 +156,24 @@ class Path3:
                     path_bounds.include(positive_x)
                 if lower_bound < parametric_positive_y < upper_bound:
                     path_bounds.include(positive_y)
-                if lower_bound < parametric_positive_z < upper_bound:
-                    path_bounds.include(positive_z)
+
                 if lower_bound < parametric_negative_x < upper_bound:
                     path_bounds.include(negative_x)
                 if lower_bound < parametric_negative_y < upper_bound:
                     path_bounds.include(negative_y)
-                if lower_bound < parametric_negative_z < upper_bound:
-                    path_bounds.include(negative_z)
+
+                if edge.p1.z != edge.p2.z:
+                    positive_z = edge.centre + Vector3(0, 0, edge.radius)
+                    negative_z = edge.centre + Vector3(0, 0, -edge.radius)
+
+                    parametric_positive_z = edge.parametric_point(positive_z)
+                    parametric_negative_z = edge.parametric_point(negative_z)
+
+                    if lower_bound < parametric_positive_z < upper_bound:
+                        path_bounds.include(positive_z)
+
+                    if lower_bound < parametric_negative_z < upper_bound:
+                        path_bounds.include(negative_z)
 
         return path_bounds
 

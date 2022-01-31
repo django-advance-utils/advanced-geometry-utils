@@ -240,8 +240,8 @@ class Vector3:
             cross_vector.y = 0.0
             cross_vector.z = 1.0
 
-        vector_1 = self.cross(cross_vector)
-        vector_2 = self.cross(vector_1)
+        vector_1 = self.cross(cross_vector).normalised()
+        vector_2 = self.cross(vector_1).normalised()
 
         return vector_1, vector_2
 

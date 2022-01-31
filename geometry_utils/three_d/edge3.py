@@ -65,6 +65,7 @@ class Edge3:
                 self.via = via
             elif via is None:
                 self.via = self.get_via()
+            self.sweep_angle = 0.0
             self.centre = self.calculate_centre()
         else:
             if not is_point3(p1) or not is_point3(p2) or not is_point3(via):
@@ -107,7 +108,10 @@ class Edge3:
         :return:the 3D point of the arc centre
         :rtype: Point3
         """
-        if self.is_arc():
+        if self.is_circle():
+            return self.p1
+
+        elif self.is_arc():
             p1_vector = self.p1.to_vector3()
             p2_vector = self.p2.to_vector3()
             via_vector = self.via.to_vector3()
@@ -139,8 +143,8 @@ class Edge3:
             yol = Vector2(c.x - a.x, c.y - a.y)
 
             ans = Vector2()
-            ans.y = ((sol.x * yol.x) - (sol.y * tol.x))/((tol.y * yol.x) - (tol.x * yol.y))
-            ans.x = (sol.x - (tol.y * ans.y))/tol.x
+            ans.y = ((sol.x * yol.x) - (sol.y * tol.x)) / ((tol.y * yol.x) - (tol.x * yol.y))
+            ans.x = (sol.x - (tol.y * ans.y)) / tol.x
 
             ans_3d = Vector3()
             ans_3d.x = (u.x * ans.x) + (v.x * ans.y)
@@ -148,8 +152,13 @@ class Edge3:
             ans_3d.z = (u.z * ans.x) + (v.z * ans.y)
             m = n * d
             q = m + ans_3d
+
+            self.sweep_angle = math.acos(
+                ((p2_vector - q).dot(p1_vector - q)) / ((p2_vector - q).length() * (p1_vector - q).length()))
             return Point3(q.x, q.y, q.z)
-        return Point3((self.p1.x + self.p2.x) * 0.5, (self.p1.y + self.p2.y) * 0.5, (self.p1.z + self.p2.z) * 0.5)
+
+        else:
+            return Point3((self.p1.x + self.p2.x) * 0.5, (self.p1.y + self.p2.y) * 0.5, (self.p1.z + self.p2.z) * 0.5)
 
     def is_arc(self):
         """
@@ -197,14 +206,14 @@ class Edge3:
         :raises:TypeError: wrong argument type
         """
         if is_point3(point):
-            if self.p1 == self.p2:
+            if self.is_circle():
                 return 0.5
 
-            if self.is_arc():
+            elif self.is_arc():
                 p1_vector = self.p1.to_vector3()
                 p2_vector = self.p2.to_vector3()
 
-                arc_norm = self.get_arc_normal(point)
+                arc_norm = self.get_arc_normal(self.via)
 
                 v = point - self.centre
                 vc = ((p1_vector + p2_vector) / 2.0) - self.centre.to_vector3()
@@ -212,7 +221,8 @@ class Edge3:
                 if vc == Vector3(0.0, 0.0, 0.0):
                     perpendicular_1 = Vector3()
                     perpendicular_2 = Vector3()
-                    perpendicular_1, perpendicular_2 = (self.p2 - self.p1).get_perpendicular(perpendicular_1, perpendicular_2)
+                    perpendicular_1, perpendicular_2 = (self.p2 - self.p1).get_perpendicular(perpendicular_1,
+                                                                                             perpendicular_2)
                     vc = perpendicular_1
 
                     dp = vc.dot(self.via - self.p1)
@@ -226,21 +236,25 @@ class Edge3:
                 vc.normalise()
                 v.normalise()
 
-                # dot_product = vc.dot(v)
-                # determinant = (vc.x * v.y
-                # a = math.atan2(determinant, dot_product)
-                a = math.atan2(vc.cross(v).dot(arc_norm), v.dot(vc))
+                a = math.atan2(v.cross(vc).dot(arc_norm), vc.dot(v))
 
                 if a > PI:
                     a -= TWO_PI
 
+                a = a / self.sweep_angle
+
                 return a + 0.5
 
-            tangent = self.get_line_tangent()  # vector
-            point_p1_difference = (point - self.p1)  # vector
-            distance = tangent.dot(point_p1_difference)
-            return distance / self.p1.distance_to(self.p2)
-        raise TypeError("Argument must be an object of Point3")
+            elif self.is_line:
+                tangent = self.get_line_tangent()  # vector
+                point_p1_difference = (point - self.p1)  # vector
+                distance = tangent.dot(point_p1_difference)
+                return distance / self.p1.distance_to(self.p2)
+        else:
+            raise TypeError("Argument must be an object of Point3")
+
+    def is_line(self):
+        return not self.is_arc and not self.p1 == self.p2
 
     def get_line_tangent(self):
         """
