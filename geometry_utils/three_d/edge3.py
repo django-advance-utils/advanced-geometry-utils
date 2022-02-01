@@ -187,6 +187,21 @@ class Edge3:
             if self.p1 == self.p2:
                 return self.p1
 
+            if self.is_arc():
+                t = self.sweep_angle * s
+                norm = self.get_plane_normal()
+
+                p1v = self.p1 - self.centre
+
+                plane_x = p1v.normalised()
+                plane_y = norm.cross(p1v).normalised()
+
+                point = ((plane_x * (self.radius * math.cos(t))) + (plane_y * (self.radius * math.sin(t))))
+
+                point = self.centre + point
+
+                return point
+
             tangent = self.get_line_tangent()  # vector
             p1_p2_distance = self.p1.distance_to(self.p2)  # vector
             vector = tangent * (s * p1_p2_distance)  # vector
@@ -194,6 +209,9 @@ class Edge3:
 
         else:
             raise TypeError("Point parametric must be with an int or float")
+
+    def get_plane_normal(self):
+        return self.p1.to_vector3().cross(self.p2.to_vector3())
 
     def parametric_point(self, point):
         """
