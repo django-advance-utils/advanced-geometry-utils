@@ -180,6 +180,27 @@ class Point3:
         v = string.split(',')
         return cls(float(v[0]), float(v[1]), float(v[2]))
 
+    def mirror_x(self):
+        self.y = -self.y
+        self.z = -self.z
+        return self
+
+    def mirror_y(self):
+        self.x = -self.x
+        self.z = -self.z
+        return self
+
+    def mirror_z(self):
+        self.x = -self.x
+        self.y = -self.y
+        return self
+
+    def mirror_origin(self):
+        self.x = -self.x
+        self.y = -self.y
+        self.z = -self.z
+        return self
+
 
 def is_point3(input_variable):
     return isinstance(input_variable, Point3)
