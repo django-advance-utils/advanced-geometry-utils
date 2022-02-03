@@ -389,7 +389,6 @@ class Edge2:
 
             self.p1 = rotation_matrix * self.p1
             self.p2 = rotation_matrix * self.p2
-
             self.centre = self.calculate_centre()
 
             return self
@@ -489,6 +488,7 @@ class Edge2:
         self.p1 = transformation_matrix * self.p1
         self.p2 = transformation_matrix * self.p2
         self.centre = self.calculate_centre()
+        return self
 
 
 def is_edge2(input_variable):
