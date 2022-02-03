@@ -1,7 +1,8 @@
+from geometry_utils.maths_utility import is_int_or_float
 from geometry_utils.three_d.axis_aligned_box3 import AxisAlignedBox3
 from geometry_utils.three_d.edge3 import Edge3
 from geometry_utils.three_d.point3 import Point3
-from geometry_utils.three_d.vector3 import Vector3
+from geometry_utils.three_d.vector3 import Vector3, is_vector3
 
 
 class Path3:
@@ -88,18 +89,6 @@ class Path3:
                     continuity = False
         return continuity
 
-    def get_bounds(self):
-        """
-        Derives the AxisAlignedBox3 containing the bounds of the path
-
-        :return:the box containing the path bounds
-        :rtype: AxisAlignedBox3
-        """
-        path_bounds = AxisAlignedBox3()
-        for edge in self.list_of_edges:
-            path_bounds.include(edge.get_edge_bounds())
-        return path_bounds
-
     def reverse(self):
         self.list_of_edges.reverse()
         for edge in self.list_of_edges:
@@ -176,6 +165,44 @@ class Path3:
                         path_bounds.include(negative_z)
 
         return path_bounds
+
+    def transform(self, transformation_matrix):
+        for edge in self.list_of_edges:
+            edge.transform(transformation_matrix)
+
+    def offset(self, vector, point_type=None):
+        if is_vector3(vector):
+            if point_type is None or point_type.lower() == 'pp':
+                for edge in self.list_of_edges:
+                    edge.offset(vector)
+                return self
+            elif point_type.lower() == 'mm':
+                for edge in self.list_of_edges:
+                    edge.mirror_origin().offset(vector)
+                return self
+            elif point_type.lower() == 'pm':
+                for edge in self.list_of_edges:
+                    edge.mirror_y().offset(vector)
+                return self
+            elif point_type.lower() == 'mp':
+                for edge in self.list_of_edges:
+                    edge.mirror_x().offset(vector)
+                return self
+        else:
+            raise TypeError("Path offset must be done with a vector")
+
+    def rotate_around(self, rotation_vector, rotation_angle):
+        if is_vector3(rotation_vector) and is_int_or_float(rotation_angle):
+            reversed_rotation_vector = rotation_vector.invert()
+            self.offset(reversed_rotation_vector)
+            self.rotate(rotation_angle)
+            self.offset(rotation_vector)
+            return self
+
+    def rotate(self, rotation_angle):
+        for edge in self.list_of_edges:
+            edge.rotate(rotation_angle)
+        return self
 
 
 def is_path3(input_variable):
