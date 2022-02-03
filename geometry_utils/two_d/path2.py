@@ -210,22 +210,25 @@ class Path2:
             elif point_type.lower() == 'mm':
                 for edge in self.list_of_edges:
                     edge.mirror_origin().offset(vector)
+                return self
             elif point_type.lower() == 'pm':
                 for edge in self.list_of_edges:
                     edge.mirror_y().offset(vector)
+                return self
             elif point_type.lower() == 'mp':
                 for edge in self.list_of_edges:
                     edge.mirror_x().offset(vector)
+                return self
         else:
             raise TypeError("Path offset must be done with a vector")
 
     def rotate_around(self, rotation_vector, rotation_angle):
         if is_vector2(rotation_vector) and is_int_or_float(rotation_angle):
-            reversed_rotation_vector = rotation_vector.reverse()
+            reversed_rotation_vector = rotation_vector.invert()
             self.offset(reversed_rotation_vector)
             self.rotate(rotation_angle)
             self.offset(rotation_vector)
-        return self
+            return self
 
     def rotate(self, rotation_angle):
         for edge in self.list_of_edges:
