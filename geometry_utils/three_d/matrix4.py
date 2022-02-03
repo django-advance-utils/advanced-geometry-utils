@@ -130,7 +130,7 @@ class Matrix4:
         :raises: TypeError: Wrong argument type
         """
         if is_vector3(vector):
-            mat = cls
+            mat = cls()
             mat.vals = [[1.0, 0.0, 0.0, vector.x],
                         [0.0, 1.0, 0.0, vector.y],
                         [0.0, 0.0, 1.0, vector.z],
@@ -151,7 +151,7 @@ class Matrix4:
         :raises: TypeError: Wrong argument type
         """
         if is_int_or_float(theta):
-            mat = cls
+            mat = cls()
             cos_theta = cos(theta)
             sin_theta = sin(theta)
             negative_sin_theta = 0.0 if (-sin_theta == -0.0) else -sin_theta
@@ -175,7 +175,7 @@ class Matrix4:
         :raises: TypeError: Wrong argument type
         """
         if is_int_or_float(theta):
-            mat = cls
+            mat = cls()
             cos_theta = cos(theta)
             sin_theta = sin(theta)
             negative_sin_theta = 0.0 if (-sin_theta == -0.0) else -sin_theta
@@ -199,7 +199,7 @@ class Matrix4:
         :raises: TypeError: Wrong argument type
         """
         if is_int_or_float(theta):
-            mat = cls
+            mat = cls()
             cos_theta = cos(theta)
             sin_theta = sin(theta)
             negative_sin_theta = 0.0 if (-sin_theta == -0.0) else -sin_theta
