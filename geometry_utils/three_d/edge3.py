@@ -1,9 +1,10 @@
 import math
 
-from geometry_utils.maths_utility import floats_are_close, is_int_or_float, DOUBLE_EPSILON, sqr, PI, TWO_PI
+from geometry_utils.maths_utility import is_int_or_float, DOUBLE_EPSILON, sqr, PI, is_float, degrees_to_radians
 from geometry_utils.three_d.axis_aligned_box3 import AxisAlignedBox3
+from geometry_utils.three_d.matrix4 import Matrix4
 from geometry_utils.three_d.point3 import Point3, is_point3
-from geometry_utils.three_d.vector3 import Vector3
+from geometry_utils.three_d.vector3 import Vector3, is_vector3
 from geometry_utils.two_d.edge2 import Edge2
 from geometry_utils.two_d.point2 import Point2
 from geometry_utils.two_d.vector2 import Vector2
@@ -187,20 +188,53 @@ class Edge3:
             if self.p1 == self.p2:
                 return self.p1
 
+            # if self.is_arc():
+            #     t = self.sweep_angle * s
+            #     norm = self.get_plane_normal()
+            #
+            #     p1v = self.p1 - self.centre
+            #
+            #     plane_x = p1v.normalised()
+            #     plane_y = norm.cross(p1v).normalised()
+            #
+            #     point = ((plane_x * (self.radius * math.cos(t))) + (plane_y * (self.radius * math.sin(t))))
+            #
+            #     point = self.centre + point
+            #
+            #     return point
+
             if self.is_arc():
-                t = self.sweep_angle * s
-                norm = self.get_plane_normal()
+                # gotten from https://stackoverflow.com/questions/10550874/how-to-calc-a-cyclic-arc-through-3-points-and-parameterize-it-0-1-in-3d
+                o = (self.via.to_vector3() + self.p2.to_vector3()) / 2
+                c = (self.p1.to_vector3() + self.p2.to_vector3()) / 2
+                x = (self.via - self.p1) / -2
 
-                p1v = self.p1 - self.centre
+                n = (self.p2 - self.p1).cross(self.via - self.p1)
+                d = n.normalised().cross(self.via.to_vector3() - o)
+                v = (self.p1.to_vector3() - c).normalised()
 
-                plane_x = p1v.normalised()
-                plane_y = norm.cross(p1v).normalised()
+                check = d.dot(v)
+                angle = PI
 
-                point = ((plane_x * (self.radius * math.cos(t))) + (plane_y * (self.radius * math.sin(t))))
+                if check != 0:
+                    t = (x.dot(v)) / check
+                    v1 = (self.p1.to_vector3() - self.centre.to_vector3()).normalised()
 
-                point = self.centre + point
+                    f_dir_p1 = v1
+                    v2 = (self.p2 - self.centre).normalised()
+                    angle = math.acos(v1.dot(v2))
 
-                return point
+                    if angle != 0:
+                        v1 = self.via - self.p1
+                        v2 = self.via - self.p2
+
+                        if v1.dot(v2) > 0:
+                            angle = PI * 2 - angle
+
+                f_dir_p2 = ((n * -1).cross(self.p1 - self.centre)).normalised()
+
+                x = s * angle
+                return self.centre + f_dir_p1 * self.radius * math.cos(x) + f_dir_p2 * self.radius * math.sin(x)
 
             tangent = self.get_line_tangent()  # vector
             p1_p2_distance = self.p1.distance_to(self.p2)  # vector
@@ -227,42 +261,48 @@ class Edge3:
             if self.is_circle():
                 return 0.5
 
+            # elif self.is_arc():
+            #     p1_vector = self.p1.to_vector3()
+            #     p2_vector = self.p2.to_vector3()
+            #
+            #     arc_norm = self.get_arc_normal(self.via)
+            #
+            #     v = point - self.centre
+            #     vc = ((p1_vector + p2_vector) / 2.0) - self.centre.to_vector3()
+            #
+            #     if vc == Vector3(0.0, 0.0, 0.0):
+            #         perpendicular_1 = Vector3()
+            #         perpendicular_2 = Vector3()
+            #         perpendicular_1, perpendicular_2 = (self.p2 - self.p1).get_perpendicular(perpendicular_1,
+            #                                                                                  perpendicular_2)
+            #         vc = perpendicular_1
+            #
+            #         dp = vc.dot(self.via - self.p1)
+            #
+            #         if dp < 0:
+            #             vc.invert()
+            #     else:
+            #         if self.large:
+            #             vc.invert()
+            #
+            #     vc.normalise()
+            #     v.normalise()
+            #
+            #     a = math.atan2(v.cross(vc).dot(arc_norm), vc.dot(v))
+            #
+            #     if a > PI:
+            #         a -= TWO_PI
+            #
+            #     a = a / self.sweep_angle
+            #
+            #     return a + 0.5
             elif self.is_arc():
-                p1_vector = self.p1.to_vector3()
-                p2_vector = self.p2.to_vector3()
-
-                arc_norm = self.get_arc_normal(self.via)
-
-                v = point - self.centre
-                vc = ((p1_vector + p2_vector) / 2.0) - self.centre.to_vector3()
-
-                if vc == Vector3(0.0, 0.0, 0.0):
-                    perpendicular_1 = Vector3()
-                    perpendicular_2 = Vector3()
-                    perpendicular_1, perpendicular_2 = (self.p2 - self.p1).get_perpendicular(perpendicular_1,
-                                                                                             perpendicular_2)
-                    vc = perpendicular_1
-
-                    dp = vc.dot(self.via - self.p1)
-
-                    if dp < 0:
-                        vc.invert()
-                else:
-                    if self.large:
-                        vc.invert()
-
-                vc.normalise()
-                v.normalise()
-
-                a = math.atan2(v.cross(vc).dot(arc_norm), vc.dot(v))
-
-                if a > PI:
-                    a -= TWO_PI
-
-                a = a / self.sweep_angle
-
-                return a + 0.5
-
+                p1_2d = Point2(self.p1.x, self.p1.y)
+                p2_2d = Point2(self.p2.x, self.p2.y)
+                point_2d = Point2(point.x, point.y)
+                edge_2d = Edge2(p1_2d, p2_2d, self.radius, self.clockwise, self.large)
+                s = edge_2d.parametric_point(point_2d)
+                return s
             elif self.is_line:
                 tangent = self.get_line_tangent()  # vector
                 point_p1_difference = (point - self.p1)  # vector
@@ -328,6 +368,66 @@ class Edge3:
         if self.is_arc():
             self.clockwise = not self.clockwise
         return self
+
+    def mirror_x(self):
+        self.p1.mirror_x()
+        self.p2.mirror_x()
+        self.centre = self.calculate_centre()
+        if self.is_arc():
+            self.clockwise = not self.clockwise
+        return self
+
+    def mirror_y(self):
+        self.p1.mirror_y()
+        self.p2.mirror_y()
+        self.centre = self.calculate_centre()
+        if self.is_arc():
+            self.clockwise = not self.clockwise
+        return self
+
+    def mirror_z(self):
+        self.p1.mirror_z()
+        self.p2.mirror_z()
+        self.centre = self.calculate_centre()
+        if self.is_arc():
+            self.clockwise = not self.clockwise
+        return self
+
+    def mirror_origin(self):
+        self.p1.mirror_origin()
+        self.p2.mirror_origin()
+        self.centre = self.calculate_centre()
+        if self.clockwise:
+            self.clockwise = False
+        return self
+
+    def transform(self, transformation_matrix):
+        self.p1 = transformation_matrix * self.p1
+        self.p2 = transformation_matrix * self.p2
+        self.centre = self.calculate_centre()
+        return self
+
+    def offset(self, vector):
+        if is_vector3(vector):
+            self.p1 += vector
+            self.p2 += vector
+            self.centre = self.calculate_centre()
+            self.via = self.get_via()
+        else:
+            raise TypeError("Edge offset is done by an object of Vector3")
+
+    def rotate(self, rotation_angle):
+        if is_float(rotation_angle):
+            rotation_angle_in_radians = degrees_to_radians(rotation_angle)
+            rotation_matrix = Matrix4.z_rotation(rotation_angle_in_radians)
+
+            self.p1 = rotation_matrix * self.p1
+            self.p2 = rotation_matrix * self.p2
+            self.centre = self.calculate_centre()
+            self.via = self.get_via()
+
+            return self
+        raise TypeError("Rotation angle must be a float")
 
 
 def is_edge3(input_variable):
