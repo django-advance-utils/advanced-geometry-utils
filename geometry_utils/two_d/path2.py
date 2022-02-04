@@ -320,7 +320,7 @@ class Path2:
         return True
 
     def convert_circle_to_points(self):
-        if self.is_circle():
+        if self.is_circle:
             circle_centre = Point2()
             circle_centre.x = self.list_of_edges[0].centre.x
             circle_centre.y = self.list_of_edges[0].centre.y
