@@ -490,6 +490,9 @@ class Edge2:
         self.centre = self.calculate_centre()
         return self
 
+    def to_edge3(self):
+        return Edge3(self.p1.to_point3(), self.p2.to_point3(), None, self.radius, self.clockwise, self.large)
+
 
 def is_edge2(input_variable):
     return isinstance(input_variable, Edge2)

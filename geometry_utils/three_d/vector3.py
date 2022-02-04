@@ -2,6 +2,7 @@ import math
 from math import sqrt
 
 from geometry_utils.maths_utility import is_int_or_float, are_ints_or_floats, floats_are_close
+from geometry_utils.two_d.vector2 import Vector2
 
 
 class Vector3:
@@ -265,6 +266,9 @@ class Vector3:
 
     def inverted(self):
         return Vector3(-self.x, -self.y, -self.z)
+
+    def to_vector2(self):
+        return Vector2(self.x, self.y)
 
 
 def is_vector3(input_variable):

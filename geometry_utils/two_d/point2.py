@@ -1,4 +1,5 @@
 import geometry_utils.maths_utility as maths_utility
+from geometry_utils.three_d.point3 import Point3
 
 from geometry_utils.two_d.vector2 import Vector2, is_vector2
 
@@ -191,6 +192,9 @@ class Point2:
     def from_comma_string(cls, string):
         v = string.split(',')
         return cls(float(v[0]), float(v[1]))
+
+    def to_point3(self):
+        return Point3(self.x, self.y, 0.0)
 
 
 def is_point2(input_variable):
