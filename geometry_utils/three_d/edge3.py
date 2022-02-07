@@ -434,6 +434,9 @@ class Edge3:
         edge_2d.centre = edge_2d.calculate_centre()
         return edge_2d
 
+    def to_vector3(self):
+        return self.p2 - self.p1
+
 
 def is_edge3(input_variable):
     return isinstance(input_variable, Edge3)

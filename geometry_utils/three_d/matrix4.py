@@ -211,6 +211,48 @@ class Matrix4:
             return mat
         raise TypeError("Z rotation must be with an int or float")
 
+    @classmethod
+    def x_reflection(cls):
+        """
+        Creates a x-axis reflection matrix
+
+        :return: x-axis reflection matrix
+        :rtype:  Matrix4
+        """
+        mat = cls()
+        mat.vals = [[-1.0, 0.0, 0.0, 0.0],
+                    [0.0, 1.0, 0.0, 0.0],
+                    [0.0, 0.0, 1.0, 0.0],
+                    [0.0, 0.0, 0.0, 1.0]]
+
+        return mat
+
+    @classmethod
+    def basis_change(cls, base_x, base_y, base_z, new_x, new_y, new_z):
+        matrix = Matrix4()
+
+        matrix.vals[0][0] = new_x.dot(base_x)
+        matrix.vals[0][1] = new_x.dot(base_y)
+        matrix.vals[0][2] = new_x.dot(base_z)
+        matrix.vals[0][3] = 0.0
+
+        matrix.vals[1][0] = new_y.dot(base_x)
+        matrix.vals[1][1] = new_y.dot(base_y)
+        matrix.vals[1][2] = new_y.dot(base_z)
+        matrix.vals[1][3] = 0.0
+
+        matrix.vals[2][0] = new_z.dot(base_x)
+        matrix.vals[2][1] = new_z.dot(base_y)
+        matrix.vals[2][2] = new_z.dot(base_z)
+        matrix.vals[2][3] = 0.0
+
+        matrix.vals[3][0] = 0.0
+        matrix.vals[3][1] = 0.0
+        matrix.vals[3][2] = 0.0
+        matrix.vals[3][3] = 1.0
+
+        return matrix
+
 
 def is_matrix4(input_variable):
     return isinstance(input_variable, Matrix4)

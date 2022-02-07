@@ -41,7 +41,7 @@ class Intersection:
         self.on_second_segment = False
         self.collinear = False
         self.end_of_line = False
-        self.point = Point2()
+        self.point = None
 
     def __str__(self):
         return ("Intersection(point:" + str(self.point) + ", Vectors Intersect:" + str(self.vectors_intersect) +
@@ -142,7 +142,7 @@ class Intersection:
 
                 self.on_second_segment = floats_are_close(intersect_point_to_point3_distance +
                                                           intersect_point_to_point4_distance, length_of_side2)
-            return [self]
+            return self
         else:
             raise TypeError("Arguments must be objects of Point2")
 

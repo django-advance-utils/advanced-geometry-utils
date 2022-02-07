@@ -1,6 +1,5 @@
 from geometry_utils.maths_utility import are_ints_or_floats, floats_are_close
 from geometry_utils.three_d.vector3 import Vector3, is_vector3
-from geometry_utils.two_d.point2 import Point2
 
 
 class Point3:
@@ -201,9 +200,6 @@ class Point3:
         self.y = -self.y
         self.z = -self.z
         return self
-
-    def to_point2(self):
-        return Point2(self.x, self.y)
 
 
 def is_point3(input_variable):
