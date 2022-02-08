@@ -255,6 +255,10 @@ class Vector3:
         self_unit_vector = self.normalised()
         other_unit_vector = other_vector.normalised()
         dot_product = self_unit_vector.dot(other_unit_vector)
+        if floats_are_close(dot_product, -1.0):
+            dot_product = -1
+        elif floats_are_close(dot_product, 1.0):
+            dot_product = 1
         angle = math.acos(dot_product)
         return angle
 
