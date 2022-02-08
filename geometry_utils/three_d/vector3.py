@@ -258,6 +258,9 @@ class Vector3:
         angle = math.acos(dot_product)
         return angle
 
+    def signed_angle_to(self, other_vector):
+        return self.to_vector2().signed_angle_to(other_vector.to_vector2())
+
     def invert(self):
         self.x *= -1
         self.y *= -1
