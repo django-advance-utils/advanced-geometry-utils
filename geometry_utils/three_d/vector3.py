@@ -1,7 +1,7 @@
 import math
 from math import sqrt
 
-from geometry_utils.maths_utility import is_int_or_float, are_ints_or_floats, floats_are_close
+from geometry_utils.maths_utility import is_int_or_float, are_ints_or_floats, floats_are_close, radians_to_degrees
 from geometry_utils.two_d.vector2 import Vector2
 
 
@@ -252,15 +252,17 @@ class Vector3:
         return cls(float(v[0]), float(v[1]), float(v[2]))
 
     def angle_to(self, other_vector):
-        self_unit_vector = self.normalised()
-        other_unit_vector = other_vector.normalised()
-        dot_product = self_unit_vector.dot(other_unit_vector)
-        if floats_are_close(dot_product, -1.0):
-            dot_product = -1
-        elif floats_are_close(dot_product, 1.0):
-            dot_product = 1
-        angle = math.acos(dot_product)
-        return angle
+        if is_vector3(other_vector):
+            self_unit_vector = self.normalised()
+            other_unit_vector = other_vector.normalised()
+
+            dot_product = self_unit_vector.dot(other_unit_vector)
+            if floats_are_close(dot_product, 1.0):
+                return 0.0
+
+            angle = math.acos(dot_product)
+            angle = radians_to_degrees(angle)
+            return angle
 
     def signed_angle_to(self, other_vector):
         return self.to_vector2().signed_angle_to(other_vector.to_vector2())

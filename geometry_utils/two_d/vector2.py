@@ -261,18 +261,27 @@ class Vector2:
             raise TypeError("Angle of rotation must be a float or int")
 
     def angle_to(self, other_vector):
-        self_unit_vector = self.normalised()
-        other_unit_vector = other_vector.normalised()
-        dot_product = self_unit_vector.dot(other_unit_vector)
-        angle = math.acos(dot_product)
-        return angle
+        if is_vector2(other_vector):
+            self_unit_vector = self.normalised()
+            other_unit_vector = other_vector.normalised()
+
+            dot_product = self_unit_vector.dot(other_unit_vector)
+            if maths_utility.floats_are_close(dot_product, 1.0):
+                return 0.0
+
+            angle = math.acos(dot_product)
+            angle = maths_utility.radians_to_degrees(angle)
+            return angle
 
     def signed_angle_to(self, other_vector):
         if is_vector2(other_vector):
-            return self.angle_to_x_axis() - other_vector.angle_to_x_axis()
+            angle = self.angle_to_x_axis() - other_vector.angle_to_x_axis()
+            return angle
 
     def angle_to_x_axis(self):
-        return math.atan2(self.y, self.x)
+        angle = math.atan2(self.y, self.x)
+        angle = maths_utility.radians_to_degrees(angle)
+        return angle
 
     @classmethod
     def from_comma_string(cls, string):

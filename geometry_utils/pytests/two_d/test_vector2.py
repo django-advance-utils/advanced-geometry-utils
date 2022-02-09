@@ -221,7 +221,7 @@ def test_vector_angle_to_return_type(test_vector2_1, test_vector2_2):
 
 
 def test_vector_angle_to_arithmetic(test_vector2_2, test_vector2_5):
-    assert test_vector2_2.angle_to(test_vector2_5) == maths_utility.HALF_PI
+    assert test_vector2_2.angle_to(test_vector2_5) == 90.0
 
 
 def test_vector_signed_angle_to_return_type(test_vector2_1, test_vector2_2):
@@ -229,7 +229,7 @@ def test_vector_signed_angle_to_return_type(test_vector2_1, test_vector2_2):
 
 
 def test_vector_signed_angle_to_arithmetic(test_vector2_2, test_vector2_5):
-    assert test_vector2_2.signed_angle_to(test_vector2_5) == -maths_utility.HALF_PI
+    assert test_vector2_2.signed_angle_to(test_vector2_5) == -90.0
 
 
 def test_vector_angle_to_x_axis_return_type(test_vector2_1):
@@ -238,4 +238,4 @@ def test_vector_angle_to_x_axis_return_type(test_vector2_1):
 
 def test_vector_angle_to_x_axis_arithmetic(test_vector2_2, test_vector2_5):
     assert test_vector2_2.angle_to_x_axis() == 0.0
-    assert test_vector2_5.angle_to_x_axis() == maths_utility.HALF_PI
+    assert test_vector2_5.angle_to_x_axis() == 90.0
