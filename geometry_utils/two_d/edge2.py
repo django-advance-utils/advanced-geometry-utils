@@ -335,7 +335,7 @@ class Edge2:
         return self.is_arc() and self.p1 == self.p2
 
     def is_line(self):
-        return not self.is_arc and not self.p1 == self.p2
+        return (not self.is_arc()) and (not self.p1 == self.p2)
 
     def get_arc_start_angle(self):
         return atan2(self.p1.y - self.centre.y, self.p1.x - self.centre.x)
