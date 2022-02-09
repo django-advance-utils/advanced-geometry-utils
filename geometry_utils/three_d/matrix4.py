@@ -1,6 +1,6 @@
 from math import cos, sin
 
-from geometry_utils.maths_utility import is_list, is_int_or_float
+from geometry_utils.maths_utility import is_list, is_int_or_float, radians_to_degrees, degrees_to_radians
 from geometry_utils.three_d.vector3 import Vector3, is_vector3
 from geometry_utils.three_d.point3 import Point3, is_point3
 
@@ -46,7 +46,7 @@ class Matrix4:
                 raise TypeError("Matrix4 argument list must contain int or float")
 
     def __str__(self):
-        return ("Matrix3(vals:\n\t\t\t" + str(self.vals[0]) + "\n\t\t\t" + str(self.vals[1]) + "\n\t\t\t" +
+        return ("Matrix4(vals:\n\t\t\t" + str(self.vals[0]) + "\n\t\t\t" + str(self.vals[1]) + "\n\t\t\t" +
                 str(self.vals[2]) + "\n\t\t\t" + str(self.vals[3]) + ")")
 
     def set_identity(self):
@@ -152,6 +152,7 @@ class Matrix4:
         """
         if is_int_or_float(theta):
             mat = cls()
+            theta = degrees_to_radians(theta)
             cos_theta = cos(theta)
             sin_theta = sin(theta)
             negative_sin_theta = 0.0 if (-sin_theta == -0.0) else -sin_theta
@@ -176,6 +177,7 @@ class Matrix4:
         """
         if is_int_or_float(theta):
             mat = cls()
+            theta = degrees_to_radians(theta)
             cos_theta = cos(theta)
             sin_theta = sin(theta)
             negative_sin_theta = 0.0 if (-sin_theta == -0.0) else -sin_theta
@@ -200,6 +202,7 @@ class Matrix4:
         """
         if is_int_or_float(theta):
             mat = cls()
+            theta = degrees_to_radians(theta)
             cos_theta = cos(theta)
             sin_theta = sin(theta)
             negative_sin_theta = 0.0 if (-sin_theta == -0.0) else -sin_theta
