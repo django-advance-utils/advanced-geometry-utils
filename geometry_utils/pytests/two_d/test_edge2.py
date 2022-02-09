@@ -79,8 +79,8 @@ def test_edge2_point_parametric_with_point_argument(test_edge2_1, test_point2_1)
         return test_edge2_1.point_parametric(test_point2_1)
 
 
-def test_edge2_parametric_point_return_type(test_edge2_1, test_point2_1):
-    assert isinstance(test_edge2_1.parametric_point(test_point2_1), float)
+def test_edge2_parametric_point_return_type(test_edge2_1):
+    assert isinstance(test_edge2_1.parametric_point(test_edge2_1.p1), float)
 
 
 def test_edge2_parametric_point_arcs_arithmetic(test_circle_points_1, test_edge2_7):
