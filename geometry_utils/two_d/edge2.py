@@ -182,6 +182,9 @@ class Edge2:
             if self.is_circle():
                 return 0.5
 
+            if self.p1 == self.p2:
+                return 1.0
+
             if self.is_arc():
                 p1_vector = self.p1.to_vector2()
                 p2_vector = self.p2.to_vector2()
@@ -216,11 +219,12 @@ class Edge2:
 
                 return point_to_arc_centre_point_angle + 0.5
 
-            tangent = self.get_line_tangent()
-            point_p1_difference = (point - self.p1)
-            p1_to_p2_distance = self.p1.distance_to(self.p2)
-            distance = tangent.dot(point_p1_difference)
-            return distance / p1_to_p2_distance
+            if self.is_line():
+                tangent = self.get_line_tangent()
+                point_p1_difference = (point - self.p1)
+                p1_to_p2_distance = self.p1.distance_to(self.p2)
+                distance = tangent.dot(point_p1_difference)
+                return distance / p1_to_p2_distance
         raise TypeError("Argument must be an object of Point2")
 
     def get_arc_normal(self, point):
