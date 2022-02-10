@@ -1,9 +1,10 @@
 import math
 
-from geometry_utils.two_d.point2 import Point2, is_point2
-from geometry_utils.maths_utility import floats_are_close, ranges_overlap, TWO_PI
+from geometry_utils.maths_utility import floats_are_close, ranges_overlap
+from geometry_utils.three_d.edge3 import is_edge3
+from geometry_utils.three_d.point3 import Point3
 from geometry_utils.two_d.edge2 import is_edge2
-from geometry_utils.two_d.vector2 import is_vector2
+from geometry_utils.two_d.point2 import Point2
 
 
 class Intersection:
@@ -53,6 +54,13 @@ class Intersection:
         Creates the intersection of the edge with another edge and appends the list of intersections
 
         """
+        if is_edge3(first_edge) and is_edge3(second_edge):
+            first_edge = first_edge.to_edge2()
+            second_edge = second_edge.to_edge2()
+            intersection = self.intersect(first_edge, second_edge)
+            intersection.point = Point3(intersection.point.x, intersection.point.y, 0)
+            return intersection
+
         if is_edge2(first_edge) and is_edge2(second_edge):
             if second_edge.is_arc():
                 if second_edge.is_circle():
@@ -120,6 +128,7 @@ class Intersection:
                 s = float(v.x * w.y - v.y * w.x) / denominator
                 t = float(u.x * w.y - u.y * w.x) / denominator
 
+                self.point = Point2()
                 self.point.x = first_edge.p1.x + s * u.x
                 self.point.y = first_edge.p1.y + t * u.y
 
