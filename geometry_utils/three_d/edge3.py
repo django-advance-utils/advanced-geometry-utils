@@ -430,7 +430,7 @@ class Edge3:
         raise TypeError("Rotation angle must be a float")
 
     def to_edge2(self):
-        edge_2d = Edge2(self.p1.to_point2(), self.p2.to_point2(), self.radius, self.clockwise, self.large)
+        edge_2d = Edge2(Point2(self.p1.x, self.p1.y), Point2(self.p2.x, self.p2.y), self.radius, self.clockwise, self.large)
         edge_2d.centre = edge_2d.calculate_centre()
         return edge_2d
 
