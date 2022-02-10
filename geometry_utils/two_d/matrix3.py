@@ -1,6 +1,6 @@
 from math import cos, sin
 
-from geometry_utils.maths_utility import is_list, is_int_or_float, are_ints_or_floats, is_float
+from geometry_utils.maths_utility import is_list, is_int_or_float, are_ints_or_floats, is_float, degrees_to_radians
 from geometry_utils.two_d.point2 import is_point2, Point2
 from geometry_utils.two_d.vector2 import Vector2, is_vector2
 
@@ -126,7 +126,7 @@ class Matrix3:
         raise TypeError("Translation must be with an object of Vector2")
 
     @classmethod
-    def rotation(cls, theta):
+    def rotation(cls, theta, rad=False):
         """
         Creates a rotation matrix using an angle
 
@@ -139,6 +139,8 @@ class Matrix3:
 
         if is_float(theta):
             mat = cls()
+            if rad is False:
+                theta = degrees_to_radians(theta)
             cos_theta = cos(theta)
             sin_theta = sin(theta)
             negative_sin_theta = 0.0 if (-sin_theta == -0.0) else -sin_theta

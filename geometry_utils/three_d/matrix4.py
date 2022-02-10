@@ -140,10 +140,11 @@ class Matrix4:
         raise TypeError("Translation must be with an object of Vector3")
 
     @classmethod
-    def x_rotation(cls, theta):
+    def x_rotation(cls, theta, rad=False):
         """
         Creates an x-axis rotation matrix using an angle
 
+        :param   rad: rotation angle in Degrees, unless rad = True
         :param   theta: the angle of rotation
         :type    theta: int/float
         :return: x-axis rotation matrix
@@ -152,10 +153,13 @@ class Matrix4:
         """
         if is_int_or_float(theta):
             mat = cls()
-            theta = degrees_to_radians(theta)
+            if rad is False:
+                theta = degrees_to_radians(theta)
+
             cos_theta = cos(theta)
             sin_theta = sin(theta)
             negative_sin_theta = 0.0 if (-sin_theta == -0.0) else -sin_theta
+
             mat.vals = [[1.0, 0.0, 0.0, 0.0],
                         [0.0, cos_theta, sin_theta, 0.0],
                         [0.0, negative_sin_theta, cos_theta, 0.0],
@@ -165,7 +169,7 @@ class Matrix4:
         raise TypeError("X rotation must be with an int or float")
 
     @classmethod
-    def y_rotation(cls, theta):
+    def y_rotation(cls, theta, rad=False):
         """
         Creates a y-axis rotation matrix using an angle
 
@@ -177,7 +181,8 @@ class Matrix4:
         """
         if is_int_or_float(theta):
             mat = cls()
-            theta = degrees_to_radians(theta)
+            if rad is False:
+                theta = degrees_to_radians(theta)
             cos_theta = cos(theta)
             sin_theta = sin(theta)
             negative_sin_theta = 0.0 if (-sin_theta == -0.0) else -sin_theta
@@ -190,7 +195,7 @@ class Matrix4:
         raise TypeError("Y rotation must be with an int or float")
 
     @classmethod
-    def z_rotation(cls, theta):
+    def z_rotation(cls, theta, rad=False):
         """
         Creates a z-axis rotation matrix using an angle
 
@@ -202,7 +207,8 @@ class Matrix4:
         """
         if is_int_or_float(theta):
             mat = cls()
-            theta = degrees_to_radians(theta)
+            if rad is False:
+                theta = degrees_to_radians(theta)
             cos_theta = cos(theta)
             sin_theta = sin(theta)
             negative_sin_theta = 0.0 if (-sin_theta == -0.0) else -sin_theta
