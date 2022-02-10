@@ -387,9 +387,7 @@ class Edge2:
 
     def rotate(self, rotation_angle):
         if is_float(rotation_angle):
-            rotation_angle_in_radians = degrees_to_radians(rotation_angle)
-
-            rotation_matrix = Matrix3.rotation(rotation_angle_in_radians)
+            rotation_matrix = Matrix3.rotation(rotation_angle)
 
             self.p1 = rotation_matrix * self.p1
             self.p2 = rotation_matrix * self.p2
