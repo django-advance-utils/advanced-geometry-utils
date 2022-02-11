@@ -1,5 +1,5 @@
 import copy
-from copy import deepcopy
+import geometry_utils.three_d.path3
 
 from geometry_utils.maths_utility import is_int_or_float, is_list
 from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
@@ -243,7 +243,8 @@ class Path2:
                         continue
                     if self.list_of_edges[index - 1].p2 != edge.p1:
                         self.list_of_edges.insert(index, Edge2(self.list_of_edges[index - 1].p2, edge.p1))
-            self.list_of_edges.append(Edge2(deepcopy(self.list_of_edges[-1].p2), deepcopy(self.list_of_edges[0].p1)))
+            self.list_of_edges.append(Edge2(copy.deepcopy(self.list_of_edges[-1].p2),
+                                            copy.deepcopy(self.list_of_edges[0].p1)))
         return self
 
     def make_continuous(self):
@@ -266,7 +267,7 @@ class Path2:
         return self.path_length == 1 and self.list_of_edges[0].is_circle()
 
     def get_enclosed_area(self):
-        path = deepcopy(self)
+        path = copy.deepcopy(self)
 
         path.remove_duplicate_edges()
         if path.is_closed and path.path_length != 0:
@@ -657,6 +658,12 @@ class Path2:
     def update_path(self):
         for edge in self.list_of_edges:
             edge.centre = edge.calculate_centre()
+
+    def to_path3(self):
+        path_3d = geometry_utils.three_d.path3.Path3()
+        for edge in self.list_of_edges:
+            path_3d.list_of_edges.append(edge.to_edge3())
+        return path_3d
 
 
 def is_path2(input_variable):

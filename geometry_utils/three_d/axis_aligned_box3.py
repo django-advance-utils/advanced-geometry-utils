@@ -1,4 +1,5 @@
 import copy
+import geometry_utils.two_d.axis_aligned_box2
 
 from geometry_utils.three_d.point3 import Point3, is_point3
 from geometry_utils.three_d.vector3 import Vector3, is_vector3
@@ -47,7 +48,7 @@ class AxisAlignedBox3:
             raise TypeError("AxisAlignedBox3 arguments must be objects of Point3")
 
     def __str__(self):
-        return "AxisAlignedBox3(min:" + str(self.min) + ", max:" + str(self.max)
+        return "AxisAlignedBox3(min:" + str(self.min) + ", max:" + str(self.max) + ")"
 
     def include(self, other):
         if is_point3(other):
@@ -158,7 +159,6 @@ class AxisAlignedBox3:
         :raises:TypeError: Wrong argument type
         """
         if is_box3(box):
-            x = self.max == box.max and self.min == box.min
             return self.max == box.max and self.min == box.min
 
     def __ne__(self, box):
@@ -188,6 +188,13 @@ class AxisAlignedBox3:
 
     def is_valid(self):
         return self.min is not None and self.max is not None
+
+    def to_axis_aligned_box2(self):
+        if self.is_valid():
+            box_2d = geometry_utils.two_d.axis_aligned_box2.AxisAlignedBox2(self.min.to_point2(), self.max.to_point2())
+        else:
+            box_2d = geometry_utils.two_d.axis_aligned_box2.AxisAlignedBox2()
+        return box_2d
 
 
 def is_box3(input_variable):

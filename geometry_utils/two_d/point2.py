@@ -1,6 +1,6 @@
-import geometry_utils.maths_utility as maths_utility
-from geometry_utils.three_d.point3 import Point3
+import geometry_utils.three_d.point3
 
+from geometry_utils.maths_utility import are_ints_or_floats, floats_are_close
 from geometry_utils.two_d.vector2 import Vector2, is_vector2
 
 
@@ -39,11 +39,11 @@ class Point2:
     """
 
     def __init__(self, x=0.0, y=0.0, w=1):
-        if maths_utility.are_ints_or_floats([x, y, w]):
+        if are_ints_or_floats([x, y, w]):
             self.x = x
             self.y = y
             self.w = w
-            self.name = ""
+            self.name = ''
         else:
             raise TypeError("Point2 argument must be an int or float")
 
@@ -91,8 +91,7 @@ class Point2:
         :raises: TypeError: Wrong argument type
         """
         if is_point2(other_point):
-            return (maths_utility.floats_are_close(self.x, other_point.x) and
-                    maths_utility.floats_are_close(self.y, other_point.y))
+            return floats_are_close(self.x, other_point.x) and floats_are_close(self.y, other_point.y)
         raise TypeError("Comparison must be done with another object of Point2")
 
     def __ne__(self, other_point):
@@ -106,8 +105,7 @@ class Point2:
         :raises: TypeError: Wrong argument type
         """
         if is_point2(other_point):
-            return (not maths_utility.floats_are_close(self.x, other_point.x) or
-                    not maths_utility.floats_are_close(self.y, other_point.y))
+            return not floats_are_close(self.x, other_point.x) or not floats_are_close(self.y, other_point.y)
         raise TypeError("Comparison must be done with another object of Point2")
 
     def __le__(self, other_point):
@@ -194,7 +192,9 @@ class Point2:
         return cls(float(v[0]), float(v[1]))
 
     def to_point3(self):
-        return Point3(self.x, self.y, 0.0)
+        point_3d = geometry_utils.three_d.point3.Point3(self.x, self.y, 0.0, self.w)
+        point_3d.name = self.name
+        return point_3d
 
 
 def is_point2(input_variable):

@@ -1,4 +1,5 @@
 import copy
+import geometry_utils.three_d.axis_aligned_box3
 
 from geometry_utils.two_d.point2 import Point2, is_point2
 from geometry_utils.two_d.vector2 import Vector2, is_vector2
@@ -194,6 +195,14 @@ class AxisAlignedBox2:
 
     def is_valid(self):
         return self.min is not None and self.max is not None
+
+    def to_axis_aligned_box3(self):
+        if self.is_valid():
+            box_3d = geometry_utils.three_d.axis_aligned_box3.AxisAlignedBox3(self.min.to_point3(),
+                                                                              self.max.to_point3())
+        else:
+            box_3d = geometry_utils.three_d.axis_aligned_box3.AxisAlignedBox3()
+        return box_3d
 
 
 def is_box2(input_variable):

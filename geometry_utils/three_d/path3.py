@@ -1,3 +1,5 @@
+import geometry_utils.two_d.path2
+
 from geometry_utils.maths_utility import is_int_or_float
 from geometry_utils.three_d.axis_aligned_box3 import AxisAlignedBox3
 from geometry_utils.three_d.edge3 import Edge3
@@ -203,6 +205,12 @@ class Path3:
         for edge in self.list_of_edges:
             edge.rotate(rotation_angle)
         return self
+
+    def to_path2(self):
+        path_2d = geometry_utils.two_d.path2.Path2()
+        for edge in self.list_of_edges:
+            path_2d.list_of_edges.append(edge.to_edge2())
+        return path_2d
 
 
 def is_path3(input_variable):

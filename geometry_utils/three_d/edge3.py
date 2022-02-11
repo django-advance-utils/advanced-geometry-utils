@@ -5,9 +5,10 @@ from geometry_utils.three_d.axis_aligned_box3 import AxisAlignedBox3
 from geometry_utils.three_d.matrix4 import Matrix4
 from geometry_utils.three_d.point3 import Point3, is_point3
 from geometry_utils.three_d.vector3 import Vector3, is_vector3
-from geometry_utils.two_d.edge2 import Edge2
-from geometry_utils.two_d.point2 import Point2
-from geometry_utils.two_d.vector2 import Vector2
+
+import geometry_utils.two_d.edge2
+import geometry_utils.two_d.point2
+import geometry_utils.two_d.vector2
 
 
 class Edge3:
@@ -68,6 +69,12 @@ class Edge3:
                 self.via = self.get_via()
             self.sweep_angle = 0.0
             self.centre = self.calculate_centre()
+
+            self.name = ''
+            self.style = ''
+            self.type = ''
+            self.left_name = ''
+            self.right_name = ''
         else:
             if not is_point3(p1) or not is_point3(p2) or not is_point3(via):
                 raise TypeError("First, second and third arguments must be objects of Point2")
@@ -75,8 +82,9 @@ class Edge3:
                 raise TypeError("Fourth argument must be an int or float")
 
     def get_via(self):
-        edge_2d = Edge2(Point2(self.p1.x, self.p1.y), Point2(self.p2.x, self.p2.y),
-                        self.radius, self.clockwise, self.large)
+        edge_2d = geometry_utils.two_d.edge2.Edge2(geometry_utils.two_d.point2.Point2(self.p1.x, self.p1.y),
+                                                   geometry_utils.two_d.point2.Point2(self.p2.x, self.p2.y),
+                                                   self.radius, self.clockwise, self.large)
         edge_2d_midpoint = edge_2d.point_parametric(0.5)
         return Point3(edge_2d_midpoint.x, edge_2d_midpoint.y, self.p1.z)
 
@@ -123,9 +131,9 @@ class Edge3:
             v = n.cross(u).normalised()
             d = n.dot(p1_vector)
 
-            a = Vector2()
-            b = Vector2()
-            c = Vector2()
+            a = geometry_utils.two_d.vector2.Vector2()
+            b = geometry_utils.two_d.vector2.Vector2()
+            c = geometry_utils.two_d.vector2.Vector2()
 
             a.x = (u.x * p1_vector.x) + (u.y * p1_vector.y) + (u.z * p1_vector.z)
             a.y = (v.x * p1_vector.x) + (v.y * p1_vector.y) + (v.z * p1_vector.z)
@@ -136,14 +144,14 @@ class Edge3:
             c.x = (u.x * p2_vector.x) + (u.y * p2_vector.y) + (u.z * p2_vector.z)
             c.y = (v.x * p2_vector.x) + (v.y * p2_vector.y) + (v.z * p2_vector.z)
 
-            sol = Vector2()
+            sol = geometry_utils.two_d.vector2.Vector2()
             sol.x = ((sqr(b.x) + sqr(b.y)) - (sqr(a.x) + sqr(a.y))) / 2
             sol.y = ((sqr(c.x) + sqr(c.y)) - (sqr(a.x) + sqr(a.y))) / 2
 
-            tol = Vector2(b.x - a.x, b.y - a.y)
-            yol = Vector2(c.x - a.x, c.y - a.y)
+            tol = geometry_utils.two_d.vector2.Vector2(b.x - a.x, b.y - a.y)
+            yol = geometry_utils.two_d.vector2.Vector2(c.x - a.x, c.y - a.y)
 
-            ans = Vector2()
+            ans = geometry_utils.two_d.vector2.Vector2()
             ans.y = ((sol.x * yol.x) - (sol.y * tol.x)) / ((tol.y * yol.x) - (tol.x * yol.y))
             ans.x = (sol.x - (tol.y * ans.y)) / tol.x
 
@@ -297,10 +305,10 @@ class Edge3:
             #
             #     return a + 0.5
             elif self.is_arc():
-                p1_2d = Point2(self.p1.x, self.p1.y)
-                p2_2d = Point2(self.p2.x, self.p2.y)
-                point_2d = Point2(point.x, point.y)
-                edge_2d = Edge2(p1_2d, p2_2d, self.radius, self.clockwise, self.large)
+                p1_2d = geometry_utils.two_d.point2.Point2(self.p1.x, self.p1.y)
+                p2_2d = geometry_utils.two_d.point2.Point2(self.p2.x, self.p2.y)
+                point_2d = geometry_utils.two_d.point2.Point2(point.x, point.y)
+                edge_2d = geometry_utils.two_d.edge2.Edge2(p1_2d, p2_2d, self.radius, self.clockwise, self.large)
                 s = edge_2d.parametric_point(point_2d)
                 return s
             elif self.is_line:
@@ -429,13 +437,19 @@ class Edge3:
             return self
         raise TypeError("Rotation angle must be a float")
 
-    def to_edge2(self):
-        edge_2d = Edge2(Point2(self.p1.x, self.p1.y), Point2(self.p2.x, self.p2.y), self.radius, self.clockwise, self.large)
-        edge_2d.centre = edge_2d.calculate_centre()
-        return edge_2d
-
     def to_vector3(self):
         return self.p2 - self.p1
+
+    def to_edge2(self):
+        edge_2d = geometry_utils.two_d.edge2.Edge2(self.p1.to_point2(), self.p2.to_point2(),
+                                                   self.radius, self.clockwise, self.large)
+        edge_2d.name = self.name
+        edge_2d.style = self.style
+        edge_2d.type = self.type
+        edge_2d.left_name = self.left_name
+        edge_2d.right_name = self.right_name
+
+        return edge_2d
 
 
 def is_edge3(input_variable):

@@ -1,8 +1,7 @@
 import math
-from math import sqrt
+import geometry_utils.two_d.vector2
 
 from geometry_utils.maths_utility import is_int_or_float, are_ints_or_floats, floats_are_close, radians_to_degrees
-from geometry_utils.two_d.vector2 import Vector2
 
 
 class Vector3:
@@ -186,7 +185,7 @@ class Vector3:
         :return: length
         :rtype: int/float
         """
-        return sqrt(self.dot(self))
+        return math.sqrt(self.dot(self))
 
     def dot(self, other_vector):
         """
@@ -277,7 +276,8 @@ class Vector3:
         return Vector3(-self.x, -self.y, -self.z)
 
     def to_vector2(self):
-        return Vector2(self.x, self.y)
+        vector_2d = geometry_utils.two_d.vector2.Vector2(self.x, self.y, self.w)
+        return vector_2d
 
 
 def is_vector3(input_variable):

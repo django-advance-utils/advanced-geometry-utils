@@ -1,9 +1,9 @@
 import copy
 import math
-from math import atan2, acos, fabs, sin, cos, pi
+import geometry_utils.three_d.edge3
 
-from geometry_utils.maths_utility import floats_are_close, DOUBLE_EPSILON, PI, TWO_PI, is_list, is_int_or_float, \
-    CIRCLE_FACTORS, CIRCLE_DIVISIONS, degrees_to_radians, HALF_PI, ONE_AND_HALF_PI, is_float
+from geometry_utils.maths_utility import (floats_are_close, DOUBLE_EPSILON, PI, TWO_PI, is_list, is_int_or_float,
+    CIRCLE_FACTORS, CIRCLE_DIVISIONS, HALF_PI, ONE_AND_HALF_PI, is_float)
 from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
 from geometry_utils.two_d.ellipse import Ellipse
 from geometry_utils.two_d.point2 import Point2, is_point2
@@ -64,11 +64,11 @@ class Edge2:
             self.clockwise = clockwise
             self.large = large
             self.centre = self.calculate_centre()
-            self.name = ""
-            self.style = ""
-            self.type = ""
-            self.left_name = ""
-            self.right_name = ""
+            self.name = ''
+            self.style = ''
+            self.type = ''
+            self.left_name = ''
+            self.right_name = ''
         else:
             if not is_point2(p1) or not is_point2(p2):
                 raise TypeError("First and second arguments must be objects of Point2")
@@ -208,7 +208,7 @@ class Edge2:
                 dot_product = centre_to_arc_centre_distance.dot(point_to_centre_distance)
                 determinant = (centre_to_arc_centre_distance.x * point_to_centre_distance.y) - \
                               (centre_to_arc_centre_distance.y * point_to_centre_distance.x)
-                point_to_arc_centre_point_angle = atan2(determinant, dot_product)
+                point_to_arc_centre_point_angle = math.atan2(determinant, dot_product)
 
                 if self.clockwise:
                     point_to_arc_centre_point_angle = -point_to_arc_centre_point_angle
@@ -338,10 +338,10 @@ class Edge2:
         return (not self.is_arc()) and (not self.p1 == self.p2)
 
     def get_arc_start_angle(self):
-        return atan2(self.p1.y - self.centre.y, self.p1.x - self.centre.x)
+        return math.atan2(self.p1.y - self.centre.y, self.p1.x - self.centre.x)
 
     def get_arc_end_angle(self):
-        return atan2(self.p2.y - self.centre.y, self.p2.x - self.centre.x)
+        return math.atan2(self.p2.y - self.centre.y, self.p2.x - self.centre.x)
 
     def flatten_arc(self):
         arc_start_angle = self.get_arc_start_angle()
@@ -492,6 +492,17 @@ class Edge2:
         self.centre = self.calculate_centre()
         return self
 
+    def to_edge3(self):
+        edge_3d = geometry_utils.three_d.edge3.Edge3(self.p1.to_point3(), self.p2.to_point3(), None,
+                                                     self.radius, self.clockwise, self.large)
+
+        edge_3d.name = self.name
+        edge_3d.style = self.style
+        edge_3d.type = self.type
+        edge_3d.left_name = self.left_name
+        edge_3d.right_name = self.right_name
+
+        return edge_3d
 
 def is_edge2(input_variable):
     return isinstance(input_variable, Edge2)
