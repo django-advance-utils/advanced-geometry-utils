@@ -1,8 +1,10 @@
+import copy
+
 import geometry_utils.two_d.path2
 
-from geometry_utils.maths_utility import is_int_or_float
+from geometry_utils.maths_utility import is_int_or_float, is_float
 from geometry_utils.three_d.axis_aligned_box3 import AxisAlignedBox3
-from geometry_utils.three_d.edge3 import Edge3
+from geometry_utils.three_d.edge3 import Edge3, is_edge3
 from geometry_utils.three_d.point3 import Point3
 from geometry_utils.three_d.vector3 import Vector3, is_vector3
 
@@ -31,6 +33,13 @@ class Path3:
     """
     def __init__(self):
         self.list_of_edges = []
+        
+        self.fill = ''
+        self.name = ''
+        self.type = ''
+        self.layers = []
+        self.closed = None
+        self.attributes = {}
 
     def __eq__(self, other_path):
         if is_path3(other_path) and self.path_length == other_path.path_length:
@@ -43,14 +52,23 @@ class Path3:
                 raise TypeError("Comparison must be done with another object of Path2")
             if self.path_length != other_path.path_length:
                 raise IndexError("Comparison must be done with another path of equal number of edges")
+            
+    def __add__(self, other_path):
+        path = Path3()
+        path.list_of_edges = self.list_of_edges + other_path.list_of_edges
+        return path
+    
+    def set_edges(self, list_of_edges):
+        for edge in list_of_edges:
+            if not is_edge3(edge):
+                raise TypeError('Input has to be list of Edge2 objects')
+        self.list_of_edges = list_of_edges
 
-    @property
     def get_first_edge(self):
         if self.path_length >= 1:
             return self.list_of_edges[0]
         raise IndexError("Can not find the first edge of an empty list of edges")
 
-    @property
     def get_last_edge(self):
         if self.path_length >= 1:
             return self.list_of_edges[-1]
@@ -66,6 +84,7 @@ class Path3:
         """
         return len(self.list_of_edges)
 
+    @property
     def is_closed(self):
         """
         Tests if the path is closed
@@ -73,8 +92,9 @@ class Path3:
         :return:closeness of the path
         :rtype: bool
         """
-        return self.list_of_edges[-1].p2 == self.list_of_edges[0].p1 and self.is_continuous()
+        return self.list_of_edges[-1].p2 == self.list_of_edges[0].p1 and self.is_continuous
 
+    @property
     def is_continuous(self):
         """
         Tests if the path is continuous
@@ -90,32 +110,7 @@ class Path3:
                 if edge.p2 != next_edge.p1:
                     continuity = False
         return continuity
-
-    def reverse(self):
-        self.list_of_edges.reverse()
-        for edge in self.list_of_edges:
-            edge.reverse()
-        return self
-
-    def is_circle(self):
-        return self.path_length == 1 and self.list_of_edges[0].is_circle()
-
-    def convert_circle_to_edges(self):
-        if self.is_circle():
-            circle_centre = Point3()
-            circle_centre.x = self.list_of_edges[0].centre.x
-            circle_centre.y = self.list_of_edges[0].centre.y
-            circle_centre.z = self.list_of_edges[0].centre.z
-            circle_radius = self.list_of_edges[0].radius
-
-            self.list_of_edges = [
-                Edge3(Point3(circle_centre.x, circle_centre.y + circle_radius, circle_centre.z),
-                      Point3(circle_centre.x, circle_centre.y - circle_radius, circle_centre.z), circle_radius, False),
-                Edge3(Point3(circle_centre.x, circle_centre.y - circle_radius, circle_centre.z),
-                      Point3(circle_centre.x, circle_centre.y + circle_radius, circle_centre.z), circle_radius, True)
-            ]
-            return self
-
+    
     def get_bounds(self):
         """
         Derives the AxisAlignedBox2 containing the bounds of the path
@@ -135,9 +130,9 @@ class Path3:
                 negative_y = edge.centre + Vector3(0, -edge.radius, 0)
 
                 parametric_positive_x = edge.parametric_point(positive_x)
-                parametric_positive_y = edge.parametric_point(positive_y)
-
                 parametric_negative_x = edge.parametric_point(negative_x)
+
+                parametric_positive_y = edge.parametric_point(positive_y)
                 parametric_negative_y = edge.parametric_point(negative_y)
 
                 lower_bound = -0.0001
@@ -167,11 +162,54 @@ class Path3:
                         path_bounds.include(negative_z)
 
         return path_bounds
-
-    def transform(self, transformation_matrix):
+    
+    def to_tuple_list(self):
+        path_tuple_list = []
         for edge in self.list_of_edges:
-            edge.transform(transformation_matrix)
+            path_tuple_list.append((edge.p1, edge.p2))
+        return path_tuple_list
+    
+    def remove_duplicate_edges(self):
+        indices_of_edges_to_remove = []
+        last_edge = None
 
+        for index, edge in enumerate(self.list_of_edges):
+            if last_edge is not None:
+                if edge == last_edge:
+                    indices_of_edges_to_remove.append(index)
+            last_edge = edge
+
+        indices_of_edges_to_remove.sort(reverse=True)
+        for index in indices_of_edges_to_remove:
+            del self.list_of_edges[index]
+        return self
+    
+    def reverse(self):
+        self.list_of_edges.reverse()
+        for edge in self.list_of_edges:
+            edge.reverse()
+        return self
+
+    def mirror_x(self):
+        for edge in self.list_of_edges:
+            edge.mirror_x()
+        return self
+
+    def mirror_y(self):
+        for edge in self.list_of_edges:
+            edge.mirror_y()
+        return self
+
+    def mirror_z(self):
+        for edge in self.list_of_edges:
+            edge.mirror_z()
+        return self
+    
+    def mirror_origin(self):
+        for edge in self.list_of_edges:
+            edge.mirror_origin()
+        return self
+    
     def offset(self, vector, point_type=None):
         if is_vector3(vector):
             if point_type is None or point_type.lower() == 'pp':
@@ -192,25 +230,107 @@ class Path3:
                 return self
         else:
             raise TypeError("Path offset must be done with a vector")
-
+        
     def rotate_around(self, rotation_vector, rotation_angle):
-        if is_vector3(rotation_vector) and is_int_or_float(rotation_angle):
+        if is_vector3(rotation_vector) and is_float(rotation_angle):
             reversed_rotation_vector = rotation_vector.invert()
             self.offset(reversed_rotation_vector)
             self.rotate(rotation_angle)
             self.offset(rotation_vector)
             return self
+        
+    def close_path(self):
+        if self.path_length > 1 and not self.is_closed:
+            if not self.is_continuous:
+                for index, edge in enumerate(self.list_of_edges):
+                    if index == 0:
+                        continue
+                    if self.list_of_edges[index - 1].p2 != edge.p1:
+                        self.list_of_edges.insert(index, Edge3(self.list_of_edges[index - 1].p2, edge.p1))
+            self.list_of_edges.append(Edge3(copy.deepcopy(self.list_of_edges[-1].p2),
+                                            copy.deepcopy(self.list_of_edges[0].p1)))
+        return self
+    
+    def make_continuous(self):
+        if self.path_length > 1 and not self.is_continuous:
+            for index in range(self.path_length - 1):
+                if self.list_of_edges[index].p2 != self.list_of_edges[index + 1].p1:
+                    self.list_of_edges[index].p2 = copy.deepcopy(self.list_of_edges[index + 1].p1)
+                    if self.list_of_edges[index + 1].is_arc():
+                        self.list_of_edges[index].radius = self.list_of_edges[index + 1].radius
+                        self.list_of_edges[index].clockwise = self.list_of_edges[index + 1].clockwise
+                        self.list_of_edges[index].large = self.list_of_edges[index + 1].large
+
+                        self.list_of_edges[index + 1].radius = 0
+                        self.list_of_edges[index + 1].clockwise = False
+                        self.list_of_edges[index + 1].large = False
+            self.update_path()
+        return self
 
     def rotate(self, rotation_angle):
         for edge in self.list_of_edges:
             edge.rotate(rotation_angle)
         return self
 
+    def is_circle(self):
+        return self.path_length == 1 and self.list_of_edges[0].is_circle()
+
+    def get_enclosed_area(self):
+        path = copy.deepcopy(self)
+
+        path.remove_duplicate_edges()
+        if path.is_closed and path.path_length != 0:
+            return path
+        raise TypeError("The path must be closed and have more than one edge")
+
+    def is_quadrilateral(self):
+        if self.path_length != 4 or not self.is_closed or not self.is_continuous:
+            return False
+
+        for edge in self.list_of_edges:
+            if edge.is_arc():
+                return False
+
+        return True
+
+    def is_rectangular(self):
+        if not self.is_quadrilateral():
+            return False
+        return (self.list_of_edges[0].is_perpendicular_to(self.list_of_edges[1]) and
+                self.list_of_edges[1].is_perpendicular_to(self.list_of_edges[2]) and
+                self.list_of_edges[2].is_perpendicular_to(self.list_of_edges[3]) and
+                self.list_of_edges[3].is_perpendicular_to(self.list_of_edges[0]))
+
+    def convert_circle_to_edges(self):
+        if self.is_circle():
+            circle_centre = Point3()
+            circle_centre.x = self.list_of_edges[0].centre.x
+            circle_centre.y = self.list_of_edges[0].centre.y
+            circle_centre.z = self.list_of_edges[0].centre.z
+            circle_radius = self.list_of_edges[0].radius
+
+            self.list_of_edges = [
+                Edge3(Point3(circle_centre.x, circle_centre.y + circle_radius, circle_centre.z),
+                      Point3(circle_centre.x, circle_centre.y - circle_radius, circle_centre.z), circle_radius, False),
+                Edge3(Point3(circle_centre.x, circle_centre.y - circle_radius, circle_centre.z),
+                      Point3(circle_centre.x, circle_centre.y + circle_radius, circle_centre.z), circle_radius, True)
+            ]
+            return self
+
+    def transform(self, transformation_matrix):
+        for edge in self.list_of_edges:
+            edge.transform(transformation_matrix)
+
     def to_path2(self):
         path_2d = geometry_utils.two_d.path2.Path2()
         for edge in self.list_of_edges:
             path_2d.list_of_edges.append(edge.to_edge2())
         return path_2d
+
+    def update_path(self):
+        for edge in self.list_of_edges:
+            edge.centre = edge.calculate_centre()
+            edge.via = edge.get_via()
 
 
 def is_path3(input_variable):

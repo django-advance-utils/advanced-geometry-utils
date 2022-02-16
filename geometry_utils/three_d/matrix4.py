@@ -1,6 +1,6 @@
-from math import cos, sin
+import math
 
-from geometry_utils.maths_utility import is_list, is_int_or_float, radians_to_degrees, degrees_to_radians
+from geometry_utils.maths_utility import is_list, is_int_or_float, radians_to_degrees, degrees_to_radians, is_float
 from geometry_utils.three_d.vector3 import Vector3, is_vector3
 from geometry_utils.three_d.point3 import Point3, is_point3
 
@@ -151,13 +151,13 @@ class Matrix4:
         :rtype:  Matrix4
         :raises: TypeError: Wrong argument type
         """
-        if is_int_or_float(theta):
+        if is_float(theta):
             mat = cls()
             if rad is False:
                 theta = degrees_to_radians(theta)
 
-            cos_theta = cos(theta)
-            sin_theta = sin(theta)
+            cos_theta = math.cos(theta)
+            sin_theta = math.sin(theta)
             negative_sin_theta = 0.0 if (-sin_theta == -0.0) else -sin_theta
 
             mat.vals = [[1.0, 0.0, 0.0, 0.0],
@@ -183,8 +183,8 @@ class Matrix4:
             mat = cls()
             if rad is False:
                 theta = degrees_to_radians(theta)
-            cos_theta = cos(theta)
-            sin_theta = sin(theta)
+            cos_theta = math.cos(theta)
+            sin_theta = math.sin(theta)
             negative_sin_theta = 0.0 if (-sin_theta == -0.0) else -sin_theta
             mat.vals = [[cos_theta, 0.0, negative_sin_theta, 0.0],
                         [0.0, 1.0, 0.0, 0.0],
@@ -209,8 +209,8 @@ class Matrix4:
             mat = cls()
             if rad is False:
                 theta = degrees_to_radians(theta)
-            cos_theta = cos(theta)
-            sin_theta = sin(theta)
+            cos_theta = math.cos(theta)
+            sin_theta = math.sin(theta)
             negative_sin_theta = 0.0 if (-sin_theta == -0.0) else -sin_theta
             mat.vals = [[cos_theta, negative_sin_theta, 0.0, 0.0],
                         [sin_theta, cos_theta, 0.0, 0.0],
@@ -261,6 +261,12 @@ class Matrix4:
         matrix.vals[3][3] = 1.0
 
         return matrix
+
+    # def to_matrix3(self):
+    #     matrix_3d = geometry_utils.two_d.matrix3.Matrix3([
+    #         self.vals[0][0], self
+    #     ])
+
 
 
 def is_matrix4(input_variable):
