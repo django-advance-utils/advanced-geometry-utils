@@ -1,6 +1,7 @@
 import math
 
-from geometry_utils.maths_utility import is_int_or_float, DOUBLE_EPSILON, sqr, PI, is_float, degrees_to_radians
+from geometry_utils.maths_utility import is_int_or_float, DOUBLE_EPSILON, sqr, PI, is_float, degrees_to_radians, \
+    HALF_PI, ONE_AND_HALF_PI
 from geometry_utils.three_d.axis_aligned_box3 import AxisAlignedBox3
 from geometry_utils.three_d.matrix4 import Matrix4
 from geometry_utils.three_d.point3 import Point3, is_point3
@@ -426,8 +427,7 @@ class Edge3:
 
     def rotate(self, rotation_angle):
         if is_float(rotation_angle):
-            rotation_angle_in_radians = degrees_to_radians(rotation_angle)
-            rotation_matrix = Matrix4.z_rotation(rotation_angle_in_radians)
+            rotation_matrix = Matrix4.z_rotation(rotation_angle)
 
             self.p1 = rotation_matrix * self.p1
             self.p2 = rotation_matrix * self.p2
@@ -450,6 +450,28 @@ class Edge3:
         edge_2d.right_name = self.right_name
 
         return edge_2d
+
+    def angle_to_edge(self, other_edge):
+        if is_edge3(other_edge):
+            if self.is_arc() or other_edge.is_arc():
+                raise TypeError("Angle check can not be found from an arc")
+            return self.angle_to_x_axis() - other_edge.angle_to_x_axis()
+        raise TypeError("Angle check must be done with another object Edge2")
+
+    def angle_to_x_axis(self):
+        if self.is_arc():
+            raise TypeError()
+        self_vector = self.to_vector3()
+        if self_vector.length() != 0:
+            return math.acos(self_vector.x / self_vector.length())
+        else:
+            return math.acos(self_vector.x)
+
+    def is_perpendicular_to(self, other_edge):
+        if is_edge3(other_edge):
+            return (self.angle_to_edge(other_edge) == HALF_PI or self.angle_to_edge(other_edge) == -ONE_AND_HALF_PI or
+                    self.angle_to_edge(other_edge) == -HALF_PI or self.angle_to_edge(other_edge) == ONE_AND_HALF_PI)
+        raise TypeError("Perpendicular check must be with an Edge3 object")
 
 
 def is_edge3(input_variable):
