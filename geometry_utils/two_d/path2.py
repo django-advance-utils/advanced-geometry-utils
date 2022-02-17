@@ -442,6 +442,38 @@ class Path2:
                 self.U0_square_length = 0.0
                 self.area = 0.0
 
+            def get_smallest_angle_to_align_box(self):
+                x_axis_1 = Vector2(self.U[0]['x'], self.U[0]['y'])
+                y_axis_1 = Vector2(self.U[1]['x'], self.U[1]['y'])
+                x_axis_1.normalise()
+                y_axis_1.normalise()
+
+                x_axis_2 = y_axis_1
+                y_axis_2 = Vector2(-x_axis_1.x, -x_axis_1.y)
+                x_axis_2.normalise()
+                y_axis_2.normalise()
+
+                x_axis_3 = y_axis_2
+                y_axis_3 = Vector2(-x_axis_2.x, -x_axis_2.y)
+                x_axis_3.normalise()
+                y_axis_3.normalise()
+
+                x_axis_4 = y_axis_3
+                y_axis_4 = x_axis_1
+                x_axis_4.normalise()
+                y_axis_4.normalise()
+
+                angles = [Vector2(1.0, 0.0).signed_angle_to(x_axis_1, True),
+                          Vector2(1.0, 0.0).signed_angle_to(x_axis_2, True),
+                          Vector2(1.0, 0.0).signed_angle_to(x_axis_3, True),
+                          Vector2(1.0, 0.0).signed_angle_to(x_axis_4, True)]
+
+                smallest = None
+                for angle in angles:
+                    if smallest is None or abs(angle) < abs(smallest):
+                        smallest = angle
+                return smallest
+
         def smallest_box(first_point_index, last_point_index, list_of_points):
             box = Box()
 

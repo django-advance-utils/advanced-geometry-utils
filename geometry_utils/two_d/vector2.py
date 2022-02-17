@@ -273,14 +273,15 @@ class Vector2:
             angle = radians_to_degrees(angle)
             return angle
 
-    def signed_angle_to(self, other_vector):
+    def signed_angle_to(self, other_vector, rad=False):
         if is_vector2(other_vector):
-            angle = self.angle_to_x_axis() - other_vector.angle_to_x_axis()
+            angle = self.angle_to_x_axis(rad) - other_vector.angle_to_x_axis(rad)
             return angle
 
-    def angle_to_x_axis(self):
+    def angle_to_x_axis(self, rad=False):
         angle = math.atan2(self.y, self.x)
-        angle = radians_to_degrees(angle)
+        if not rad:
+            angle = radians_to_degrees(angle)
         return angle
 
     @classmethod
