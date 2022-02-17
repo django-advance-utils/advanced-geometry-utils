@@ -167,12 +167,14 @@ class Vector3:
         :rtype: Vector3
         """
         vector_length = self.length()
-        if vector_length == 0:
+        if floats_are_close(vector_length, 0.0):
             return self
         return self / vector_length
 
     def normalise(self):
         vector_length = self.length()
+        if floats_are_close(vector_length, 0.0):
+            return self
         self.x /= vector_length
         self.y /= vector_length
         self.z /= vector_length
