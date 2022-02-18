@@ -186,6 +186,12 @@ class Path2:
             del self.list_of_edges[index]
         return self
 
+    def reverse(self):
+        self.list_of_edges.reverse()
+        for edge in self.list_of_edges:
+            edge.reverse()
+        return self
+
     def mirror_x(self):
         for edge in self.list_of_edges:
             edge.mirror_x()
@@ -399,12 +405,6 @@ class Path2:
         convex_hull.close_path()
         return convex_hull
 
-    def reverse(self):
-        self.list_of_edges.reverse()
-        for edge in self.list_of_edges:
-            edge.reverse()
-        return self
-
     def transform(self, transformation_matrix):
         for edge in self.list_of_edges:
             edge.transform(transformation_matrix)
@@ -443,8 +443,8 @@ class Path2:
                 self.area = 0.0
 
             def get_smallest_angle_to_align_box(self):
-                x_axis_1 = Vector2(self.U[0]['x'], self.U[0]['y'])
-                y_axis_1 = Vector2(self.U[1]['x'], self.U[1]['y'])
+                x_axis_1 = Vector2(self.U[0].x, self.U[0].y)
+                y_axis_1 = Vector2(self.U[1].x, self.U[1].y)
                 x_axis_1.normalise()
                 y_axis_1.normalise()
 
