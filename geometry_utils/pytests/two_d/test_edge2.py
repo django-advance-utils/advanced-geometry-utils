@@ -213,11 +213,11 @@ def test_edge2_is_circle(test_edge2_6):
 
 
 def test_edge2_get_arc_start_angle(test_edge2_5):
-    assert test_edge2_5.get_arc_start_angle() == PI
+    assert test_edge2_5.get_arc_start_angle(True) == PI
 
 
 def test_edge2_get_arc_end_angle(test_edge2_5):
-    assert test_edge2_5.get_arc_end_angle() == 0.0
+    assert test_edge2_5.get_arc_end_angle(True) == 0.0
 
 
 def test_edge2_flatten_arc(test_edge2_5):
