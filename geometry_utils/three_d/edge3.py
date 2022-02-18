@@ -372,6 +372,16 @@ class Edge3:
     def is_circle(self):
         return self.is_arc() and self.p1 == self.p2
 
+    def get_arc_start_angle(self, rad=False):
+        edge_2d = self.to_edge2()
+        angle = edge_2d.get_arc_start_angle(rad)
+        return angle
+
+    def get_arc_end_angle(self, rad=False):
+        edge_2d = self.to_edge2()
+        angle = edge_2d.get_arc_end_angle(rad)
+        return angle
+
     def reverse(self):
         self.p1, self.p2 = self.p2, self.p1
         if self.is_arc():

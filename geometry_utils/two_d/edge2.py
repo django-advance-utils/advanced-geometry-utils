@@ -64,6 +64,7 @@ class Edge2:
             self.clockwise = clockwise
             self.large = large
             self.centre = self.calculate_centre()
+
             self.name = ''
             self.style = ''
             self.type = ''
@@ -337,11 +338,17 @@ class Edge2:
     def is_line(self):
         return (not self.is_arc()) and (not self.p1 == self.p2)
 
-    def get_arc_start_angle(self):
-        return math.atan2(self.p1.y - self.centre.y, self.p1.x - self.centre.x)
+    def get_arc_start_angle(self, rad=False):
+        angle = math.atan2(self.p1.y - self.centre.y, self.p1.x - self.centre.x)
+        if not rad:
+            angle = radians_to_degrees(angle)
+        return angle
 
-    def get_arc_end_angle(self):
-        return math.atan2(self.p2.y - self.centre.y, self.p2.x - self.centre.x)
+    def get_arc_end_angle(self, rad=False):
+        angle = math.atan2(self.p2.y - self.centre.y, self.p2.x - self.centre.x)
+        if not rad:
+            angle = radians_to_degrees(angle)
+        return angle
 
     def flatten_arc(self):
         arc_start_angle = self.get_arc_start_angle()
