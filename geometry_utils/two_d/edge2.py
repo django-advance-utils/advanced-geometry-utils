@@ -3,7 +3,7 @@ import math
 import geometry_utils.three_d.edge3
 
 from geometry_utils.maths_utility import (floats_are_close, DOUBLE_EPSILON, PI, TWO_PI, is_list, is_int_or_float,
-    CIRCLE_FACTORS, CIRCLE_DIVISIONS, HALF_PI, ONE_AND_HALF_PI, is_float)
+    CIRCLE_FACTORS, CIRCLE_DIVISIONS, HALF_PI, ONE_AND_HALF_PI, is_float, radians_to_degrees)
 from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
 from geometry_utils.two_d.ellipse import Ellipse
 from geometry_utils.two_d.point2 import Point2, is_point2
@@ -351,8 +351,8 @@ class Edge2:
         return angle
 
     def flatten_arc(self):
-        arc_start_angle = self.get_arc_start_angle()
-        arc_end_angle = self.get_arc_end_angle()
+        arc_start_angle = self.get_arc_start_angle(True)
+        arc_end_angle = self.get_arc_end_angle(True)
 
         start_number, start_diff = divmod((arc_start_angle * CIRCLE_DIVISIONS / TWO_PI) + 0.5, 1)
         end_number, end_diff = divmod((arc_end_angle * CIRCLE_DIVISIONS / TWO_PI) + 0.5, 1)

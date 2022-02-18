@@ -116,6 +116,7 @@ class Path3:
             for edge, next_edge in zip(self.list_of_edges, self.list_of_edges[1:]):
                 if edge.p2 != next_edge.p1:
                     return False
+            return True
     
     def get_bounds(self):
         """
