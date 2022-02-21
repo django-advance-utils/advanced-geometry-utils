@@ -326,7 +326,7 @@ class Path2:
 
         return True
 
-    def convert_circle_to_points(self):
+    def convert_circle_to_edges(self):
         if self.is_circle:
             circle_centre = Point2()
             circle_centre.x = self.list_of_edges[0].centre.x
@@ -335,9 +335,9 @@ class Path2:
 
             self.list_of_edges = [
                 Edge2(Point2(circle_centre.x, circle_centre.y + circle_radius),
-                      Point2(circle_centre.x, circle_centre.y - circle_radius), circle_radius, False),
+                      Point2(circle_centre.x, circle_centre.y - circle_radius), circle_radius, False, False),
                 Edge2(Point2(circle_centre.x, circle_centre.y - circle_radius),
-                      Point2(circle_centre.x, circle_centre.y + circle_radius), circle_radius, True)
+                      Point2(circle_centre.x, circle_centre.y + circle_radius), circle_radius, False, False)
             ]
             return self
 

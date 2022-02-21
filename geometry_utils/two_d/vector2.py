@@ -260,7 +260,7 @@ class Vector2:
         if not is_int_or_float(theta):
             raise TypeError("Angle of rotation must be a float or int")
 
-    def angle_to(self, other_vector):
+    def angle_to(self, other_vector, rad=False):
         if is_vector2(other_vector):
             self_unit_vector = self.normalised()
             other_unit_vector = other_vector.normalised()
@@ -270,7 +270,8 @@ class Vector2:
                 return 0.0
 
             angle = math.acos(dot_product)
-            angle = radians_to_degrees(angle)
+            if not rad:
+                angle = radians_to_degrees(angle)
             return angle
 
     def signed_angle_to(self, other_vector, rad=False):

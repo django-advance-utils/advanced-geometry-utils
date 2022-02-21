@@ -252,7 +252,7 @@ class Vector3:
         v = string.split(',')
         return cls(float(v[0]), float(v[1]), float(v[2]))
 
-    def angle_to(self, other_vector):
+    def angle_to(self, other_vector, rad=False):
         if is_vector3(other_vector):
             self_unit_vector = self.normalised()
             other_unit_vector = other_vector.normalised()
@@ -262,7 +262,8 @@ class Vector3:
                 return 0.0
 
             angle = math.acos(dot_product)
-            angle = radians_to_degrees(angle)
+            if not rad:
+                angle = radians_to_degrees(angle)
             return angle
 
     def signed_angle_to(self, other_vector):
