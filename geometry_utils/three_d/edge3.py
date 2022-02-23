@@ -122,50 +122,53 @@ class Edge3:
             return self.p1
 
         elif self.is_arc():
-            p1_vector = self.p1.to_vector3()
-            p2_vector = self.p2.to_vector3()
-            via_vector = self.via.to_vector3()
+            try:
+                p1_vector = self.p1.to_vector3()
+                p2_vector = self.p2.to_vector3()
+                via_vector = self.via.to_vector3()
 
-            n = (p1_vector.cross(via_vector) + via_vector.cross(p2_vector) + p2_vector.cross(p1_vector)).normalised()
-            s = (p2_vector - p1_vector)
-            u = s.cross(n).normalised()
-            v = n.cross(u).normalised()
-            d = n.dot(p1_vector)
+                n = (p1_vector.cross(via_vector) + via_vector.cross(p2_vector) + p2_vector.cross(p1_vector)).normalised()
+                s = (p2_vector - p1_vector)
+                u = s.cross(n).normalised()
+                v = n.cross(u).normalised()
+                d = n.dot(p1_vector)
 
-            a = geometry_utils.two_d.vector2.Vector2()
-            b = geometry_utils.two_d.vector2.Vector2()
-            c = geometry_utils.two_d.vector2.Vector2()
+                a = geometry_utils.two_d.vector2.Vector2()
+                b = geometry_utils.two_d.vector2.Vector2()
+                c = geometry_utils.two_d.vector2.Vector2()
 
-            a.x = (u.x * p1_vector.x) + (u.y * p1_vector.y) + (u.z * p1_vector.z)
-            a.y = (v.x * p1_vector.x) + (v.y * p1_vector.y) + (v.z * p1_vector.z)
+                a.x = (u.x * p1_vector.x) + (u.y * p1_vector.y) + (u.z * p1_vector.z)
+                a.y = (v.x * p1_vector.x) + (v.y * p1_vector.y) + (v.z * p1_vector.z)
 
-            b.x = (u.x * via_vector.x) + (u.y * via_vector.y) + (u.z * via_vector.z)
-            b.y = (v.x * via_vector.x) + (v.y * via_vector.y) + (v.z * via_vector.z)
+                b.x = (u.x * via_vector.x) + (u.y * via_vector.y) + (u.z * via_vector.z)
+                b.y = (v.x * via_vector.x) + (v.y * via_vector.y) + (v.z * via_vector.z)
 
-            c.x = (u.x * p2_vector.x) + (u.y * p2_vector.y) + (u.z * p2_vector.z)
-            c.y = (v.x * p2_vector.x) + (v.y * p2_vector.y) + (v.z * p2_vector.z)
+                c.x = (u.x * p2_vector.x) + (u.y * p2_vector.y) + (u.z * p2_vector.z)
+                c.y = (v.x * p2_vector.x) + (v.y * p2_vector.y) + (v.z * p2_vector.z)
 
-            sol = geometry_utils.two_d.vector2.Vector2()
-            sol.x = ((sqr(b.x) + sqr(b.y)) - (sqr(a.x) + sqr(a.y))) / 2
-            sol.y = ((sqr(c.x) + sqr(c.y)) - (sqr(a.x) + sqr(a.y))) / 2
+                sol = geometry_utils.two_d.vector2.Vector2()
+                sol.x = ((sqr(b.x) + sqr(b.y)) - (sqr(a.x) + sqr(a.y))) / 2
+                sol.y = ((sqr(c.x) + sqr(c.y)) - (sqr(a.x) + sqr(a.y))) / 2
 
-            tol = geometry_utils.two_d.vector2.Vector2(b.x - a.x, b.y - a.y)
-            yol = geometry_utils.two_d.vector2.Vector2(c.x - a.x, c.y - a.y)
+                tol = geometry_utils.two_d.vector2.Vector2(b.x - a.x, b.y - a.y)
+                yol = geometry_utils.two_d.vector2.Vector2(c.x - a.x, c.y - a.y)
 
-            ans = geometry_utils.two_d.vector2.Vector2()
-            ans.y = ((sol.x * yol.x) - (sol.y * tol.x)) / ((tol.y * yol.x) - (tol.x * yol.y))
-            ans.x = (sol.x - (tol.y * ans.y)) / tol.x
+                ans = geometry_utils.two_d.vector2.Vector2()
+                ans.y = ((sol.x * yol.x) - (sol.y * tol.x)) / ((tol.y * yol.x) - (tol.x * yol.y))
+                ans.x = (sol.x - (tol.y * ans.y)) / tol.x
 
-            ans_3d = Vector3()
-            ans_3d.x = (u.x * ans.x) + (v.x * ans.y)
-            ans_3d.y = (u.y * ans.x) + (v.y * ans.y)
-            ans_3d.z = (u.z * ans.x) + (v.z * ans.y)
-            m = n * d
-            q = m + ans_3d
+                ans_3d = Vector3()
+                ans_3d.x = (u.x * ans.x) + (v.x * ans.y)
+                ans_3d.y = (u.y * ans.x) + (v.y * ans.y)
+                ans_3d.z = (u.z * ans.x) + (v.z * ans.y)
+                m = n * d
+                q = m + ans_3d
 
-            self.sweep_angle = math.acos(
-                ((p2_vector - q).dot(p1_vector - q)) / ((p2_vector - q).length() * (p1_vector - q).length()))
-            return Point3(q.x, q.y, q.z)
+                self.sweep_angle = math.acos(
+                    ((p2_vector - q).dot(p1_vector - q)) / ((p2_vector - q).length() * (p1_vector - q).length()))
+                return Point3(q.x, q.y, q.z)
+            except ZeroDivisionError:
+                return Point3()
 
         else:
             return Point3((self.p1.x + self.p2.x) * 0.5, (self.p1.y + self.p2.y) * 0.5, (self.p1.z + self.p2.z) * 0.5)
