@@ -161,8 +161,8 @@ class Matrix4:
             negative_sin_theta = 0.0 if (-sin_theta == -0.0) else -sin_theta
 
             mat.vals = [[1.0, 0.0, 0.0, 0.0],
-                        [0.0, cos_theta, sin_theta, 0.0],
-                        [0.0, negative_sin_theta, cos_theta, 0.0],
+                        [0.0, cos_theta, negative_sin_theta, 0.0],
+                        [0.0, sin_theta, cos_theta, 0.0],
                         [0.0, 0.0, 0.0, 1.0]]
 
             return mat
