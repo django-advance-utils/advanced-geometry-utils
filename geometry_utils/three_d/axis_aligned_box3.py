@@ -1,5 +1,6 @@
 import copy
 import geometry_utils.two_d.axis_aligned_box2
+import geometry_utils.three_d.edge3
 
 from geometry_utils.three_d.point3 import Point3, is_point3
 from geometry_utils.three_d.vector3 import Vector3, is_vector3
@@ -62,6 +63,7 @@ class AxisAlignedBox3:
                 self.min.y = min(self.min.y, other.y)
                 self.max.z = max(self.max.z, other.z)
                 self.min.z = min(self.min.z, other.z)
+
         elif is_box3(other):
             if not self.is_valid():
                 self.min = copy.deepcopy(other.min)
@@ -69,6 +71,15 @@ class AxisAlignedBox3:
             else:
                 self.include(other.min)
                 self.include(other.max)
+
+        elif geometry_utils.three_d.edge3.is_edge3(other):
+            if not self.is_valid():
+                self.min = Point3(other.minimum_x(), other.minimum_y(), other.minimum_z())
+                self.max = Point3(other.maximum_x(), other.maximum_y(), other.maximum_z())
+            else:
+                self.include(other.p1)
+                self.include(other.p2)
+
         else:
             raise TypeError("Inclusion must be with an object of Point2 or AxisAlignedBox2")
 

@@ -2,7 +2,6 @@ import math
 
 from geometry_utils.maths_utility import is_int_or_float, DOUBLE_EPSILON, sqr, PI, is_float, degrees_to_radians, \
     HALF_PI, ONE_AND_HALF_PI
-from geometry_utils.three_d.axis_aligned_box3 import AxisAlignedBox3
 from geometry_utils.three_d.matrix4 import Matrix4
 from geometry_utils.three_d.point3 import Point3, is_point3
 from geometry_utils.three_d.vector3 import Vector3, is_vector3
@@ -10,6 +9,7 @@ from geometry_utils.three_d.vector3 import Vector3, is_vector3
 import geometry_utils.two_d.edge2
 import geometry_utils.two_d.point2
 import geometry_utils.two_d.vector2
+import geometry_utils.three_d.axis_aligned_box3
 
 
 class Edge3:
@@ -485,6 +485,24 @@ class Edge3:
             return (self.angle_to_edge(other_edge) == HALF_PI or self.angle_to_edge(other_edge) == -ONE_AND_HALF_PI or
                     self.angle_to_edge(other_edge) == -HALF_PI or self.angle_to_edge(other_edge) == ONE_AND_HALF_PI)
         raise TypeError("Perpendicular check must be with an Edge3 object")
+
+    def minimum_z(self):
+        return min(self.p1.z, self.p2.z)
+
+    def maximum_z(self):
+        return max(self.p1.z, self.p2.z)
+
+    def minimum_y(self):
+        return min(self.p1.y, self.p2.y)
+
+    def maximum_y(self):
+        return max(self.p1.y, self.p2.y)
+
+    def minimum_x(self):
+        return min(self.p1.x, self.p2.x)
+
+    def maximum_x(self):
+        return max(self.p1.x, self.p2.x)
 
 
 def is_edge3(input_variable):

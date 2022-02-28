@@ -2,7 +2,6 @@ import math
 
 from geometry_utils.maths_utility import floats_are_close, ranges_overlap
 from geometry_utils.three_d.edge3 import is_edge3
-from geometry_utils.three_d.point3 import Point3
 from geometry_utils.two_d.edge2 import is_edge2
 from geometry_utils.two_d.point2 import Point2
 
@@ -58,7 +57,7 @@ class Intersection:
             first_edge = first_edge.to_edge2()
             second_edge = second_edge.to_edge2()
             intersection = self.intersect(first_edge, second_edge)
-            intersection.point = Point3(intersection.point.x, intersection.point.y, 0)
+            intersection.point = intersection.point.to_point3()
             return intersection
 
         if is_edge2(first_edge) and is_edge2(second_edge):

@@ -1,10 +1,10 @@
 import copy
 import math
 import geometry_utils.three_d.edge3
+import geometry_utils.two_d.axis_aligned_box2
 
 from geometry_utils.maths_utility import (floats_are_close, DOUBLE_EPSILON, PI, TWO_PI, is_list, is_int_or_float,
     CIRCLE_FACTORS, CIRCLE_DIVISIONS, HALF_PI, ONE_AND_HALF_PI, is_float, radians_to_degrees)
-from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
 from geometry_utils.two_d.ellipse import Ellipse
 from geometry_utils.two_d.point2 import Point2, is_point2
 from geometry_utils.two_d.vector2 import is_vector2

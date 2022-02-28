@@ -309,14 +309,17 @@ class Path3:
                 self.list_of_edges[3].is_perpendicular_to(self.list_of_edges[0]))
 
     def is_curved_top(self):
-        if self.path_length != 5 or not self.is_continuous:
+        if self.path_length != 4 or not self.is_continuous:
             return False
 
+        arc_found = False
         for edge in self.list_of_edges:
-            if not edge.is_arc():
-                return False
+            if edge.is_arc():
+                if arc_found:
+                    return False
+                arc_found = True
 
-        return True
+        return arc_found
 
     def convert_circle_to_edges(self):
         if self.is_circle():
@@ -330,7 +333,7 @@ class Path3:
                 Edge3(Point3(circle_centre.x, circle_centre.y + circle_radius, circle_centre.z),
                       Point3(circle_centre.x, circle_centre.y - circle_radius, circle_centre.z), circle_radius, False),
                 Edge3(Point3(circle_centre.x, circle_centre.y - circle_radius, circle_centre.z),
-                      Point3(circle_centre.x, circle_centre.y + circle_radius, circle_centre.z), circle_radius, True)
+                      Point3(circle_centre.x, circle_centre.y + circle_radius, circle_centre.z), circle_radius, False)
             ]
             return self
 
