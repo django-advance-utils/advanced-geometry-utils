@@ -282,7 +282,7 @@ class Edge2:
         :return:the resulting 2D box of the edge
         :rtype: AxisAlignedBox2
         """
-        bounds = AxisAlignedBox2()
+        bounds = geometry_utils.two_d.axis_aligned_box2.AxisAlignedBox2()
         bounds.include(self.p1)
         bounds.include(self.p2)
         return bounds

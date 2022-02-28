@@ -1,7 +1,6 @@
 import math
 
-from geometry_utils.maths_utility import is_int_or_float, DOUBLE_EPSILON, sqr, PI, is_float, degrees_to_radians, \
-    HALF_PI, ONE_AND_HALF_PI
+from geometry_utils.maths_utility import is_int_or_float, DOUBLE_EPSILON, sqr, PI, is_float, HALF_PI, ONE_AND_HALF_PI
 from geometry_utils.three_d.matrix4 import Matrix4
 from geometry_utils.three_d.point3 import Point3, is_point3
 from geometry_utils.three_d.vector3 import Vector3, is_vector3
@@ -367,7 +366,7 @@ class Edge3:
         :return:the resulting 3D box of the edge
         :rtype: AxisAlignedBox3
         """
-        bounds = AxisAlignedBox3()
+        bounds = geometry_utils.three_d.axis_aligned_box3.AxisAlignedBox3()
         bounds.include(self.p1)
         bounds.include(self.p2)
         return bounds
