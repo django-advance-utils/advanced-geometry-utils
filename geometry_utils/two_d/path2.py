@@ -331,7 +331,7 @@ class Path2:
         return arc_found
 
     def convert_circle_to_edges(self):
-        if self.is_circle:
+        if self.is_circle():
             circle_centre = Point2()
             circle_centre.x = self.list_of_edges[0].centre.x
             circle_centre.y = self.list_of_edges[0].centre.y
