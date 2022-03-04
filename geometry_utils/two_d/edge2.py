@@ -312,24 +312,24 @@ class Edge2:
         self.p1.mirror_x()
         self.p2.mirror_x()
         self.centre = self.calculate_centre()
-        if self.clockwise:
-            self.clockwise = False
+        if self.is_arc():
+            self.clockwise = not self.clockwise
         return self
 
     def mirror_y(self):
         self.p1.mirror_y()
         self.p2.mirror_y()
         self.centre = self.calculate_centre()
-        if self.clockwise:
-            self.clockwise = False
+        if self.is_arc():
+            self.clockwise = not self.clockwise
         return self
 
     def mirror_origin(self):
         self.p1.mirror_origin()
         self.p2.mirror_origin()
         self.centre = self.calculate_centre()
-        if self.clockwise:
-            self.clockwise = False
+        if self.is_arc():
+            self.clockwise = not self.clockwise
         return self
 
     def is_circle(self):

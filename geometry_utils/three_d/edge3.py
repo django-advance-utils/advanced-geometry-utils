@@ -110,6 +110,14 @@ class Edge3:
             return equality
         raise TypeError("Comparison must be with another object of Edge3")
 
+    def is_clockwise(self):
+        se = self.p2 - self.via
+        sm = self.p1 - self.via
+
+        cp = se.cross(sm)
+
+        return cp > 0
+
     def calculate_centre(self):
         """
         Calculates the centre of the arc

@@ -660,7 +660,7 @@ class Path2:
 
             edge.p1.y -= p1_offset * 2
             edge.p2.y -= p2_offset * 2
-            if edge.is_arc:
+            if edge.is_arc():
                 edge.clockwise = not edge.clockwise
 
     def flip_vertical(self, offset_y=0):
@@ -671,7 +671,7 @@ class Path2:
             edge.p1.y = -edge.p1.y + maximum_y + offset_y
             edge.p2.y = -edge.p2.y + maximum_y + offset_y
 
-            if edge.is_arc:
+            if edge.is_arc():
                 edge.clockwise = not edge.clockwise
 
     def flip_horizontal_center(self):
