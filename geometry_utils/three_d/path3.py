@@ -303,7 +303,7 @@ class Path3:
 
     def get_enclosed_area(self):
         if not self.is_closed or self.path_length <= 0:
-            raise TypeError("The path must be closed and have more than one edge")
+            return None
 
         path = copy.deepcopy(self)
         path.remove_duplicate_edges()
@@ -367,10 +367,11 @@ class Path3:
             edge.transform(transformation_matrix)
         new_area = self.get_enclosed_area()
 
-        if not floats_are_close(old_area, new_area):
-            for edge in self.list_of_edges:
-                if edge.is_arc():
-                    edge.clockwise = not edge.clockwise
+        if old_area is not None and new_area is not None:
+            if not floats_are_close(old_area, new_area):
+                for edge in self.list_of_edges:
+                    if edge.is_arc():
+                        edge.clockwise = not edge.clockwise
 
     def to_path2(self):
         path_2d = geometry_utils.two_d.path2.Path2()
