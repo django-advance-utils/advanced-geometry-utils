@@ -275,14 +275,15 @@ class Path2:
 
     def get_enclosed_area(self):
         if not self.is_closed or self.path_length <= 0:
-            return None
+            raise TypeError("The path must be closed and have more than one edge")
 
         path = copy.deepcopy(self)
         path.remove_duplicate_edges()
         path.remove_arcs()
-        if path.is_closed and path.path_length != 0:
-            return path
-        raise TypeError("The path must be closed and have more than one edge")
+        twice_area = 0
+        for edge in path.list_of_edges:
+            twice_area += edge.p1.x * edge.p2.y - edge.p2.x * edge.p1.y
+        return twice_area * 0.5
 
     def remove_arcs(self):
         index = 0
