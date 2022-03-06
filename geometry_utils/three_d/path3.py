@@ -2,7 +2,7 @@ import copy
 
 import geometry_utils.two_d.path2
 
-from geometry_utils.maths_utility import is_int_or_float, is_float
+from geometry_utils.maths_utility import is_int_or_float, is_float, floats_are_close
 from geometry_utils.three_d.axis_aligned_box3 import AxisAlignedBox3
 from geometry_utils.three_d.edge3 import Edge3, is_edge3
 from geometry_utils.three_d.point3 import Point3
@@ -282,13 +282,37 @@ class Path3:
     def is_circle(self):
         return self.path_length == 1 and self.list_of_edges[0].is_circle()
 
-    def get_enclosed_area(self):
-        path = copy.deepcopy(self)
+    def remove_arcs(self):
+        index = 0
+        list_of_edges_to_remove = []
 
+        for edge in self.list_of_edges:
+            if edge.is_arc():
+                list_of_edges_to_remove.append((index, edge.flatten_arc()))
+                edge.radius = 0
+                edge.clockwise = False
+                edge.large = False
+            index += 1
+
+        index_offset = 0
+        for new_edge in list_of_edges_to_remove:
+            offset_location = new_edge[0] + index_offset
+            del self.list_of_edges[offset_location]
+            self.list_of_edges[offset_location:offset_location] = new_edge[1]
+            index_offset += len(new_edge[1]) - 1
+
+    def get_enclosed_area(self):
+        if not self.is_closed or self.path_length <= 0:
+            raise TypeError("The path must be closed and have more than one edge")
+
+        path = copy.deepcopy(self)
         path.remove_duplicate_edges()
-        if path.is_closed and path.path_length != 0:
-            return path
-        raise TypeError("The path must be closed and have more than one edge")
+        path.remove_arcs()
+        twice_area = 0
+        for edge in path.list_of_edges:
+            twice_area += edge.p1.x * edge.p2.y - edge.p2.x * edge.p1.y
+        return twice_area * 0.5
+
 
     def is_quadrilateral(self):
         if self.path_length != 4 or not self.is_closed or not self.is_continuous:
@@ -338,8 +362,15 @@ class Path3:
             return self
 
     def transform(self, transformation_matrix):
+        old_area = self.get_enclosed_area()
         for edge in self.list_of_edges:
             edge.transform(transformation_matrix)
+        new_area = self.get_enclosed_area()
+
+        if not floats_are_close(old_area, new_area):
+            for edge in self.list_of_edges:
+                if edge.is_arc():
+                    edge.clockwise = not edge.clockwise
 
     def to_path2(self):
         path_2d = geometry_utils.two_d.path2.Path2()

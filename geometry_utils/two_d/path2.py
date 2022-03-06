@@ -1,7 +1,7 @@
 import copy
 import geometry_utils.three_d.path3
 
-from geometry_utils.maths_utility import is_int_or_float, is_list
+from geometry_utils.maths_utility import is_int_or_float, is_list, floats_are_close
 from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
 from geometry_utils.two_d.edge2 import Edge2, is_edge2
 from geometry_utils.two_d.vector2 import is_vector2, Vector2
@@ -274,9 +274,12 @@ class Path2:
         return self.path_length == 1 and self.list_of_edges[0].is_circle()
 
     def get_enclosed_area(self):
-        path = copy.deepcopy(self)
+        if not self.is_closed or self.path_length <= 0:
+            return None
 
+        path = copy.deepcopy(self)
         path.remove_duplicate_edges()
+        path.remove_arcs()
         if path.is_closed and path.path_length != 0:
             return path
         raise TypeError("The path must be closed and have more than one edge")
@@ -410,8 +413,15 @@ class Path2:
         return convex_hull
 
     def transform(self, transformation_matrix):
+        old_area = self.get_enclosed_area()
         for edge in self.list_of_edges:
             edge.transform(transformation_matrix)
+        new_area = self.get_enclosed_area()
+
+        if not floats_are_close(old_area, new_area):
+            for edge in self.list_of_edges:
+                if edge.is_arc():
+                    edge.clockwise = not edge.clockwise
 
     def generate_points(self):
         for count, edge in enumerate(self.list_of_edges):

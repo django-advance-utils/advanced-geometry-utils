@@ -1,6 +1,8 @@
+import copy
 import math
 
-from geometry_utils.maths_utility import is_int_or_float, DOUBLE_EPSILON, sqr, PI, is_float, HALF_PI, ONE_AND_HALF_PI
+from geometry_utils.maths_utility import is_int_or_float, DOUBLE_EPSILON, sqr, PI, is_float, HALF_PI, ONE_AND_HALF_PI, \
+    CIRCLE_DIVISIONS, TWO_PI, CIRCLE_FACTORS
 from geometry_utils.three_d.matrix4 import Matrix4
 from geometry_utils.three_d.point3 import Point3, is_point3
 from geometry_utils.three_d.vector3 import Vector3, is_vector3
@@ -426,14 +428,15 @@ class Edge3:
         self.p1.mirror_origin()
         self.p2.mirror_origin()
         self.centre = self.calculate_centre()
-        if self.clockwise:
-            self.clockwise = False
+        if self.is_arc():
+            self.clockwise = not self.clockwise
         return self
 
     def transform(self, transformation_matrix):
         self.p1 = transformation_matrix * self.p1
         self.p2 = transformation_matrix * self.p2
         self.centre = self.calculate_centre()
+
         return self
 
     def offset(self, vector):
@@ -510,6 +513,48 @@ class Edge3:
 
     def maximum_x(self):
         return max(self.p1.x, self.p2.x)
+
+    def flatten_arc(self):
+        arc_start_angle = self.get_arc_start_angle(True)
+        arc_end_angle = self.get_arc_end_angle(True)
+
+        start_number, start_diff = divmod((arc_start_angle * CIRCLE_DIVISIONS / TWO_PI) + 0.5, 1)
+        end_number, end_diff = divmod((arc_end_angle * CIRCLE_DIVISIONS / TWO_PI) + 0.5, 1)
+
+        number = int(start_number)
+        if self.clockwise:
+            end_number -= 1
+        else:
+            end_number += 1
+
+        points = []
+        temp = Point3()
+
+        while number != end_number:
+            x_factor, y_factor = CIRCLE_FACTORS[number]
+            if number == start_number:
+                temp = copy.deepcopy(self.p1)
+            elif number == end_number:
+                temp = copy.deepcopy(self.p2)
+            else:
+                temp.x = self.centre.x + self.radius * x_factor
+                temp.y = self.centre.y + self.radius * y_factor
+            part_point = Point3(temp.x - self.p1.x * x_factor, temp.y - self.p1.y * y_factor, 0.0)
+            points.append(part_point)
+            if self.clockwise:
+                number -= 1
+            else:
+                number += 1
+
+            if number >= CIRCLE_DIVISIONS:
+                if number == end_number:
+                    break
+                number = 0
+
+            list_of_arc_edges = []
+            for previous_point, point in zip(points, points[1:]):
+                list_of_arc_edges.append(Edge3(previous_point, point))
+            return list_of_arc_edges
 
 
 def is_edge3(input_variable):
