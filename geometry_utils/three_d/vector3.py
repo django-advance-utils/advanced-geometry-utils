@@ -134,6 +134,9 @@ class Vector3:
                     floats_are_close(self.y, other_vector.y))
         raise TypeError("Comparison must be with another object of Vector3")
 
+    def equal(self, other, tol=0.01):
+        return abs(self.x - other.x) <= tol and abs(self.y - other.y) <= tol and abs(self.z - other.z) <= tol
+
     def __ne__(self, other_vector):
         """
         Compares the inequality of the vector and another 3D vector.
