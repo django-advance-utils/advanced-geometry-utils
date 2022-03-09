@@ -446,6 +446,7 @@ class Edge3:
             self.p2 += vector
             self.centre = self.calculate_centre()
             self.via = self.get_via()
+            return self
         else:
             raise TypeError("Edge offset is done by an object of Vector3")
 
@@ -457,7 +458,6 @@ class Edge3:
             self.p2 = rotation_matrix * self.p2
             self.centre = self.calculate_centre()
             self.via = self.get_via()
-
             return self
         raise TypeError("Rotation angle must be a float")
 
@@ -467,11 +467,11 @@ class Edge3:
     def to_edge2(self):
         edge_2d = geometry_utils.two_d.edge2.Edge2(self.p1.to_point2(), self.p2.to_point2(),
                                                    self.radius, self.clockwise, self.large)
-        edge_2d.name = self.name
-        edge_2d.style = self.style
-        edge_2d.type = self.type
-        edge_2d.left_name = self.left_name
-        edge_2d.right_name = self.right_name
+        # edge_2d.name = self.name
+        # edge_2d.style = self.style
+        # edge_2d.type = self.type
+        # edge_2d.left_name = self.left_name
+        # edge_2d.right_name = self.right_name
 
         return edge_2d
 

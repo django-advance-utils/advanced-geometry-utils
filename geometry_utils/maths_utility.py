@@ -526,6 +526,7 @@ CIRCLE_FACTORS = [[1.000000, 0.000000],
                   [0.999925, -0.012272]]
 
 DOUBLE_EPSILON = 0.0001
+EPSILON = 0.00001
 
 
 def degrees_to_radians(theta_in_degrees):

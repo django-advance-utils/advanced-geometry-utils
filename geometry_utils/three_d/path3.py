@@ -301,6 +301,8 @@ class Path3:
             self.list_of_edges[offset_location:offset_location] = new_edge[1]
             index_offset += len(new_edge[1]) - 1
 
+        return self
+
     def get_enclosed_area(self):
         if not self.is_closed or self.path_length <= 0:
             return None
@@ -372,6 +374,7 @@ class Path3:
                 for edge in self.list_of_edges:
                     if edge.is_arc():
                         edge.clockwise = not edge.clockwise
+        return self
 
     def to_path2(self):
         path_2d = geometry_utils.two_d.path2.Path2()
@@ -383,6 +386,7 @@ class Path3:
         for edge in self.list_of_edges:
             edge.centre = edge.calculate_centre()
             edge.via = edge.get_via()
+        return self
 
 
 def is_path3(input_variable):

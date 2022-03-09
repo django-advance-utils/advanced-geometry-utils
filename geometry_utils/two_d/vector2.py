@@ -294,6 +294,13 @@ class Vector2:
         vector_3d = geometry_utils.three_d.vector3.Vector3(self.x, self.y, 0.0, self.w)
         return vector_3d
 
+    def accuracy_fix(self):
+        if -EPSILON < self.x < EPSILON:
+            self.x = 0.0
+        if -EPSILON < self.y < EPSILON:
+            self.y = 0.0
+        return self
+
 
 def is_vector2(input_variable):
     return isinstance(input_variable, Vector2)

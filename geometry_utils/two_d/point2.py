@@ -1,6 +1,6 @@
 import geometry_utils.three_d.point3
 
-from geometry_utils.maths_utility import are_ints_or_floats, floats_are_close
+from geometry_utils.maths_utility import are_ints_or_floats, floats_are_close, EPSILON
 from geometry_utils.two_d.vector2 import Vector2, is_vector2
 
 
@@ -195,6 +195,13 @@ class Point2:
         point_3d = geometry_utils.three_d.point3.Point3(self.x, self.y, 0.0, self.w)
         point_3d.name = self.name
         return point_3d
+
+    def accuracy_fix(self):
+        if -EPSILON < self.x < EPSILON:
+            self.x = 0.0
+        if -EPSILON < self.y < EPSILON:
+            self.y = 0.0
+        return self
 
 
 def is_point2(input_variable):

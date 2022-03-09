@@ -424,6 +424,7 @@ class Path2:
                 for edge in self.list_of_edges:
                     if edge.is_arc():
                         edge.clockwise = not edge.clockwise
+        return self
 
     def generate_points(self):
         for count, edge in enumerate(self.list_of_edges):

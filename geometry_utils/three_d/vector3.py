@@ -1,7 +1,8 @@
 import math
 import geometry_utils.two_d.vector2
 
-from geometry_utils.maths_utility import is_int_or_float, are_ints_or_floats, floats_are_close, radians_to_degrees
+from geometry_utils.maths_utility import is_int_or_float, are_ints_or_floats, floats_are_close, radians_to_degrees, \
+    EPSILON
 
 
 class Vector3:
@@ -284,6 +285,15 @@ class Vector3:
     def to_vector2(self):
         vector_2d = geometry_utils.two_d.vector2.Vector2(self.x, self.y, self.w)
         return vector_2d
+
+    def accuracy_fix(self):
+        if -EPSILON < self.x < EPSILON:
+            self.x = 0.0
+        if -EPSILON < self.y < EPSILON:
+            self.y = 0.0
+        if -EPSILON < self.z < EPSILON:
+            self.z = 0.0
+        return self
 
 
 def is_vector3(input_variable):
