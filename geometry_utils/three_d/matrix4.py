@@ -96,7 +96,7 @@ class Matrix4:
                         self.vals[2][2] * other.z + self.vals[2][3] * other.w)
             result.w = (self.vals[3][0] * other.x + self.vals[3][1] * other.y +
                         self.vals[3][2] * other.z + self.vals[3][3] * other.w)
-
+            result.accuracy_fix()
             return result
         raise TypeError("Multiplication must be done with a 4 x 4 matrix or 3D vector")
 

@@ -88,6 +88,7 @@ class Matrix3:
             result.x = self.vals[0][0] * other.x + self.vals[0][1] * other.y + self.vals[0][2] * other.w
             result.y = self.vals[1][0] * other.x + self.vals[1][1] * other.y + self.vals[1][2] * other.w
             result.w = self.vals[2][0] * other.x + self.vals[2][1] * other.y + self.vals[2][2] * other.w
+            result.accuracy_fix()
             return result
 
         raise TypeError("Multiplication must be done with another 3 x 3 matrix, a 2D vector, a 2D point or a scalar")
