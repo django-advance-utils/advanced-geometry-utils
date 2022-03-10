@@ -276,7 +276,7 @@ class Vector2:
 
     def signed_angle_to(self, other_vector, rad=False):
         if is_vector2(other_vector):
-            angle = self.angle_to_x_axis(rad) - other_vector.angle_to_x_axis(rad)
+            angle = other_vector.angle_to_x_axis(rad) - self.angle_to_x_axis(rad)
             return angle
 
     def angle_to_x_axis(self, rad=False):
