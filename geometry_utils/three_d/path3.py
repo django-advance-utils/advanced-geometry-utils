@@ -388,6 +388,11 @@ class Path3:
             edge.via = edge.get_via()
         return self
 
+    def get_oriented_bounding_box(self):
+        path_2d = self.to_path2()
+        box = path_2d.get_oriented_bounding_box()
+        return box
+
 
 def is_path3(input_variable):
     return isinstance(input_variable, Path3)

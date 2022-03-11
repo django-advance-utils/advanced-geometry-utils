@@ -1,7 +1,7 @@
 import math
 import geometry_utils.three_d.vector3
 
-from geometry_utils.maths_utility import is_int_or_float, are_ints_or_floats, floats_are_close, radians_to_degrees
+from geometry_utils.maths_utility import is_int_or_float, are_ints_or_floats, floats_are_close, radians_to_degrees, EPSILON
 
 
 class Vector2:
