@@ -519,6 +519,10 @@ class Edge3:
         arc_start_angle = self.get_arc_start_angle(True)
         arc_end_angle = self.get_arc_end_angle(True)
 
+        if (not self.clockwise and arc_start_angle > arc_end_angle) or (
+                self.clockwise and arc_start_angle < arc_end_angle):
+            arc_start_angle, arc_end_angle = arc_end_angle, arc_start_angle
+
         start_number, start_diff = divmod((arc_start_angle * CIRCLE_DIVISIONS / TWO_PI) + 0.5, 1)
         end_number, end_diff = divmod((arc_end_angle * CIRCLE_DIVISIONS / TWO_PI) + 0.5, 1)
 

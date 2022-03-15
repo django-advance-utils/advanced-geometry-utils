@@ -380,13 +380,14 @@ class Path2:
             raise IndexError("There must be at least three edges")
         convex_hull = Path2()
         convex_hull_list_of_points = []
-        if self.is_continuous:
-            convex_hull = copy.deepcopy(self)
-            if not self.is_closed:
-                convex_hull.close_path()
-            return convex_hull
+        # if self.is_continuous:
+        #     convex_hull = copy.deepcopy(self)
+        #     if not self.is_closed:
+        #         convex_hull.close_path()
+        #     return convex_hull
 
         path_points = self.get_list_of_points()
+        del path_points[-1]
         number_of_points = len(path_points)
 
         leftmost_point_index = self.get_leftmost_point_index(path_points)
@@ -444,9 +445,7 @@ class Path2:
             if count + 1 == self.path_length:
                 count = - 1
             next_edge = self.list_of_edges[count + 1]
-            if edge.p2 == next_edge.p1:
-                continue
-            else:
+            if edge.p2 != next_edge.p1 or count == - 1:
                 list_of_points.append(edge.p2)
 
         return list_of_points
