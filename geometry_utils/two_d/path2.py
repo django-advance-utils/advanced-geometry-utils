@@ -622,11 +622,11 @@ class Path2:
             return True, box
 
         path_points = self.get_convex_hull().get_list_of_points()
-
+        del path_points[-1]
         new_path_points = []
         number_of_new_path_points = len(new_path_points)
         for point in path_points:
-            if number_of_new_path_points == 0:
+            if len(new_path_points) == 0:
                 new_path_points.append(point)
                 continue
             if point == new_path_points[-1]:
