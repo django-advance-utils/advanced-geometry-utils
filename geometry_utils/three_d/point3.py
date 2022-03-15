@@ -204,6 +204,9 @@ class Point3:
         self.z = -self.z
         return self
 
+    def mirrored_origin(self):
+        return Point3(-self.x, -self.y, -self.z)
+
     def to_point2(self):
         point_2d = geometry_utils.two_d.point2.Point2(self.x, self.y, self.w)
         point_2d.name = self.name
