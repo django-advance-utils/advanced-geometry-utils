@@ -1,6 +1,7 @@
 import pytest
 from math import sqrt
 import geometry_utils.maths_utility as maths_utility
+from geometry_utils.three_d.vector3 import Vector3
 from geometry_utils.two_d.vector2 import Vector2
 
 
@@ -222,6 +223,7 @@ def test_vector2_angle_to_return_type(test_vector2_1, test_vector2_2):
 
 def test_vector2_angle_to_arithmetic(test_vector2_2, test_vector2_5):
     assert test_vector2_2.angle_to(test_vector2_5) == 90.0
+    assert test_vector2_2.angle_to(test_vector2_2) == 0.0
 
 
 def test_vector2_signed_angle_to_return_type(test_vector2_1, test_vector2_2):
@@ -239,3 +241,21 @@ def test_vector2_angle_to_x_axis_return_type(test_vector2_1):
 def test_vector2_angle_to_x_axis_arithmetic(test_vector2_2, test_vector2_5):
     assert test_vector2_2.angle_to_x_axis() == 0.0
     assert test_vector2_5.angle_to_x_axis() == 90.0
+
+
+def test_vector2_from_comma_string(test_vector_string):
+    assert Vector2.from_comma_string(test_vector_string) == Vector2(1.0, 2.0)
+
+
+def test_vector2_to_vector3(test_vector2_2):
+    assert test_vector2_2.to_vector3() == Vector3(1.0, 0.0, 0.0)
+
+
+def test_vector2_accuracy_fix():
+    low_accuracy_vector = Vector2(0.0000003, 0.0000005)
+    low_accuracy_vector.accuracy_fix()
+    assert low_accuracy_vector == Vector2(0.0, 0.0)
+
+
+def test_vector2_vector2_equal(test_vector2_2, test_vector2_6):
+    assert test_vector2_2.equal(test_vector2_6)

@@ -72,6 +72,11 @@ Vector2
 
 
 @pytest.fixture(scope="session")
+def test_vector_string():
+    return '1, 2'
+
+
+@pytest.fixture(scope="session")
 def test_vector2_1():
     return Vector2(1.0, 1.0)
 

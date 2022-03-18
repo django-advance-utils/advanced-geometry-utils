@@ -222,12 +222,9 @@ def test_edge2_get_arc_end_angle(test_edge2_5):
 
 def test_edge2_flatten_arc(test_edge2_5):
     list_of_arc_edges = test_edge2_5.flatten_arc()
-    arc = False
     for edge in list_of_arc_edges:
-        if edge.is_arc():
-            arc = True
+        assert not edge.is_arc()
 
-    assert not arc
     assert list_of_arc_edges[0].p1 == test_edge2_5.p1
     assert list_of_arc_edges[-1].p2 == test_edge2_5.p2
 
