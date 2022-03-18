@@ -46,8 +46,8 @@ class Vector3:
     cross(Vector3): Vector3
         Returns the cross product of vector with another 3D vector
     """
-    def __init__(self, x=None, y=None, z=None, w=0):
-        if are_ints_or_floats([x, y, w]) or (x is None and y is None and z is None):
+    def __init__(self, x=0.0, y=0.0, z=0.0, w=0):
+        if are_ints_or_floats([x, y, w]):
             self.x = x
             self.y = y
             self.z = z

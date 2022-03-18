@@ -38,8 +38,8 @@ class Point2:
         Returns the pythagorean length of the difference between the point and another 2D point
     """
 
-    def __init__(self, x=None, y=None, w=1):
-        if are_ints_or_floats([x, y, w]) or (x is None and y is None):
+    def __init__(self, x=0.0, y=0.0, w=1):
+        if are_ints_or_floats([x, y, w]):
             self.x = x
             self.y = y
             self.w = w

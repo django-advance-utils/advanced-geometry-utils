@@ -53,8 +53,8 @@ class Edge3:
     """
 
     def __init__(self,
-                 p1=Point3(),
-                 p2=Point3(),
+                 p1=Point3(0.0, 0.0, 0.0),
+                 p2=Point3(0.0, 0.0, 0.0),
                  via=None,
                  radius=0.0,
                  clockwise=False,
@@ -84,15 +84,11 @@ class Edge3:
                 raise TypeError("Fourth argument must be an int or float")
 
     def get_via(self):
-        try:
-            edge_2d = geometry_utils.two_d.edge2.Edge2(geometry_utils.two_d.point2.Point2(self.p1.x, self.p1.y),
-                                                       geometry_utils.two_d.point2.Point2(self.p2.x, self.p2.y),
-                                                       self.radius, self.clockwise, self.large)
-            edge_2d_midpoint = edge_2d.point_parametric(0.5)
-            return Point3(edge_2d_midpoint.x, edge_2d_midpoint.y, self.p1.z)
-        except TypeError:
-            return Point3()
-
+        edge_2d = geometry_utils.two_d.edge2.Edge2(geometry_utils.two_d.point2.Point2(self.p1.x, self.p1.y),
+                                                   geometry_utils.two_d.point2.Point2(self.p2.x, self.p2.y),
+                                                   self.radius, self.clockwise, self.large)
+        edge_2d_midpoint = edge_2d.point_parametric(0.5)
+        return Point3(edge_2d_midpoint.x, edge_2d_midpoint.y, self.p1.z)
 
     def __str__(self):
         return ("Edge3(p1:" + str(self.p1) + ", p2:" + str(self.p2) + ", via:" + str(self.via) +
@@ -131,17 +127,14 @@ class Edge3:
         :return:the 3D point of the arc centre
         :rtype: Point3
         """
-        try:
-            if self.is_circle():
-                return self.p1
+        if self.is_circle():
+            return self.p1
 
-            elif self.is_arc():
-                return self.to_edge2().calculate_centre().to_point3()
+        elif self.is_arc():
+            return self.to_edge2().calculate_centre().to_point3()
 
-            else:
-                return Point3((self.p1.x + self.p2.x) * 0.5, (self.p1.y + self.p2.y) * 0.5, (self.p1.z + self.p2.z) * 0.5)
-        except TypeError:
-            return Point3()
+        else:
+            return Point3((self.p1.x + self.p2.x) * 0.5, (self.p1.y + self.p2.y) * 0.5, (self.p1.z + self.p2.z) * 0.5)
 
     def is_arc(self):
         """
@@ -169,21 +162,6 @@ class Edge3:
         if is_int_or_float(s):
             if self.p1 == self.p2:
                 return self.p1
-
-            # if self.is_arc():
-            #     t = self.sweep_angle * s
-            #     norm = self.get_plane_normal()
-            #
-            #     p1v = self.p1 - self.centre
-            #
-            #     plane_x = p1v.normalised()
-            #     plane_y = norm.cross(p1v).normalised()
-            #
-            #     point = ((plane_x * (self.radius * math.cos(t))) + (plane_y * (self.radius * math.sin(t))))
-            #
-            #     point = self.centre + point
-            #
-            #     return point
 
             if self.is_arc():
                 # gotten from https://stackoverflow.com/questions/10550874/how-to-calc-a-cyclic-arc-through-3-points-and-parameterize-it-0-1-in-3d

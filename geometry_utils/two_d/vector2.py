@@ -49,8 +49,8 @@ class Vector2:
     rotate(Vector2, int/float): Vector2
         Returns the rotation of the vector at angle theta with respect to 2D vector origin
     """
-    def __init__(self, x=None, y=None, w=0):
-        if are_ints_or_floats([x, y, w]) or (x is None and y is None):
+    def __init__(self, x=0.0, y=0.0, w=0):
+        if are_ints_or_floats([x, y, w]):
             self.x = x
             self.y = y
             self.w = w
