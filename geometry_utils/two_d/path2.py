@@ -345,7 +345,9 @@ class Path2:
                 Edge2(Point2(circle_centre.x, circle_centre.y + circle_radius),
                       Point2(circle_centre.x, circle_centre.y - circle_radius), circle_radius, False, False),
                 Edge2(Point2(circle_centre.x, circle_centre.y - circle_radius),
-                      Point2(circle_centre.x, circle_centre.y + circle_radius), circle_radius, False, False)
+                      Point2(circle_centre.x, circle_centre.y + circle_radius), circle_radius, False, False),
+                Edge2(Point2(circle_centre.x, circle_centre.y + circle_radius),
+                      Point2(circle_centre.x, circle_centre.y + circle_radius))
             ]
             return self
 
