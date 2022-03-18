@@ -196,7 +196,7 @@ def test_vector2_rotate_with_vector2_theta(test_vector2_2, test_vector2_4):
         return test_vector2_2.rotate(test_vector2_4, test_vector2_4)
 
 
-def test_vector_invert_arithmetic(test_vector2_6):
+def test_vector2_invert_arithmetic(test_vector2_6):
     assert test_vector2_6.invert() == Vector2(-1.0, 0.0)
 
 
@@ -204,7 +204,7 @@ def test_vector2_inverted_return_type(test_vector2_2):
     assert isinstance(test_vector2_2.inverted(), Vector2)
 
 
-def test_vector_inverted_arithmetic(test_vector2_2):
+def test_vector2_inverted_arithmetic(test_vector2_2):
     assert test_vector2_2.inverted() == Vector2(-1.0, 0.0)
 
 
@@ -212,30 +212,30 @@ def test_vector2_get_perpendicular_return_type(test_vector2_2):
     assert isinstance(test_vector2_2.get_perpendicular(), Vector2)
 
 
-def test_vector_get_perpendicular_arithmetic(test_vector2_1):
+def test_vector2_get_perpendicular_arithmetic(test_vector2_1):
     assert test_vector2_1.get_perpendicular() == Vector2(-1.0, 1.0)
 
 
-def test_vector_angle_to_return_type(test_vector2_1, test_vector2_2):
+def test_vector2_angle_to_return_type(test_vector2_1, test_vector2_2):
     assert isinstance(test_vector2_1.angle_to(test_vector2_2), float)
 
 
-def test_vector_angle_to_arithmetic(test_vector2_2, test_vector2_5):
+def test_vector2_angle_to_arithmetic(test_vector2_2, test_vector2_5):
     assert test_vector2_2.angle_to(test_vector2_5) == 90.0
 
 
-def test_vector_signed_angle_to_return_type(test_vector2_1, test_vector2_2):
+def test_vector2_signed_angle_to_return_type(test_vector2_1, test_vector2_2):
     assert isinstance(test_vector2_1.signed_angle_to(test_vector2_2), float)
 
 
-def test_vector_signed_angle_to_arithmetic(test_vector2_2, test_vector2_5):
-    assert test_vector2_2.signed_angle_to(test_vector2_5) == -90.0
+def test_vector2_signed_angle_to_arithmetic(test_vector2_2, test_vector2_5):
+    assert test_vector2_2.signed_angle_to(test_vector2_5) == 90.0
 
 
-def test_vector_angle_to_x_axis_return_type(test_vector2_1):
+def test_vector2_angle_to_x_axis_return_type(test_vector2_1):
     assert isinstance(test_vector2_1.angle_to_x_axis(), float)
 
 
-def test_vector_angle_to_x_axis_arithmetic(test_vector2_2, test_vector2_5):
+def test_vector2_angle_to_x_axis_arithmetic(test_vector2_2, test_vector2_5):
     assert test_vector2_2.angle_to_x_axis() == 0.0
     assert test_vector2_5.angle_to_x_axis() == 90.0

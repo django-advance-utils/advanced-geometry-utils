@@ -353,7 +353,7 @@ class Path2:
                       Point2(circle_centre.x, circle_centre.y - circle_radius), circle_radius, False, False),
                 Edge2(Point2(circle_centre.x, circle_centre.y - circle_radius),
                       Point2(circle_centre.x, circle_centre.y + circle_radius), circle_radius, False, False),
-                Edge2(Point2(circle_centre.x, circle_centre.y + circle_radius),
+                Edge2(Point2(circle_centre.x, circle_centre.y + circle_radius),  # review to remove redundant line
                       Point2(circle_centre.x, circle_centre.y + circle_radius))
             ]
             return self
