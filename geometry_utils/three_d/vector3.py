@@ -46,8 +46,8 @@ class Vector3:
     cross(Vector3): Vector3
         Returns the cross product of vector with another 3D vector
     """
-    def __init__(self, x=0.0, y=0.0, z=0.0, w=0):
-        if are_ints_or_floats([x, y, z, w]):
+    def __init__(self, x=None, y=None, z=None, w=0):
+        if are_ints_or_floats([x, y, w]) or (x is None and y is None and z is None):
             self.x = x
             self.y = y
             self.z = z
@@ -62,7 +62,7 @@ class Vector3:
 
     def __add__(self, other_vector):
         """
-        Calculates the addition of vector with another 3D vector
+        Calculates the addition of 3D vector with another 3D vector
 
         :param   other_vector: the addition 3D vector
         :type    other_vector: Vector3
@@ -72,7 +72,7 @@ class Vector3:
         """
         if is_vector3(other_vector):
             return Vector3(self.x + other_vector.x, self.y + other_vector.y, self.z + other_vector.z)
-        raise TypeError("Addition must be with an object of Vector3")
+        raise TypeError("Addition of a Vector3 object must be with an object of Vector3")
 
     def __sub__(self, other_vector):
         """
@@ -86,7 +86,7 @@ class Vector3:
         """
         if is_vector3(other_vector):
             return Vector3(self.x - other_vector.x, self.y - other_vector.y, self.z - other_vector.z)
-        raise TypeError("Subtraction must be with an object of Vector3")
+        raise TypeError("Subtraction of a Vector3 object must be with an object of Vector3")
 
     def __mul__(self, scalar):
         """
@@ -100,7 +100,7 @@ class Vector3:
         """
         if is_int_or_float(scalar):
             return Vector3(self.x * scalar, self.y * scalar, self.z * scalar)
-        raise TypeError("Multiplication must be by a scalar of type int or float")
+        raise TypeError("Multiplication of a Vector3 object must be by a scalar of type int or float")
 
     def __div__(self, scalar):
         """
@@ -114,7 +114,7 @@ class Vector3:
         """
         if is_int_or_float(scalar):
             return Vector3(self.x / scalar, self.y / scalar, self.z / scalar)
-        raise TypeError("Division must be by a scalar of type int or float")
+        raise TypeError("Division of a Vector3 object must be by a scalar of type int or float")
 
     # division in Python 3.x = division in Python 2.x
     __truediv__ = __div__
@@ -176,6 +176,10 @@ class Vector3:
         return self / vector_length
 
     def normalise(self):
+        """
+        Normalises the vector
+
+        """
         vector_length = self.length()
         if floats_are_close(vector_length, 0.0):
             return self
@@ -253,10 +257,24 @@ class Vector3:
 
     @classmethod
     def from_comma_string(cls, string):
+        """
+        Creates a Vector3 object from a string
+
+        :param string: String containing the 3D point coordinates
+        :return: a Vector3 object
+        """
         v = string.split(',')
         return cls(float(v[0]), float(v[1]), float(v[2]))
 
     def angle_to(self, other_vector, rad=False):
+        """
+        Calculates the angle of the vector to another 3D vector
+
+        :param other_vector: the other 3D vector
+        :param rad: if the result should be calculated in radians
+        :rtype: float
+        :return: the angle between the vectors
+        """
         if is_vector3(other_vector):
             self_unit_vector = self.normalised()
             other_unit_vector = other_vector.normalised()
@@ -271,9 +289,20 @@ class Vector3:
             return angle
 
     def signed_angle_to(self, other_vector):
+        """
+        Calculates the signed angle of the vector to another 3D vector
+
+        :param other_vector: the other 3D vector
+        :rtype: float
+        :return: the signed angle between the vectors
+        """
         return self.to_vector2().signed_angle_to(other_vector.to_vector2())
 
     def invert(self):
+        """
+        Inverts the vector
+
+        """
         self.x *= -1
         self.y *= -1
         self.z *= -1

@@ -52,8 +52,8 @@ class Edge2:
     """
 
     def __init__(self,
-                 p1=Point2(0.0, 0.0),
-                 p2=Point2(0.0, 0.0),
+                 p1=Point2(),
+                 p2=Point2(),
                  radius=0.0,
                  clockwise=False,
                  large=False):

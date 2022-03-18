@@ -38,8 +38,8 @@ class Point2:
         Returns the pythagorean length of the difference between the point and another 2D point
     """
 
-    def __init__(self, x=0.0, y=0.0, w=1):
-        if are_ints_or_floats([x, y, w]):
+    def __init__(self, x=None, y=None, w=1):
+        if are_ints_or_floats([x, y, w]) or (x is None and y is None):
             self.x = x
             self.y = y
             self.w = w
@@ -62,7 +62,7 @@ class Point2:
         """
         if is_vector2(vector):
             return Point2(self.x + vector.x, self.y + vector.y)
-        raise TypeError("Addition must be done with an object of Vector2")
+        raise TypeError("Addition of a Point2 object must be done with an object of Vector2")
 
     def __sub__(self, other):
         """
@@ -78,7 +78,7 @@ class Point2:
             return Point2(self.x - other.x, self.y - other.y)
         if is_point2(other):
             return Vector2(self.x - other.x, self.y - other.y)
-        raise TypeError("Subtraction must be done with an object of Vector2 or Point2")
+        raise TypeError("Subtraction of a Point2 object must be done with an object of Vector2 or Point2")
 
     def __eq__(self, other_point):
         """
@@ -92,7 +92,10 @@ class Point2:
         """
         if is_point2(other_point):
             return floats_are_close(self.x, other_point.x) and floats_are_close(self.y, other_point.y)
-        raise TypeError("Comparison must be done with another object of Point2")
+        raise TypeError("Equality comparison of a Point2 object must be done with another object of Point2")
+
+    def equal(self, other, tol=0.01):
+        return abs(self.x - other.x) <= tol and abs(self.y - other.y) <= tol
 
     def __ne__(self, other_point):
         """
@@ -106,7 +109,7 @@ class Point2:
         """
         if is_point2(other_point):
             return not floats_are_close(self.x, other_point.x) or not floats_are_close(self.y, other_point.y)
-        raise TypeError("Comparison must be done with another object of Point2")
+        raise TypeError("Inequality comparison of a Point2 object must be done with another object of Point2")
 
     def __le__(self, other_point):
         """
@@ -120,7 +123,8 @@ class Point2:
         """
         if is_point2(other_point):
             return self.x <= other_point.x and self.y <= other_point.y
-        raise TypeError("Comparison must be done with another object of Point2")
+        raise TypeError("Less than or equal to comparison of a Point2 object must be done with another object of "
+                        "Point2")
 
     def __ge__(self, other_point):
         """
@@ -134,17 +138,18 @@ class Point2:
         """
         if is_point2(other_point):
             return self.x >= other_point.x and self.y >= other_point.y
-        raise TypeError("Comparison must be done with another object of Point2")
+        raise TypeError("Greater than or equal to comparison of a Point2 object must be done with another object of "
+                        "Point2")
 
     def __lt__(self, other_point):
         if is_point2(other_point):
             return self.x < other_point.x and self.y < other_point.y
-        raise TypeError("Comparison must be done with another object of Point2")
+        raise TypeError("Less than comparison of a Point2 object must be done with another object of Point2")
 
     def __gt__(self, other_point):
         if is_point2(other_point):
             return self.x > other_point.x and self.y > other_point.y
-        raise TypeError("Comparison must be done with another object of Point2")
+        raise TypeError("Greater than comparison must be done with another object of Point2")
 
     def to_vector2(self):
         """
@@ -171,13 +176,17 @@ class Point2:
 
     def mirror_y(self):
         """
-        Mirrors the x coordinate about the y-coordinate
+        Mirrors the 2D point about the y-coordinate
 
         """
         self.x = -self.x
         return self
 
     def mirror_x(self):
+        """
+        Mirrors the 2D point about the x-coordinate
+
+        """
         self.y = -self.y
         return self
 
@@ -188,10 +197,21 @@ class Point2:
 
     @classmethod
     def from_comma_string(cls, string):
+        """
+        Creates a Point2 object from a string
+
+        :param string: String containing the 2D point coordinates
+        :return: a Point2 object
+        """
         v = string.split(',')
         return cls(float(v[0]), float(v[1]))
 
     def to_point3(self):
+        """
+        Converts the 2D point to a 3D point
+
+        :return: a Point3 object
+        """
         point_3d = geometry_utils.three_d.point3.Point3(self.x, self.y, 0.0, self.w)
         point_3d.name = self.name
         return point_3d

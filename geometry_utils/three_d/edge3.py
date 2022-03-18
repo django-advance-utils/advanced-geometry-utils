@@ -53,8 +53,8 @@ class Edge3:
     """
 
     def __init__(self,
-                 p1=Point3(0.0, 0.0, 0.0),
-                 p2=Point3(0.0, 0.0, 0.0),
+                 p1=Point3(),
+                 p2=Point3(),
                  via=None,
                  radius=0.0,
                  clockwise=False,
