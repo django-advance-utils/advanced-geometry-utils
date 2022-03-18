@@ -257,5 +257,5 @@ def test_vector2_accuracy_fix():
     assert low_accuracy_vector == Vector2(0.0, 0.0)
 
 
-def test_vector2_vector2_equal(test_vector2_2, test_vector2_6):
-    assert test_vector2_2.equal(test_vector2_6)
+def test_vector2_vector2_equal(test_vector2_1, test_vector2_3):
+    assert test_vector2_1.equal(test_vector2_3)
