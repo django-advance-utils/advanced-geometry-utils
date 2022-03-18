@@ -393,6 +393,13 @@ class Path3:
         box = path_2d.get_oriented_bounding_box()
         return box
 
+    def is_incomplete_circle(self):
+        return self.path_length == 1 and self.list_of_edges[0].is_incomplete_circle()
+
+    def complete_circle(self):
+        if self.is_incomplete_circle():
+            self.list_of_edges[0].complete_circle()
+
 
 def is_path3(input_variable):
     return isinstance(input_variable, Path3)

@@ -220,47 +220,9 @@ class Edge3:
         if is_point3(point):
             if self.is_circle():
                 return 0.5
-
-            # elif self.is_arc():
-            #     p1_vector = self.p1.to_vector3()
-            #     p2_vector = self.p2.to_vector3()
-            #
-            #     arc_norm = self.get_arc_normal(self.via)
-            #
-            #     v = point - self.centre
-            #     vc = ((p1_vector + p2_vector) / 2.0) - self.centre.to_vector3()
-            #
-            #     if vc == Vector3(0.0, 0.0, 0.0):
-            #         perpendicular_1 = Vector3()
-            #         perpendicular_2 = Vector3()
-            #         perpendicular_1, perpendicular_2 = (self.p2 - self.p1).get_perpendicular(perpendicular_1,
-            #                                                                                  perpendicular_2)
-            #         vc = perpendicular_1
-            #
-            #         dp = vc.dot(self.via - self.p1)
-            #
-            #         if dp < 0:
-            #             vc.invert()
-            #     else:
-            #         if self.large:
-            #             vc.invert()
-            #
-            #     vc.normalise()
-            #     v.normalise()
-            #
-            #     a = math.atan2(v.cross(vc).dot(arc_norm), vc.dot(v))
-            #
-            #     if a > PI:
-            #         a -= TWO_PI
-            #
-            #     a = a / self.sweep_angle
-            #
-            #     return a + 0.5
             elif self.is_arc():
-                p1_2d = geometry_utils.two_d.point2.Point2(self.p1.x, self.p1.y)
-                p2_2d = geometry_utils.two_d.point2.Point2(self.p2.x, self.p2.y)
-                point_2d = geometry_utils.two_d.point2.Point2(point.x, point.y)
-                edge_2d = geometry_utils.two_d.edge2.Edge2(p1_2d, p2_2d, self.radius, self.clockwise, self.large)
+                edge_2d = self.to_edge2()
+                point_2d = point.to_point2()
                 s = edge_2d.parametric_point(point_2d)
                 return s
             elif self.is_line:
@@ -387,6 +349,14 @@ class Edge3:
             return self
         else:
             raise TypeError("Edge offset is done by an object of Vector3")
+
+    def is_incomplete_circle(self):
+        return self.is_arc() and self.p2 != self.p1
+
+    def complete_circle(self):
+        if self.is_incomplete_circle():
+            self.p2 = copy.deepcopy(self.p1)
+        return self
 
     def rotate(self, rotation_angle):
         if is_float(rotation_angle):

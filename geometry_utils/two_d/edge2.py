@@ -335,6 +335,14 @@ class Edge2:
     def is_circle(self):
         return self.is_arc() and self.p1 == self.p2
 
+    def is_incomplete_circle(self):
+        return self.is_arc() and self.p2 != self.p1
+
+    def complete_circle(self):
+        if self.is_incomplete_circle():
+            self.p2 = copy.deepcopy(self.p1)
+        return self
+
     def is_line(self):
         return (not self.is_arc()) and (not self.p1 == self.p2)
 
