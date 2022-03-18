@@ -122,15 +122,19 @@ class Edge2:
         :return:the 2D point of the arc centre
         :rtype: Point2
         """
-        if self.p1 == self.p2:
-            return self.p1
+        try:
+            if self.p1 == self.p2:
+                return self.p1
 
-        if not self.is_arc():
-            return Point2((self.p1.x + self.p2.x) * 0.5, (self.p1.y + self.p2.y) * 0.5)
+            if not self.is_arc():
+                return Point2((self.p1.x + self.p2.x) * 0.5, (self.p1.y + self.p2.y) * 0.5)
 
-        ellipse = Ellipse(start = self.p1, end = self.p2, major_radius = self.radius, minor_radius = self.radius,
-                          clockwise = self.clockwise, large_arc = self.large, angle=0.0)
-        return ellipse.centre
+            ellipse = Ellipse(start = self.p1, end = self.p2, major_radius = self.radius, minor_radius = self.radius,
+                              clockwise = self.clockwise, large_arc = self.large, angle=0.0)
+            return ellipse.centre
+
+        except TypeError:
+            return Point2()
 
     def is_arc(self):
         """
