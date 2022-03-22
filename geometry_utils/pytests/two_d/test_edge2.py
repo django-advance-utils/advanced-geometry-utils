@@ -258,8 +258,8 @@ def test_edge2_mirror_y():
 
 
 def test_edge2_mirror_origin():
-    assert (Edge2(Point2(1, 2), Point2(2, 3), 1.0, False).mirror_origin() ==
-            Edge2(Point2(-1, -2), Point2(-2, -3), 1.0, True))
+    assert (Edge2(Point2(1, 1), Point2(3, 1), 1.0, False).mirror_origin() ==
+            Edge2(Point2(-1, -1), Point2(-3, -1), 1.0, True))
 
 
 def test_edge2_is_circle(test_edge2_6):

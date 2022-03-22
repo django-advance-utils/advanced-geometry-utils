@@ -195,11 +195,11 @@ def test_point3_mirror_origin():
 
 
 def test_point3_mirrored_origin():
-    assert Point3(1.0, 1.0, 1.0).mirrored_origin() == Point3(-1.0, 1.0, -1.0)
+    assert Point3(1.0, 1.0, 1.0).mirrored_origin() == Point3(-1.0, -1.0, -1.0)
 
 
 def test_point3_to_point2(test_point3_2):
-    assert test_point3_2.to_vector2() == Point2(1.0, 0.0)
+    assert test_point3_2.to_point2() == Point2(1.0, 0.0)
 
 
 def test_point3_point3_equal(test_vector3_1, test_vector3_3):

@@ -238,7 +238,7 @@ def test_edge3_2():
 def test_edge3_3():
     p1 = Point3(0.0, 0.0, 0.0)
     p2 = Point3(2.0, 0.0, 0.0)
-    return Edge2(p1, p2, 1.0, True)
+    return Edge3(p1, p2, 1.0, True)
 
 
 @pytest.fixture(scope="session")

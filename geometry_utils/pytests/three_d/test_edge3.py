@@ -16,7 +16,9 @@ def test_vector3_string_parameter():
 def test_edge3_print_string(test_edge3_1):
     assert (test_edge3_1.__str__() ==
             "Edge3(p1:Point3(x:0.00, y:0.00, z:0.00), p2:Point3(x:0.00, y:0.00, z:0.00), "
-            "centre:Point3(x:0.00, y:0.00, z:0.00), radius: 0, clockwise:False, large:False)")
+            "via:Point3(x:0.00, y:0.00, z:0.00), centre:Point3(x:0.00, y:0.00, z:0.00), "
+            "radius: 0, clockwise:False, large:False)")
+
 
 def test_edge3_point_parametric(test_edge3_1, test_edge3_2):
     assert test_edge3_2.point_parametric(0.0) == test_edge3_2.p1

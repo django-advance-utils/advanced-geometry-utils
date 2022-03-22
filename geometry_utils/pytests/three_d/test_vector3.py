@@ -11,7 +11,7 @@ def test_vector3_string_parameter():
 
 
 def test_vector3_print_string(test_vector3_1):
-    assert test_vector3_1.__str__() == "Vector2(x:1.00, y:1.00, z:1.00)"
+    assert test_vector3_1.__str__() == "Vector3(x:1.00, y:1.00, z:1.00)"
 
 '''
 Vector Addition Tests
@@ -187,7 +187,7 @@ def test_reversed_vector3_arithmetic(test_vector3_1, test_vector3_4):
 
 
 def test_vector3_get_perpendicular_arithmetic(test_vector3_2, test_vector3_4, test_vector3_5):
-    assert test_vector3_2.get_perpendicular(test_vector3_4, test_vector3_5) == Vector3(0, 0, 1), Vector3(0, -1, 0)
+    assert test_vector3_2.get_perpendicular(test_vector3_4, test_vector3_5) == (Vector3(0, 0, 1), Vector3(0, -1, 0))
 
 
 def test_vector3_from_comma_string(test_3d_string):
