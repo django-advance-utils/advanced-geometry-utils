@@ -10,8 +10,10 @@ def test_vector2_string_parameter():
         return Vector2("0", "0", "0")
 
 
-def test_vector2_print_string(test_vector2_1):
-    assert test_vector2_1.__str__() == "Vector2(x:1.00, y:1.00)"
+def test_edge2_print_string(test_edge2_1):
+    assert (test_edge2_1.__str__() ==
+            "Edge2(p1:Point2(x:0.00, y:0.00), p2:Point2(x:0.00, y:0.00), "
+            "centre:Point2(x:0.00, y:0.00), radius: 0, clockwise:False, large:False)")
 
 
 '''
@@ -243,8 +245,8 @@ def test_vector2_angle_to_x_axis_arithmetic(test_vector2_2, test_vector2_5):
     assert test_vector2_5.angle_to_x_axis() == 90.0
 
 
-def test_vector2_from_comma_string(test_vector_string):
-    assert Vector2.from_comma_string(test_vector_string) == Vector2(1.0, 2.0)
+def test_vector2_from_comma_string(test_2d_string):
+    assert Vector2.from_comma_string(test_2d_string) == Vector2(1.0, 2.0)
 
 
 def test_vector2_to_vector3(test_vector2_2):

@@ -1,5 +1,6 @@
 import pytest
 
+from geometry_utils.three_d.point3 import Point3
 from geometry_utils.two_d.point2 import Point2
 from geometry_utils.two_d.vector2 import Vector2
 
@@ -178,5 +179,27 @@ def test_point2_distance_to_float(test_point2_1):
         return test_point2_1.distance_to(9.0)
 
 
+def test_point2_mirror_x():
+    assert Point2(1.0, 1.0).mirror_x() == Point2(1.0, -1.0)
+
+
 def test_point2_mirror_y():
     assert Point2(1.0, 1.0).mirror_y() == Point2(-1.0, 1.0)
+
+
+def test_point2_point2_equal(test_point2_1, test_point2_3):
+    assert test_point2_1.equal(test_point2_3)
+
+
+def test_point2_from_comma_string(test_2d_string):
+    assert Point2.from_comma_string(test_2d_string) == Point2(1.0, 2.0)
+
+
+def test_point2_to_point3(test_point2_2):
+    assert test_point2_2.to_point3() == Point3(1.0, 0.0, 0.0)
+
+
+def test_point2_accuracy_fix():
+    low_accuracy_point = Point2(0.0000003, 0.0000005)
+    low_accuracy_point.accuracy_fix()
+    assert low_accuracy_point == Point2(0.0, 0.0)

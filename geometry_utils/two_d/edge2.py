@@ -252,7 +252,7 @@ class Edge2:
                 if self.clockwise:
                     return self.get_arc_normal(point).get_perpendicular()
                 else:
-                    return self.get_arc_normal(point).get_perpendicular().inverse()
+                    return self.get_arc_normal(point).get_perpendicular().inverted()
             raise TypeError("Arc tangent can not be derived for a line")
         raise TypeError("Input argument must be an object of Point2")
 
@@ -334,14 +334,6 @@ class Edge2:
 
     def is_circle(self):
         return self.is_arc() and self.p1 == self.p2
-
-    def is_incomplete_circle(self):
-        return self.is_arc() and self.p2 != self.p1
-
-    def complete_circle(self):
-        if self.is_incomplete_circle():
-            self.p2 = copy.deepcopy(self.p1)
-        return self
 
     def is_line(self):
         return (not self.is_arc()) and (not self.p1 == self.p2)

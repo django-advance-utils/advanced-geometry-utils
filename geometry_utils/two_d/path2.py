@@ -274,11 +274,14 @@ class Path2:
         return self.path_length == 1 and self.list_of_edges[0].is_circle()
 
     def is_incomplete_circle(self):
-        return self.path_length == 1 and self.list_of_edges[0].is_incomplete_circle()
+        return (self.path_length == 1 and
+                self.list_of_edges[0].is_arc() and
+                self.list_of_edges[0].p2 != self.list_of_edges[0].p1)
 
     def complete_circle(self):
         if self.is_incomplete_circle():
-            self.list_of_edges[0].complete_circle()
+            self.list_of_edges[0].p2 = copy.deepcopy(self.list_of_edges[0].p1)
+        return self
 
     def get_enclosed_area(self):
         if not self.is_closed or self.path_length <= 0:

@@ -66,13 +66,18 @@ def test_point3_3():
     return Point3(1.0, 1.0, 1.0)
 
 
+@pytest.fixture(scope="session")
+def test_point3_4():
+    return Point3(0.0, 0.0, 0.0)
+
+
 '''
 Vector2
 '''
 
 
 @pytest.fixture(scope="session")
-def test_vector_string():
+def test_2d_string():
     return '1, 2'
 
 
@@ -112,6 +117,11 @@ Vector3
 
 
 @pytest.fixture(scope="session")
+def test_3d_string():
+    return '1, 2, 3'
+
+
+@pytest.fixture(scope="session")
 def test_vector3_1():
     return Vector3(1.0, 1.0, 1.0)
 
@@ -129,6 +139,16 @@ def test_vector3_3():
 @pytest.fixture(scope="session")
 def test_vector3_4():
     return Vector3(0.0, 0.0, 0.0)
+
+
+@pytest.fixture(scope="session")
+def test_vector3_5():
+    return Vector3(0.0, 1.0, 0.0)
+
+
+@pytest.fixture(scope="session")
+def test_vector3_6():
+    return Vector3(1.0, 0.0, 0.0)
 
 
 '''
@@ -212,6 +232,20 @@ def test_edge3_2():
     p1 = Point3(0.0, 0.0, 0.0)
     p2 = Point3(2.0, 2.0, 2.0)
     return Edge3(p1, p2)
+
+
+@pytest.fixture(scope="session")
+def test_edge3_3():
+    p1 = Point3(0.0, 0.0, 0.0)
+    p2 = Point3(2.0, 0.0, 0.0)
+    return Edge2(p1, p2, 1.0, True)
+
+
+@pytest.fixture(scope="session")
+def test_edge3_4():
+    p1 = Point3(0.0, 0.0, 0.0)
+    p2 = Point3(0.0, 0.0, 0.0)
+    return Edge3(p1, p2, 1, True, True)
 
 
 '''
