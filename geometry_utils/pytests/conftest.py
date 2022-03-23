@@ -365,6 +365,32 @@ def path2_3():
     return path
 
 
+@pytest.fixture(scope="session")
+def path2_4():
+    path = Path2()
+    path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 1.0)),
+                          Edge2(Point2(1.0, 1.0), Point2(2.0, 2.0)),
+                          Edge2(Point2(2.0, 2.0), Point2(0.0, 0.0))]
+    return path
+
+
+@pytest.fixture(scope="session")
+def path2_5():
+    path = Path2()
+    path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 1.0)),
+                          Edge2(Point2(1.0, 1.0), Point2(2.0, 2.0)),
+                          Edge2(Point2(2.0, 2.0), Point2(3.0, 3.0)),
+                          Edge2(Point2(3.0, 3.0), Point2(0.0, 0.0))]
+    return path
+
+
+@pytest.fixture(scope="session")
+def path2_6():
+    path = Path2()
+    path.list_of_edges = [Edge2(Point2(1.0, 1.0), Point2(1.0, 1.0), 1.0)]
+    return path
+
+
 '''
 Path3
 '''
