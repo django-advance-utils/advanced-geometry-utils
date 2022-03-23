@@ -83,14 +83,6 @@ class Path2:
             return self.list_of_edges[-1]
         raise IndexError("Can not find the last edge of an empty list of edges")
 
-    def is_first_edge(self, edge):
-        if is_edge2(edge):
-            return edge is self.get_first_edge()
-
-    def is_last_edge(self, edge):
-        if is_edge2(edge):
-            return edge is self.get_last_edge()
-
     @property
     def path_length(self):
         """
@@ -168,7 +160,7 @@ class Path2:
     def to_tuple_list(self):
         path_tuple_list = []
         for edge in self.list_of_edges:
-            path_tuple_list.append((edge.p1, edge.p2))
+            path_tuple_list.append(((edge.p1.x, edge.p1.y), (edge.p2.x, edge.p2.y)))
         return path_tuple_list
 
     def remove_duplicate_edges(self):
@@ -281,6 +273,7 @@ class Path2:
     def complete_circle(self):
         if self.is_incomplete_circle():
             self.list_of_edges[0].p2 = copy.deepcopy(self.list_of_edges[0].p1)
+            self.update_path()
         return self
 
     def get_enclosed_area(self):

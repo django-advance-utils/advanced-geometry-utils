@@ -28,9 +28,10 @@ def test_path2_path2_addition(path2_1):
 
 def test_path2_set_edges(path2_1):
     path = Path2()
-    assert path.set_edges([Edge2(Point2(0.0, 0.0), Point2(1.0, 1.0)),
+    path.set_edges([Edge2(Point2(0.0, 0.0), Point2(1.0, 1.0)),
                            Edge2(Point2(1.0, 1.0), Point2(2.0, 2.0)),
-                           Edge2(Point2(2.0, 2.0), Point2(0.0, 0.0))]) == path2_1
+                           Edge2(Point2(2.0, 2.0), Point2(0.0, 0.0))])
+    assert path == path2_1
 
 
 def test_path2_set_edges_with_float_argument():
@@ -49,20 +50,12 @@ def test_path2_get_first_edge_with_empty_list():
 
 
 def test_path2_get_last_edge(path2_1):
-    assert path2_1.get_first_edge() == Edge2(Point2(2.0, 2.0), Point2(0.0, 0.0))
+    assert path2_1.get_last_edge() == Edge2(Point2(2.0, 2.0), Point2(0.0, 0.0))
 
 
 def test_path2_get_last_edge_with_empty_list():
     with pytest.raises(IndexError):
         return Path2().get_last_edge()
-
-
-def test_path2_is_first_edge(path2_1):
-    assert path2_1.is_first_edge(Edge2(Point2(0.0, 0.0), Point2(1.0, 1.0)))
-
-
-def test_path2_is_last_edge(path2_1):
-    assert path2_1.is_last_edge(Edge2(Point2(2.0, 2.0), Point2(0.0, 0.0)))
 
 
 def test_path2_path_length(path2_1):
@@ -219,7 +212,7 @@ def test_path2_complete_circle(path2_6):
 def test_path2_is_rectangular(path2_1, path2_6):
     assert not path2_1.is_rectangular()
     assert not path2_6.is_rectangular()
-    
+
 
 def test_path2_to_tuple_list(path2_1):
     assert path2_1.to_tuple_list() == [((0.0, 0.0), (1.0, 1.0)), ((1.0, 1.0), (2.0, 2.0)), ((2.0, 2.0), (0.0, 0.0))]
