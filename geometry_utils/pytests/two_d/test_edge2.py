@@ -180,7 +180,7 @@ def test_edge2_arc_normal_arithmetic_with_float_argument(test_edge2_2):
 
 
 def test_edge2_get_line_normal(test_edge2_2):
-    assert test_edge2_2.get_line_tangent() == Vector2(-1.0 / math.sqrt(2.0), 1.0 / math.sqrt(2.0))
+    assert test_edge2_2.get_line_tangent() == Vector2(1.0 / math.sqrt(2.0), 1.0 / math.sqrt(2.0))
 
 
 def test_edge2_get_line_tangent_return_type(test_edge2_4):
@@ -197,11 +197,11 @@ def test_edge2_arc_get_line_tangent(test_edge2_5):
 
 
 def test_edge2_get_arc_tangent_return_type(test_edge2_5):
-    assert isinstance(test_edge2_5.get_arc_tangent(), Vector2)
+    assert isinstance(test_edge2_5.get_arc_tangent(Point2(0, 1)), Vector2)
 
 
 def test_edge2_get_arc_tangent_arithmetic(test_edge2_5, test_edge2_2):
-    assert test_edge2_5.get_arc_tangent() == Vector2(-1.0, 0.0)
+    assert test_edge2_5.get_arc_tangent(Point2(0, 1)) == Vector2(1.0 / math.sqrt(2.0), 1.0 / math.sqrt(2.0))
 
 
 def test_edge2_line_get_arc_tangent(test_edge2_2, test_point2_3):
@@ -267,7 +267,7 @@ def test_edge2_is_circle(test_edge2_6):
 
 
 def test_edge2_get_arc_start_angle(test_edge2_5):
-    assert test_edge2_5.get_arc_start_angle() == 360.0
+    assert test_edge2_5.get_arc_start_angle() == 180.0
 
 
 def test_edge2_get_arc_end_angle(test_edge2_5):
