@@ -97,8 +97,9 @@ def test_path2_closed(path2_1):
     assert path2_1.is_closed
 
 
-def test_path2_get_path_bounds(path2_1):
+def test_path2_get_path_bounds(path2_1, path2_8):
     assert path2_1.get_bounds() == AxisAlignedBox2(Point2(0.0, 0.0), Point2(2.0, 2.0))
+    assert path2_8.get_bounds() == AxisAlignedBox2(Point2(0.0, 0.0), Point2(1.0, 1.5))
 
 
 def test_path2_remove_duplicate_edges(path2_4):
@@ -332,3 +333,6 @@ def test_path2_get_points_orientation(path2_7):
 def test_path2_get_points_orientation_with_float_argument(path2_7):
     with pytest.raises(TypeError):
         return path2_7.get_points_orientation(9.0, 9.0)
+
+
+def test_path2_transfor
