@@ -221,8 +221,6 @@ def test_path2_make_continuous():
     continuous_path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(2.0, 2.0), 1.0, True),
                                      Edge2(Point2(2.0, 2.0), Point2(0.0, 0.0))]
 
-    del path
-    del continuous_path
 
 
 def test_path2_is_circle(path2_6):
@@ -259,8 +257,6 @@ def test_path2_flip_vertical_centre():
                                                   Edge2(Point2(0.0, 0.0), Point2(0.0, 1.0))]
     assert path == vertical_centre_flipped_path
 
-    del path
-    del vertical_centre_flipped_path
 
 
 def test_path2_flip_vertical():
@@ -279,8 +275,6 @@ def test_path2_flip_vertical():
                                            Edge2(Point2(1.0, 1.0), Point2(0.0, 1.0))]
     assert path == vertical_flipped_path
 
-    del path
-    del vertical_flipped_path
 
 
 def test_path2_flip_horizontal_centre():
@@ -298,9 +292,6 @@ def test_path2_flip_horizontal_centre():
                                                     Edge2(Point2(0.0, 1.0), Point2(1.0, 1.0), 0.5, True),
                                                     Edge2(Point2(1.0, 1.0), Point2(1.0, 0.0))]
     assert path == horizontal_centre_flipped_path
-
-    del path
-    del horizontal_centre_flipped_path
 
 
 def test_path2_to_path3(path2_1):
@@ -335,4 +326,19 @@ def test_path2_get_points_orientation_with_float_argument(path2_7):
         return path2_7.get_points_orientation(9.0, 9.0)
 
 
-def test_path2_transfor
+def test_path2_transform(test_matrix3_3):
+    path = Path2()
+    path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 0.0)),
+                          Edge2(Point2(1.0, 0.0), Point2(1.0, 1.0)),
+                          Edge2(Point2(1.0, 1.0), Point2(0.0, 1.0), 0.5),
+                          Edge2(Point2(0.0, 1.0), Point2(0.0, 0.0))]
+
+    path.transform(test_matrix3_3)
+
+    transformed_path = Path2()
+    transformed_path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(-1.0, 0.0)),
+                          Edge2(Point2(-1.0, 0.0), Point2(-1.0, -1.0)),
+                          Edge2(Point2(-1.0, -1.0), Point2(0.0, -1.0), 0.5),
+                          Edge2(Point2(0.0, -1.0), Point2(0.0, 0.0))]
+
+    assert path == transformed_path
