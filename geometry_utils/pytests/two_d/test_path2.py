@@ -1,10 +1,30 @@
 import pytest
 
+from geometry_utils.three_d.edge3 import Edge3
+from geometry_utils.three_d.path3 import Path3
+from geometry_utils.three_d.point3 import Point3
 from geometry_utils.two_d.axis_aligned_box2 import AxisAlignedBox2
 from geometry_utils.two_d.edge2 import Edge2
 from geometry_utils.two_d.path2 import Path2
 from geometry_utils.two_d.point2 import Point2
 from geometry_utils.two_d.vector2 import Vector2
+
+
+def test_path2_is_closed_with_empty_path():
+    assert not Path2().is_closed
+
+
+def test_path2_is_continuous_with_empty_path():
+    assert not Path2().is_continuous
+
+
+def test_path2_get_enclosed_area(path2_7):
+    assert path2_7.get_enclosed_area() == 1.0
+
+
+def test_path2_get_list_of_points(path2_1):
+    assert path2_1.get_list_of_points() == [Point2(0.0, 0.0), Point2(1.0, 0.0), Point2(1.0, 1.0), Point2(0.0, 1.0),
+                                            Point2(0.0, 0.0)]
 
 
 def test_path2_path2_equality(path2_1, path2_2, path2_4):
@@ -29,8 +49,8 @@ def test_path2_path2_addition(path2_1):
 def test_path2_set_edges(path2_1):
     path = Path2()
     path.set_edges([Edge2(Point2(0.0, 0.0), Point2(1.0, 1.0)),
-                           Edge2(Point2(1.0, 1.0), Point2(2.0, 2.0)),
-                           Edge2(Point2(2.0, 2.0), Point2(0.0, 0.0))])
+                    Edge2(Point2(1.0, 1.0), Point2(2.0, 2.0)),
+                    Edge2(Point2(2.0, 2.0), Point2(0.0, 0.0))])
     assert path == path2_1
 
 
@@ -66,6 +86,12 @@ def test_path2_continuity(path2_1, path2_2, path2_3):
     assert path2_1.is_continuous
     assert path2_2.is_continuous
     assert not path2_3.is_continuous
+
+
+def test_path2_is_rectangular(path2_1, path2_6, path2_7):
+    assert path2_7.is_rectangular()
+    assert not path2_1.is_rectangular()
+    assert not path2_6.is_rectangular()
 
 
 def test_path2_closed(path2_1):
@@ -209,10 +235,72 @@ def test_path2_complete_circle(path2_6):
     assert path.complete_circle() == path2_6
 
 
-def test_path2_is_rectangular(path2_1, path2_6):
-    assert not path2_1.is_rectangular()
-    assert not path2_6.is_rectangular()
-
-
 def test_path2_to_tuple_list(path2_1):
     assert path2_1.to_tuple_list() == [((0.0, 0.0), (1.0, 1.0)), ((1.0, 1.0), (2.0, 2.0)), ((2.0, 2.0), (0.0, 0.0))]
+
+
+def test_path2_is_curved_top(path2_8):
+    assert path2_8.is_curved_top()
+
+
+def test_path2_flip_vertical_centre():
+    path = Path2()
+    path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 0.0)),
+                          Edge2(Point2(1.0, 0.0), Point2(1.0, 1.0)),
+                          Edge2(Point2(1.0, 1.0), Point2(0.0, 1.0), 0.5),
+                          Edge2(Point2(0.0, 1.0), Point2(0.0, 0.0))]
+
+    vertical_centre_flipped_path = Path2()
+    vertical_centre_flipped_path.list_of_edges = [Edge2(Point2(0.0, 1.0), Point2(1.0, 1.0)),
+                                                  Edge2(Point2(1.0, 1.0), Point2(1.0, 0.0)),
+                                                  Edge2(Point2(1.0, 0.0), Point2(0.0, 0.0), 0.5, True),
+                                                  Edge2(Point2(0.0, 0.0), Point2(0.0, 1.0))]
+    assert path == vertical_centre_flipped_path
+
+    del path
+    del vertical_centre_flipped_path
+
+
+def test_path2_flip_vertical():
+    path = Path2()
+    path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 0.0)),
+                          Edge2(Point2(1.0, 0.0), Point2(1.0, 1.0)),
+                          Edge2(Point2(1.0, 1.0), Point2(0.0, 1.0), 0.5),
+                          Edge2(Point2(0.0, 1.0), Point2(0.0, 0.0))]
+
+    vertical_flipped_path = Path2()
+    vertical_flipped_path.list_of_edges = [Edge2(Point2(0.0, 1.0), Point2(0.0, 0.0)),
+                                           Edge2(Point2(0.0, 0.0), Point2(1.0, 0.0), 0.5),
+                                           Edge2(Point2(1.0, 0.0), Point2(1.0, 1.0)),
+                                           Edge2(Point2(1.0, 1.0), Point2(0.0, 1.0))]
+    assert path == vertical_flipped_path
+
+    del path
+    del vertical_flipped_path
+
+
+def test_path2_flip_horizontal_centre():
+    path = Path2()
+    path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 0.0)),
+                          Edge2(Point2(1.0, 0.0), Point2(1.0, 1.0)),
+                          Edge2(Point2(1.0, 1.0), Point2(0.0, 1.0), 0.5),
+                          Edge2(Point2(0.0, 1.0), Point2(0.0, 0.0))]
+
+    horizontal_centre_flipped_path = Path2()
+    horizontal_centre_flipped_path.list_of_edges = [Edge2(Point2(1.0, 0.0), Point2(0.0, 0.0)),
+                                                    Edge2(Point2(0.0, 0.0), Point2(0.0, 1.0)),
+                                                    Edge2(Point2(0.0, 1.0), Point2(1.0, 1.0), 0.5, True),
+                                                    Edge2(Point2(1.0, 1.0), Point2(1.0, 0.0))]
+    assert path == horizontal_centre_flipped_path
+
+    del path
+    del horizontal_centre_flipped_path
+
+
+def test_path2_to_path3(path2_1):
+    path_3d = Path3()
+    path_3d.list_of_edges = [Edge3(Point3(0.0, 0.0, 0.0), Point3(1.0, 1.0, 0.0)),
+                             Edge3(Point3(1.0, 1.0, 0.0), Point3(2.0, 2.0, 0.0)),
+                             Edge3(Point3(2.0, 2.0, 0.0), Point3(0.0, 0.0, 0.0))]
+
+    assert path2_1.to_path3() == path_3d

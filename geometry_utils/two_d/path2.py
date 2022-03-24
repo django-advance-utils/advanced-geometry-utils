@@ -438,9 +438,7 @@ class Path2:
             if count + 1 == self.path_length:
                 count = - 1
             next_edge = self.list_of_edges[count + 1]
-            if edge.p2 == next_edge.p1:
-                continue
-            else:
+            if edge.p2 != next_edge.p1 or count == - 1:
                 yield edge.p2
 
     def get_list_of_points(self):
@@ -629,7 +627,6 @@ class Path2:
         path_points = self.get_convex_hull().get_list_of_points()
         del path_points[-1]
         new_path_points = []
-        number_of_new_path_points = len(new_path_points)
         for point in path_points:
             if len(new_path_points) == 0:
                 new_path_points.append(point)
@@ -679,6 +676,8 @@ class Path2:
             edge.p2.y -= p2_offset * 2
             if edge.is_arc():
                 edge.clockwise = not edge.clockwise
+        self.update_path()
+        return self
 
     def flip_vertical(self, offset_y=0):
         self.reverse()
@@ -690,6 +689,8 @@ class Path2:
 
             if edge.is_arc():
                 edge.clockwise = not edge.clockwise
+        self.update_path()
+        return self
 
     def flip_horizontal_center(self):
         minimum_x = min(edge.minimum_x() for edge in self.list_of_edges)
@@ -705,8 +706,10 @@ class Path2:
             edge.p1.x -= p1_offset * 2
             edge.p2.x -= p2_offset * 2
 
-            if edge.is_arc:
+            if edge.is_arc():
                 edge.clockwise = not edge.clockwise
+        self.update_path()
+        return self
 
     def update_path(self):
         for edge in self.list_of_edges:
