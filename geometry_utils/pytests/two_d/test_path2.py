@@ -23,8 +23,7 @@ def test_path2_get_enclosed_area(path2_7):
 
 
 def test_path2_get_list_of_points(path2_1):
-    assert path2_1.get_list_of_points() == [Point2(0.0, 0.0), Point2(1.0, 0.0), Point2(1.0, 1.0), Point2(0.0, 1.0),
-                                            Point2(0.0, 0.0)]
+    assert path2_1.get_list_of_points() == [Point2(0.0, 0.0), Point2(1.0, 1.0), Point2(2.0, 2.0), Point2(0.0, 0.0)]
 
 
 def test_path2_path2_equality(path2_1, path2_2, path2_4):
@@ -250,6 +249,8 @@ def test_path2_flip_vertical_centre():
                           Edge2(Point2(1.0, 1.0), Point2(0.0, 1.0), 0.5),
                           Edge2(Point2(0.0, 1.0), Point2(0.0, 0.0))]
 
+    path.flip_vertical_centre()
+
     vertical_centre_flipped_path = Path2()
     vertical_centre_flipped_path.list_of_edges = [Edge2(Point2(0.0, 1.0), Point2(1.0, 1.0)),
                                                   Edge2(Point2(1.0, 1.0), Point2(1.0, 0.0)),
@@ -268,6 +269,8 @@ def test_path2_flip_vertical():
                           Edge2(Point2(1.0, 1.0), Point2(0.0, 1.0), 0.5),
                           Edge2(Point2(0.0, 1.0), Point2(0.0, 0.0))]
 
+    path.flip_vertical()
+
     vertical_flipped_path = Path2()
     vertical_flipped_path.list_of_edges = [Edge2(Point2(0.0, 1.0), Point2(0.0, 0.0)),
                                            Edge2(Point2(0.0, 0.0), Point2(1.0, 0.0), 0.5),
@@ -285,6 +288,8 @@ def test_path2_flip_horizontal_centre():
                           Edge2(Point2(1.0, 0.0), Point2(1.0, 1.0)),
                           Edge2(Point2(1.0, 1.0), Point2(0.0, 1.0), 0.5),
                           Edge2(Point2(0.0, 1.0), Point2(0.0, 0.0))]
+
+    path.flip_horizontal_center()
 
     horizontal_centre_flipped_path = Path2()
     horizontal_centre_flipped_path.list_of_edges = [Edge2(Point2(1.0, 0.0), Point2(0.0, 0.0)),
