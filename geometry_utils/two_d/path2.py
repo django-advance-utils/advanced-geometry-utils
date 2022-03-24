@@ -356,7 +356,7 @@ class Path2:
 
     def get_points_orientation(self, list_of_point_indices, list_of_points):
         # https://www.geeksforgeeks.org/convex-hull-set-1-jarviss-algorithm-or-wrapping/
-        if is_list(list_of_point_indices):
+        if is_list(list_of_point_indices) and is_list(list_of_points):
             val = (((list_of_points[list_of_point_indices[1]].y - list_of_points[list_of_point_indices[0]].y) *
                     (list_of_points[list_of_point_indices[2]].x - list_of_points[list_of_point_indices[1]].x)) -
                    ((list_of_points[list_of_point_indices[1]].x - list_of_points[list_of_point_indices[0]].x) *

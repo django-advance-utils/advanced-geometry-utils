@@ -309,3 +309,26 @@ def test_path2_to_path3(path2_1):
                              Edge3(Point3(2.0, 2.0, 0.0), Point3(0.0, 0.0, 0.0))]
 
     assert path2_1.to_path3() == path_3d
+
+
+def test_path2_convert_circle_to_edges():
+    path = Path2()
+    path.list_of_edges = [Edge2(Point2(1.0, 1.0), Point2(1.0, 1.0), 1.0)]
+    path.convert_circle_to_edges()
+
+    circle = Path2()
+    circle.list_of_edges = [Edge2(Point2(1.0, 2.0), Point2(1.0, 0.0), 1.0),
+                            Edge2(Point2(1.0, 0.0), Point2(1.0, 2.0), 1.0),
+                            Edge2(Point2(1.0, 2.0), Point2(1.0, 2.0))]
+
+
+def test_path2_get_points_orientation(path2_7):
+    points = path2_7.get_list_of_points()
+    assert path2_7.get_points_orientation([0, 1, 3], points) == 'Counterclockwise'
+    assert path2_7.get_points_orientation([0, 2, 1], points) == 'Clockwise'
+    assert path2_7.get_points_orientation([0, 0, 3], points) == 'Collinear'
+
+
+def test_path2_get_points_orientation_with_float_argument(path2_7):
+    with pytest.raises(TypeError):
+        return path2_7.get_points_orientation(9.0, 9.0)
