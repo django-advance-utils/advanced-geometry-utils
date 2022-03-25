@@ -337,7 +337,6 @@ class Edge3:
         self.p1 = transformation_matrix * self.p1
         self.p2 = transformation_matrix * self.p2
         self.centre = self.calculate_centre()
-
         return self
 
     def offset(self, vector):
