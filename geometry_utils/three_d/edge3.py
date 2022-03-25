@@ -224,7 +224,6 @@ class Edge3:
                 edge_2d = self.to_edge2()
                 point_2d = point.to_point2()
                 s = edge_2d.parametric_point(point_2d)
-                s = s.to_point3()
                 return s
             elif self.is_line:
                 tangent = self.get_line_tangent()  # vector

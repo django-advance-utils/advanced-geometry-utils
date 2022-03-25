@@ -484,7 +484,7 @@ def path3_8():
     path = Path2()
     path.list_of_edges = [Edge3(Point3(0.0, 0.0, 0.0), Point3(1.0, 0.0, 0.0)),
                           Edge3(Point3(1.0, 0.0, 0.0), Point3(1.0, 1.0, 0.0)),
-                          Edge3(Point3(1.0, 1.0, 0.0), Point3(0.0, 1.0, 0.0), 0.5),
+                          Edge3(Point3(1.0, 1.0, 0.0), Point3(0.0, 1.0, 0.0), radius=0.5),
                           Edge3(Point3(0.0, 1.0, 0.0), Point3(0.0, 0.0, 0.0))]
     return path
 

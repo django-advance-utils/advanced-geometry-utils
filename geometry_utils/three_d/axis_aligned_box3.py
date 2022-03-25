@@ -81,7 +81,7 @@ class AxisAlignedBox3:
                 self.include(other.p2)
 
         else:
-            raise TypeError("Inclusion must be with an object of Point2 or AxisAlignedBox2")
+            raise TypeError("Inclusion must be with an object of Point3 or AxisAlignedBox3")
 
     def __contains__(self, item):
         """
