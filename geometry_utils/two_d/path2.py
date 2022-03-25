@@ -430,6 +430,7 @@ class Path2:
                 for edge in self.list_of_edges:
                     if edge.is_arc():
                         edge.clockwise = not edge.clockwise
+        self.update_path()           
         return self
 
     def generate_points(self):
