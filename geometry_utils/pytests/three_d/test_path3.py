@@ -4,6 +4,7 @@ from geometry_utils.three_d.axis_aligned_box3 import AxisAlignedBox3
 from geometry_utils.three_d.edge3 import Edge3
 from geometry_utils.three_d.path3 import Path3
 from geometry_utils.three_d.point3 import Point3
+from geometry_utils.three_d.vector3 import Vector3
 
 
 def test_path3_inequality(path3_1, path3_2):
@@ -103,3 +104,160 @@ def test_path3_reverse():
                                    Edge3(Point3(2.0, 2.0, 2.0), Point3(1.0, 1.0, 1.0)),
                                    Edge3(Point3(1.0, 1.0, 1.0), Point3(0.0, 0.0, 0.0))]
     assert path == reversed_path
+
+
+def test_path3_mirror_x():
+    path = Path3()
+    path.list_of_edges = [Edge3(Point3(0.0, 0.0, 0.0), Point3(1.0, 1.0, 1.0)),
+                          Edge3(Point3(1.0, 1.0, 1.0), Point3(2.0, 2.0, 2.0)),
+                          Edge3(Point3(2.0, 2.0, 2.0), Point3(0.0, 0.0, 0.0))]
+    path.mirror_x()
+
+    mirrored_path = Path3()
+    mirrored_path.list_of_edges = [Edge3(Point3(0.0, 0.0, 0.0), Point3(1.0, -1.0, -1.0)),
+                                   Edge3(Point3(1.0, -1.0, -1.0), Point3(2.0, -2.0, -2.0)),
+                                   Edge3(Point3(2.0, -2.0, -2.0), Point3(0.0, 0.0, 0.0))]
+
+
+def test_path3_mirror_y():
+    path = Path3()
+    path.list_of_edges = [Edge3(Point3(0.0, 0.0, 0.0), Point3(1.0, 1.0, 1.0)),
+                          Edge3(Point3(1.0, 1.0, 1.0), Point3(2.0, 2.0, 2.0)),
+                          Edge3(Point3(2.0, 2.0, 2.0), Point3(0.0, 0.0, 0.0))]
+    path.mirror_y()
+
+    mirrored_path = Path3()
+    mirrored_path.list_of_edges = [Edge3(Point3(0.0, 0.0, 0.0), Point3(-1.0, 1.0, -1.0)),
+                                   Edge3(Point3(-1.0, 1.0, -1.0), Point3(-2.0, 2.0, -2.0)),
+                                   Edge3(Point3(-2.0, 2.0, -2.0), Point3(0.0, 0.0, 0.0))]
+
+
+def test_path3_mirror_z():
+    path = Path3()
+    path.list_of_edges = [Edge3(Point3(0.0, 0.0, 0.0), Point3(1.0, 1.0, 1.0)),
+                          Edge3(Point3(1.0, 1.0, 1.0), Point3(2.0, 2.0, 2.0)),
+                          Edge3(Point3(2.0, 2.0, 2.0), Point3(0.0, 0.0, 0.0))]
+    path.mirror_z()
+
+    mirrored_path = Path3()
+    mirrored_path.list_of_edges = [Edge3(Point3(0.0, 0.0, 0.0), Point3(-1.0, -1.0, 1.0)),
+                                   Edge3(Point3(-1.0, -1.0, 1.0), Point3(-2.0, -2.0, 2.0)),
+                                   Edge3(Point3(-2.0, -2.0, 2.0), Point3(0.0, 0.0, 0.0))]
+
+
+def test_path3_mirror_origin():
+    path = Path3()
+    path.list_of_edges = [Edge3(Point3(0.0, 0.0, 0.0), Point3(1.0, 1.0, 1.0)),
+                          Edge3(Point3(1.0, 1.0, 1.0), Point3(2.0, 2.0, 2.0)),
+                          Edge3(Point3(2.0, 2.0, 2.0), Point3(0.0, 0.0, 0.0))]
+    path.mirror_origin()
+
+    mirrored_path = Path3()
+    mirrored_path.list_of_edges = [Edge3(Point3(0.0, 0.0, 0.0), Point3(-1.0, -1.0, -1.0)),
+                                   Edge3(Point3(-1.0, -1.0, -1.0), Point3(-2.0, -2.0, -2.0)),
+                                   Edge3(Point3(-2.0, -2.0, -2.0), Point3(0.0, 0.0, 0.0))]
+
+
+def test_path3_offset():
+    path = Path3()
+    path.list_of_edges = [Edge3(Point3(0.0, 0.0, 0.0), Point3(1.0, 1.0, 1.0)),
+                          Edge3(Point3(1.0, 1.0, 1.0), Point3(2.0, 2.0, 2.0)),
+                          Edge3(Point3(2.0, 2.0, 2.0), Point3(0.0, 0.0, 0.0))]
+    path.offset(Vector3(1.0, 1.0, 1.0))
+
+    offset_path = Path3()
+    offset_path.list_of_edges = [Edge3(Point3(1.0, 1.0, 1.0), Point3(2.0, 2.0, 2.0)),
+                                 Edge3(Point3(2.0, 2.0, 2.0), Point3(3.0, 3.0, 3.0)),
+                                 Edge3(Point3(3.0, 3.0, 3.0), Point3(1.0, 1.0, 1.0))]
+
+    assert path == offset_path
+
+
+def test_path3_offset_with_float_argument(path3_1):
+    with pytest.raises(TypeError):
+        return path3_1.offset(9.0)
+
+
+def test_path3_rotate_around():
+    path = Path3()
+    path.list_of_edges = [Edge3(Point3(0.0, 0.0, 0.0), Point3(1.0, 1.0, 1.0)),
+                          Edge3(Point3(1.0, 1.0, 1.0), Point3(2.0, 2.0, 2.0)),
+                          Edge3(Point3(2.0, 2.0, 2.0), Point3(0.0, 0.0, 0.0))]
+    path.rotate_around(Vector3(0.0, 0.0, 0.0), 90.0)
+
+    rotated_path = Path3()
+    rotated_path.list_of_edges = [Edge3(Point3(0.0, 0.0, 0.0), Point3(-1.0, 1.0, 1.0)),
+                                  Edge3(Point3(-1.0, 1.0, 1.0), Point3(-2.0, 2.0, 2.0)),
+                                  Edge3(Point3(-2.0, 2.0, 2.0), Point3(0.0, 0.0, 0.0))]
+
+
+def test_path3_close_path():
+    path = Path3()
+    path.list_of_edges = [Edge3(Point3(0.0, 0.0, 0.0), Point3(1.0, 1.0, 1.0)),
+                          Edge3(Point3(2.0, 2.0, 2.0), Point3(3.0, 3.0, 3.0))]
+    path.close_path()
+
+    closed_path = Path3()
+    closed_path.list_of_edges = [Edge3(Point3(0.0, 0.0, 0.0), Point3(1.0, 1.0, 1.0)),
+                                 Edge3(Point3(1.0, 1.0, 1.0), Point3(2.0, 2.0, 2.0)),
+                                 Edge3(Point3(2.0, 2.0, 2.0), Point3(3.0, 3.0, 3.0)),
+                                 Edge3(Point3(3.0, 3.0, 3.0), Point3(0.0, 0.0, 0.0))]
+
+
+def test_path3_make_continuous():
+    path = Path3()
+    path.list_of_edges = [Edge3(Point3(0.0, 0.0, 0.0), Point3(0.0, 0.0, 0.0)),
+                          Edge3(Point3(2.0, 2.0, 2.0), Point3(0.0, 0.0, 0.0), radius=1.0, clockwise=True)]
+    path.make_continuous()
+
+    continuous_path = Path3()
+    continuous_path.list_of_edges = [Edge3(Point3(0.0, 0.0, 0.0), Point3(2.0, 2.0, 2.0), radius=1.0, clockwise=True),
+                                     Edge3(Point3(2.0, 2.0, 2.0), Point3(0.0, 0.0, 2.0))]
+
+
+def test_path3_is_circle(path3_6):
+    assert path3_6.is_circle()
+
+
+def test_path3_get_enclosed_area(path3_7):
+    assert path3_7.get_enclosed_area() == 1.0
+
+
+def test_path3_is_rectangular(path3_1, path3_6, path3_7):
+    assert path3_7.is_rectangular()
+    assert not path3_1.is_rectangular()
+    assert not path3_6.is_rectangular()
+
+
+def test_path3_is_quadrilateral_with_curved_top(path3_8):
+    assert not path3_8.is_quadrilateral()
+
+
+def test_path2_convert_circle_to_edges():
+    path = Path3()
+    path.list_of_edges = [Edge3(Point3(1.0, 1.0, 0.0), Point3(1.0, 1.0, 0.0), radius=1.0)]
+    path.convert_circle_to_edges()
+
+    circle = Path3()
+    circle.list_of_edges = [Edge3(Point3(1.0, 2.0, 0.0), Point3(1.0, 0.0, 0.0), radius=1.0),
+                            Edge3(Point3(1.0, 0.0, 0.0), Point3(1.0, 2.0, 0.0), radius=1.0),
+                            Edge3(Point3(1.0, 2.0, 0.0), Point3(1.0, 2.0, 0.0))]
+
+
+def test_path2_transform(test_matrix4_3):
+    path = Path3()
+    path.list_of_edges = [Edge3(Point3(0.0, 0.0, 0.0), Point3(1.0, 0.0, 0.0)),
+                          Edge3(Point3(1.0, 0.0, 0.0), Point3(1.0, 1.0, 0.0)),
+                          Edge3(Point3(1.0, 1.0, 0.0), Point3(0.0, 1.0, 0.0), radius=0.5),
+                          Edge3(Point3(0.0, 1.0, 0.0), Point3(0.0, 0.0, 0.0))]
+
+    path.transform(test_matrix4_3)
+
+    transformed_path = Path3()
+    transformed_path.list_of_edges = [Edge3(Point3(0.0, 0.0, 0.0), Point3(-1.0, 0.0, 0.0)),
+                                      Edge3(Point3(-1.0, 0.0, 0.0), Point3(-1.0, -1.0, 0.0)),
+                                      Edge3(Point3(-1.0, -1.0, 0.0), Point3(0.0, -1.0, 0.0), radius=0.5,
+                                            clockwise=True),
+                                      Edge3(Point3(0.0, -1.0, 0.0), Point3(0.0, 0.0, 0.0))]
+
+    assert path == transformed_path
