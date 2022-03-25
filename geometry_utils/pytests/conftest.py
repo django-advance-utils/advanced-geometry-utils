@@ -262,7 +262,7 @@ def test_matrix3_2():
 
 @pytest.fixture(scope="session")
 def test_matrix3_3():
-    return Matrix4([[-1, 0, 0], [0, -1, 0], [0, 0, -1]])
+    return Matrix3([[-1, 0, 0], [0, -1, 0], [0, 0, -1]])
 
 
 '''
