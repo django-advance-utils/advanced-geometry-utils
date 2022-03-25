@@ -72,7 +72,7 @@ def test_path3_get_last_edge_with_empty_list():
 
 def test_path3_get_path_bounds(path3_1, path3_8):
     assert path3_1.get_bounds() == AxisAlignedBox3(Point3(0.0, 0.0, 0.0), Point3(2.0, 2.0, 2.0))
-    assert path3_8.get_bounds() == AxisAlignedBox3(Point3(0.0, 0.0, 0.0), Point3(1.0, 1.5, 0.0), 0.5)
+    assert path3_8.get_bounds() == AxisAlignedBox3(Point3(0.0, 0.0, 0.0), Point3(1.0, 1.5, 0.0))
 
 
 def test_path3_remove_duplicate_edges(path3_4):

@@ -165,7 +165,7 @@ class Path3:
     def to_tuple_list(self):
         path_tuple_list = []
         for edge in self.list_of_edges:
-            path_tuple_list.append(((edge.p1.x, edge.p1.y), (edge.p2.x, edge.p2.y)))
+            path_tuple_list.append(((edge.p1.x, edge.p1.y, edge.p1.z), (edge.p2.x, edge.p2.y, edge.p2.z)))
         return path_tuple_list
     
     def remove_duplicate_edges(self):
