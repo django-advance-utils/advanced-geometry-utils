@@ -436,10 +436,56 @@ def path3_2():
 
 @pytest.fixture(scope="session")
 def path3_3():
-    path = Path2()
+    path = Path3()
     path.list_of_edges = [Edge3(Point3(1.0, 1.0, 1.0), Point3(2.0, 2.0, 2.0)),
                           Edge3(Point3(2.0, 2.0, 2.0), Point3(3.0, 3.0, 3.0)),
                           Edge3(Point3(4.0, 4.0, 4.0), Point3(5.0, 5.0, 5.0))]
+    return path
+
+
+@pytest.fixture(scope="session")
+def path3_4():
+    path = Path3()
+    path.list_of_edges = [Edge3(Point3(0.0, 0.0, 0.0), Point3(1.0, 1.0, 1.0)),
+                          Edge3(Point3(1.0, 1.0, 1.0), Point3(2.0, 2.0, 2.0)),
+                          Edge3(Point3(2.0, 2.0, 2.0), Point3(0.0, 0.0, 0.0))]
+    return path
+
+
+@pytest.fixture(scope="session")
+def path3_5():
+    path = Path3()
+    path.list_of_edges = [Edge3(Point3(0.0, 0.0, 0.0), Point3(1.0, 1.0, 1.0)),
+                          Edge3(Point3(1.0, 1.0, 1.0), Point3(2.0, 2.0, 2.0)),
+                          Edge3(Point3(2.0, 2.0, 2.0), Point3(3.0, 3.0, 3.0)),
+                          Edge3(Point3(3.0, 3.0, 3.0), Point3(0.0, 0.0, 0.0))]
+    return path
+
+
+@pytest.fixture(scope="session")
+def path3_6():
+    path = Path3()
+    path.list_of_edges = [Edge3(Point3(1.0, 1.0, 1.0), Point3(1.0, 1.0, 1.0), 1.0)]
+    return path
+
+
+@pytest.fixture(scope="session")
+def path3_7():
+    path = Path3()
+    path.list_of_edges = [Edge3(Point3(0.0, 0.0, 0.0), Point3(1.0, 0.0, 0.0)),
+                          Edge3(Point3(1.0, 0.0, 0.0), Point3(1.0, 1.0, 0.0)),
+                          Edge3(Point3(1.0, 1.0, 0.0), Point3(0.0, 1.0, 0.0)),
+                          Edge3(Point3(0.0, 1.0, 0.0), Point3(0.0, 0.0, 0.0))]
+    return path
+
+
+@pytest.fixture(scope="session")
+def path3_8():
+    path = Path2()
+    path.list_of_edges = [Edge3(Point3(0.0, 0.0, 0.0), Point3(1.0, 0.0, 0.0)),
+                          Edge3(Point3(1.0, 0.0, 0.0), Point3(1.0, 1.0, 0.0)),
+                          Edge3(Point3(1.0, 1.0, 0.0), Point3(0.0, 1.0, 0.0), 0.5),
+                          Edge3(Point3(0.0, 1.0, 0.0), Point3(0.0, 0.0, 0.0))]
     return path
 
 

@@ -54,9 +54,8 @@ def test_path2_set_edges(path2_1):
 
 
 def test_path2_set_edges_with_float_argument():
-    path = Path2()
     with pytest.raises(TypeError):
-        return path.set_edges([9.0])
+        return Path2().set_edges([9.0])
 
 
 def test_path2_get_first_edge(path2_1):
@@ -91,6 +90,10 @@ def test_path2_is_rectangular(path2_1, path2_6, path2_7):
     assert path2_7.is_rectangular()
     assert not path2_1.is_rectangular()
     assert not path2_6.is_rectangular()
+
+
+def test_path2_is_quadrilateral_with_curved_top(path2_8):
+    assert not path2_8.is_quadrilateral()
 
 
 def test_path2_closed(path2_1):
@@ -222,7 +225,6 @@ def test_path2_make_continuous():
                                      Edge2(Point2(2.0, 2.0), Point2(0.0, 0.0))]
 
 
-
 def test_path2_is_circle(path2_6):
     assert path2_6.is_circle()
 
@@ -239,6 +241,15 @@ def test_path2_to_tuple_list(path2_1):
 
 def test_path2_is_curved_top(path2_8):
     assert path2_8.is_curved_top()
+
+
+def test_path2_is_curved_top_with_circle_path(path2_6):
+    assert not path2_6.is_curved_top()
+
+
+def test_path2_get_leftmost_point_index(path2_1):
+    list_of_points = path2_1.get_list_of_points()
+    assert path2_1.get_leftmost_point_index(list_of_points) == 0
 
 
 def test_path2_flip_vertical_centre():
@@ -258,7 +269,6 @@ def test_path2_flip_vertical_centre():
     assert path == vertical_centre_flipped_path
 
 
-
 def test_path2_flip_vertical():
     path = Path2()
     path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 0.0)),
@@ -274,7 +284,6 @@ def test_path2_flip_vertical():
                                            Edge2(Point2(1.0, 0.0), Point2(1.0, 1.0)),
                                            Edge2(Point2(1.0, 1.0), Point2(0.0, 1.0))]
     assert path == vertical_flipped_path
-
 
 
 def test_path2_flip_horizontal_centre():

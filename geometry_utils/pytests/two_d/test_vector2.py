@@ -10,10 +10,8 @@ def test_vector2_string_parameter():
         return Vector2("0", "0", "0")
 
 
-def test_edge2_print_string(test_edge2_1):
-    assert (test_edge2_1.__str__() ==
-            "Edge2(p1:Point2(x:0.00, y:0.00), p2:Point2(x:0.00, y:0.00), "
-            "centre:Point2(x:0.00, y:0.00), radius:0.0, clockwise:False, large:False)")
+def test_edge2_print_string(test_vector2_1):
+    assert test_vector2_1.__str__() == "Vector2(x:1.00, y:1.00)"
 
 
 '''
