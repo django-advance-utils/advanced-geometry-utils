@@ -481,7 +481,7 @@ def path3_7():
 
 @pytest.fixture(scope="session")
 def path3_8():
-    path = Path2()
+    path = Path3()
     path.list_of_edges = [Edge3(Point3(0.0, 0.0, 0.0), Point3(1.0, 0.0, 0.0)),
                           Edge3(Point3(1.0, 0.0, 0.0), Point3(1.0, 1.0, 0.0)),
                           Edge3(Point3(1.0, 1.0, 0.0), Point3(0.0, 1.0, 0.0), radius=0.5),
