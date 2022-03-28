@@ -433,15 +433,6 @@ class Path2:
         self.update_path()
         return self
 
-    def generate_points(self):
-        for count, edge in enumerate(self.list_of_edges):
-            yield edge.p1
-            if count + 1 == self.path_length:
-                count = - 1
-            next_edge = self.list_of_edges[count + 1]
-            if edge.p2 != next_edge.p1 or count == - 1:
-                yield edge.p2
-
     def get_list_of_points(self):
         list_of_points = []
         for count, edge in enumerate(self.list_of_edges):
