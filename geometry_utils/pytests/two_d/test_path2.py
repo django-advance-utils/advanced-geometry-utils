@@ -117,68 +117,131 @@ def test_path2_remove_duplicate_edges(path2_4):
 
 def test_path2_reverse():
     path = Path2()
-    path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 1.0)),
-                          Edge2(Point2(1.0, 1.0), Point2(2.0, 2.0)),
-                          Edge2(Point2(2.0, 2.0), Point2(0.0, 0.0))]
+    path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 0.0)),
+                          Edge2(Point2(1.0, 0.0), Point2(1.0, 1.0)),
+                          Edge2(Point2(1.0, 1.0), Point2(0.0, 1.0)),
+                          Edge2(Point2(0.0, 1.0), Point2(0.0, 0.0))]
     path.reverse()
 
     reversed_path = Path2()
-    reversed_path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(2.0, 2.0)),
-                                   Edge2(Point2(2.0, 2.0), Point2(1.0, 1.0)),
-                                   Edge2(Point2(1.0, 1.0), Point2(0.0, 0.0))]
+    reversed_path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(0.0, 1.0)),
+                                   Edge2(Point2(0.0, 1.0), Point2(1.0, 1.0)),
+                                   Edge2(Point2(1.0, 1.0), Point2(1.0, 0.0)),
+                                   Edge2(Point2(1.0, 0.0), Point2(0.0, 0.0))]
     assert path == reversed_path
 
 
 def test_path2_mirror_x():
     path = Path2()
-    path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 1.0)),
-                          Edge2(Point2(1.0, 1.0), Point2(2.0, 2.0)),
-                          Edge2(Point2(2.0, 2.0), Point2(0.0, 0.0))]
+    path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 0.0)),
+                          Edge2(Point2(1.0, 0.0), Point2(1.0, 1.0)),
+                          Edge2(Point2(1.0, 1.0), Point2(0.0, 1.0)),
+                          Edge2(Point2(0.0, 1.0), Point2(0.0, 0.0))]
     path.mirror_x()
 
     mirrored_path = Path2()
-    mirrored_path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, -1.0)),
-                                   Edge2(Point2(1.0, -1.0), Point2(2.0, -2.0)),
-                                   Edge2(Point2(2.0, -2.0), Point2(0.0, -0.0))]
+    mirrored_path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 0.0)),
+                                   Edge2(Point2(1.0, 0.0), Point2(1.0, -1.0)),
+                                   Edge2(Point2(1.0, -1.0), Point2(0.0, -1.0)),
+                                   Edge2(Point2(0.0, -1.0), Point2(0.0, 0.0))]
 
 
 def test_path2_mirror_y():
     path = Path2()
-    path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 1.0)),
-                          Edge2(Point2(1.0, 1.0), Point2(2.0, 2.0)),
-                          Edge2(Point2(2.0, 2.0), Point2(0.0, 0.0))]
+    path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 0.0)),
+                          Edge2(Point2(1.0, 0.0), Point2(1.0, 1.0)),
+                          Edge2(Point2(1.0, 1.0), Point2(0.0, 1.0)),
+                          Edge2(Point2(0.0, 1.0), Point2(0.0, 0.0))]
     path.mirror_y()
 
     mirrored_path = Path2()
-    mirrored_path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(-1.0, 1.0)),
-                                   Edge2(Point2(-1.0, 1.0), Point2(-2.0, 2.0)),
-                                   Edge2(Point2(-2.0, 2.0), Point2(0.0, 0.0))]
+    mirrored_path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(-1.0, 0.0)),
+                                   Edge2(Point2(-1.0, 0.0), Point2(-1.0, 1.0)),
+                                   Edge2(Point2(-1.0, 1.0), Point2(0.0, 1.0)),
+                                   Edge2(Point2(0.0, 1.0), Point2(0.0, 0.0))]
 
 
 def test_path2_mirror_origin():
     path = Path2()
-    path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 1.0)),
-                          Edge2(Point2(1.0, 1.0), Point2(2.0, 2.0)),
-                          Edge2(Point2(2.0, 2.0), Point2(0.0, 0.0))]
+    path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 0.0)),
+                          Edge2(Point2(1.0, 0.0), Point2(1.0, 1.0)),
+                          Edge2(Point2(1.0, 1.0), Point2(0.0, 1.0)),
+                          Edge2(Point2(0.0, 1.0), Point2(0.0, 0.0))]
     path.mirror_origin()
 
     mirrored_path = Path2()
-    mirrored_path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(-1.0, -1.0)),
-                                   Edge2(Point2(-1.0, -1.0), Point2(-2.0, -2.0)),
-                                   Edge2(Point2(-2.0, -2.0), Point2(0.0, 0.0))]
+    mirrored_path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(-1.0, 0.0)),
+                                   Edge2(Point2(-1.0, 0.0), Point2(-1.0, -1.0)),
+                                   Edge2(Point2(-1.0, -1.0), Point2(0.0, -1.0)),
+                                   Edge2(Point2(0.0, -1.0), Point2(0.0, 0.0))]
 
 
-def test_path2_offset():
+def test_path2_offset_pp():
     path = Path2()
-    path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 1.0)),
-                          Edge2(Point2(1.0, 1.0), Point2(2.0, 2.0)),
-                          Edge2(Point2(2.0, 2.0), Point2(0.0, 0.0))]
+    path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 0.0)),
+                          Edge2(Point2(1.0, 0.0), Point2(1.0, 1.0)),
+                          Edge2(Point2(1.0, 1.0), Point2(0.0, 1.0)),
+                          Edge2(Point2(0.0, 1.0), Point2(0.0, 0.0))]
     path.offset(Vector2(1.0, 1.0))
 
     offset_path = Path2()
-    offset_path.list_of_edges = [Edge2(Point2(1.0, 1.0), Point2(2.0, 2.0)),
-                                 Edge2(Point2(2.0, 2.0), Point2(3.0, 3.0)),
-                                 Edge2(Point2(3.0, 3.0), Point2(1.0, 1.0))]
+    offset_path.list_of_edges = [Edge2(Point2(1.0, 1.0), Point2(2.0, 1.0)),
+                                 Edge2(Point2(2.0, 1.0), Point2(2.0, 2.0)),
+                                 Edge2(Point2(2.0, 2.0), Point2(1.0, 2.0)),
+                                 Edge2(Point2(1.0, 2.0), Point2(1.0, 1.0))]
+
+    assert path == offset_path
+
+
+def test_path2_offset_mm():
+    path = Path2()
+    path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 0.0)),
+                          Edge2(Point2(1.0, 0.0), Point2(1.0, 1.0)),
+                          Edge2(Point2(1.0, 1.0), Point2(0.0, 1.0)),
+                          Edge2(Point2(0.0, 1.0), Point2(0.0, 0.0))]
+    path.offset(Vector2(1.0, 1.0), 'mm')
+
+    offset_path = Path2()
+    offset_path.list_of_edges = [Edge2(Point2(1.0, 1.0), Point2(0.0, 1.0)),
+                                 Edge2(Point2(0.0, 1.0), Point2(0.0, 0.0)),
+                                 Edge2(Point2(0.0, 0.0), Point2(1.0, 0.0)),
+                                 Edge2(Point2(1.0, 0.0), Point2(1.0, 1.0))]
+
+    assert path == offset_path
+
+
+def test_path2_offset_pm():
+    path = Path2()
+    path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 0.0)),
+                          Edge2(Point2(1.0, 0.0), Point2(1.0, 1.0)),
+                          Edge2(Point2(1.0, 1.0), Point2(0.0, 1.0)),
+                          Edge2(Point2(0.0, 1.0), Point2(0.0, 0.0))]
+
+    path.offset(Vector2(1.0, 1.0), 'pm')
+
+    offset_path = Path2()
+    offset_path.list_of_edges = [Edge2(Point2(1.0, 1.0), Point2(0.0, 1.0)),
+                                 Edge2(Point2(0.0, 1.0), Point2(0.0, 2.0)),
+                                 Edge2(Point2(0.0, 2.0), Point2(1.0, 2.0)),
+                                 Edge2(Point2(1.0, 2.0), Point2(1.0, 1.0))]
+
+    assert path == offset_path
+
+
+def test_path2_offset_mp():
+    path = Path2()
+    path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 0.0)),
+                          Edge2(Point2(1.0, 0.0), Point2(1.0, 1.0)),
+                          Edge2(Point2(1.0, 1.0), Point2(0.0, 1.0)),
+                          Edge2(Point2(0.0, 1.0), Point2(0.0, 0.0))]
+
+    path.offset(Vector2(1.0, 1.0), 'mp')
+
+    offset_path = Path2()
+    offset_path.list_of_edges = [Edge2(Point2(1.0, 1.0), Point2(2.0, 1.0)),
+                                 Edge2(Point2(2.0, 1.0), Point2(2.0, 0.0)),
+                                 Edge2(Point2(2.0, 0.0), Point2(1.0, 0.0)),
+                                 Edge2(Point2(1.0, 0.0), Point2(1.0, 1.0))]
 
     assert path == offset_path
 
@@ -190,38 +253,40 @@ def test_path2_offset_with_float_argument(path2_1):
 
 def test_path2_rotate_around():
     path = Path2()
-    path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 1.0)),
-                          Edge2(Point2(1.0, 1.0), Point2(2.0, 2.0)),
-                          Edge2(Point2(2.0, 2.0), Point2(0.0, 0.0))]
+    path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 0.0)),
+                          Edge2(Point2(1.0, 0.0), Point2(1.0, 1.0)),
+                          Edge2(Point2(1.0, 1.0), Point2(0.0, 1.0)),
+                          Edge2(Point2(0.0, 1.0), Point2(0.0, 0.0))]
     path.rotate_around(Vector2(0.0, 0.0), 90.0)
 
     rotated_path = Path2()
-    rotated_path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(-1.0, 1.0)),
-                                  Edge2(Point2(-1.0, 1.0), Point2(-2.0, 2.0)),
-                                  Edge2(Point2(-2.0, 2.0), Point2(0.0, 0.0))]
+    rotated_path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(0.0, 1.0)),
+                                  Edge2(Point2(0.0, 1.0), Point2(-1.0, 1.0)),
+                                  Edge2(Point2(-1.0, 1.0), Point2(-1.0, 0.0)),
+                                  Edge2(Point2(-1.0, 0.0), Point2(0.0, 0.0))]
 
 
 def test_path2_close_path():
     path = Path2()
-    path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 1.0)),
-                          Edge2(Point2(2.0, 2.0), Point2(3.0, 3.0))]
+    path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 0.0)),
+                          Edge2(Point2(1.0, 1.0), Point2(0.0, 1.0))]
     path.close_path()
 
     closed_path = Path2()
-    closed_path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 1.0)),
-                                 Edge2(Point2(1.0, 1.0), Point2(2.0, 2.0)),
-                                 Edge2(Point2(2.0, 2.0), Point2(3.0, 3.0)),
-                                 Edge2(Point2(3.0, 3.0), Point2(0.0, 0.0))]
+    closed_path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 0.0)),
+                                 Edge2(Point2(1.0, 0.0), Point2(1.0, 1.0)),
+                                 Edge2(Point2(1.0, 1.0), Point2(0.0, 1.0)),
+                                 Edge2(Point2(0.0, 1.0), Point2(0.0, 0.0))]
 
 
 def test_path2_make_continuous():
     path = Path2()
     path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(0.0, 0.0)),
-                          Edge2(Point2(2.0, 2.0), Point2(0.0, 0.0), 1.0, True)]
+                          Edge2(Point2(2.0, 0.0), Point2(0.0, 0.0), 1.0, True)]
     path.make_continuous()
 
     continuous_path = Path2()
-    continuous_path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(2.0, 2.0), 1.0, True),
+    continuous_path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(2.0, 0.0), 1.0, True),
                                      Edge2(Point2(2.0, 2.0), Point2(0.0, 0.0))]
 
 
@@ -346,8 +411,24 @@ def test_path2_transform(test_matrix3_3):
 
     transformed_path = Path2()
     transformed_path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(-1.0, 0.0)),
-                          Edge2(Point2(-1.0, 0.0), Point2(-1.0, -1.0)),
-                          Edge2(Point2(-1.0, -1.0), Point2(0.0, -1.0), 0.5, True),
-                          Edge2(Point2(0.0, -1.0), Point2(0.0, 0.0))]
+                                      Edge2(Point2(-1.0, 0.0), Point2(-1.0, -1.0)),
+                                      Edge2(Point2(-1.0, -1.0), Point2(0.0, -1.0), 0.5, True),
+                                      Edge2(Point2(0.0, -1.0), Point2(0.0, 0.0))]
 
     assert path == transformed_path
+
+
+def test_path2_get_convex_hull():
+    path = Path2()
+    path.list_of_edges = [Edge2(Point2(1.0, 0.0), Point2(0.0, 0.0)),
+                          Edge2(Point2(0.0, 0.0), Point2(0.0, 1.0)),
+                          Edge2(Point2(0.0, 1.0), Point2(1.0, 1.0)),
+                          Edge2(Point2(1.0, 1.0), Point2(1.0, 0.0))]
+
+    convex_hull = Path2()
+    convex_hull.list_of_edges = [Edge2(Point2(0.0, 1.0), Point2(0.0, 0.0)),
+                                 Edge2(Point2(0.0, 0.0), Point2(1.0, 0.0)),
+                                 Edge2(Point2(1.0, 0.0), Point2(1.0, 1.0)),
+                                 Edge2(Point2(1.0, 1.0), Point2(0.0, 1.0))]
+
+    assert path.get_convex_hull() == convex_hull
