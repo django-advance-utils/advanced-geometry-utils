@@ -243,6 +243,13 @@ def test_edge3_4():
     return Edge3(p1, p2, 1, True, True)
 
 
+@pytest.fixture(scope="session")
+def test_edge3_5():
+    p1 = Point3(2.0, 2.0, 2.0)
+    p2 = Point3(4.0, 4.0, 4.0)
+    return Edge3(p1, p2)
+
+
 '''
 Matrix3
 '''
@@ -511,4 +518,9 @@ Intersection
 
 @pytest.fixture(scope="session")
 def intersection1():
+    return Intersection()
+
+
+@pytest.fixture(scope="session")
+def intersection2():
     return Intersection()
