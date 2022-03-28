@@ -35,7 +35,7 @@ def test_intersection_on_non_collinear_edge2_lines(test_point2_1):
 
     intersection = Intersection()
     intersection.intersect(vertical_edge, horizontal_edge)
-    print intersection.point
+    print(intersection.point)
     assert intersection.point == test_point2_1
     assert intersection.vectors_intersect
     assert intersection.on_first_segment
