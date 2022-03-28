@@ -347,7 +347,7 @@ def test_path2_transform(test_matrix3_3):
     transformed_path = Path2()
     transformed_path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(-1.0, 0.0)),
                           Edge2(Point2(-1.0, 0.0), Point2(-1.0, -1.0)),
-                          Edge2(Point2(-1.0, -1.0), Point2(0.0, -1.0), radius=0.5, clockwise=True),
+                          Edge2(Point2(-1.0, -1.0), Point2(0.0, -1.0), 0.5, True),
                           Edge2(Point2(0.0, -1.0), Point2(0.0, 0.0))]
 
     assert path == transformed_path

@@ -463,10 +463,10 @@ class Edge3:
                     break
                 number = 0
 
-            list_of_arc_edges = []
-            for previous_point, point in zip(points, points[1:]):
-                list_of_arc_edges.append(Edge3(previous_point, point))
-            return list_of_arc_edges
+        list_of_arc_edges = []
+        for previous_point, point in zip(points, points[1:]):
+            list_of_arc_edges.append(Edge3(previous_point, point))
+        return list_of_arc_edges
 
 
 def is_edge3(input_variable):
