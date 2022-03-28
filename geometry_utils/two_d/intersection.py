@@ -44,9 +44,15 @@ class Intersection:
         self.point = None
 
     def __str__(self):
-        return ("Intersection(point:" + str(self.point) + ", Vectors Intersect:" + str(self.vectors_intersect) +
-                ", On First Segment:" + str(self.on_first_segment) +
-                ", On Second Segment:" + str(self.on_second_segment) + ", Collinear:" + str(self.collinear))
+        if isinstance(self, list):
+            for intersection in self:
+                return ("Intersection(point:" + str(intersection.point) + ", Vectors Intersect:" + str(intersection.vectors_intersect) +
+                        ", On First Segment:" + str(intersection.on_first_segment) +
+                        ", On Second Segment:" + str(intersection.on_second_segment) + ", Collinear:" + str(intersection.collinear))
+        else:
+            return ("Intersection(point:" + str(self.point) + ", Vectors Intersect:" + str(self.vectors_intersect) +
+                    ", On First Segment:" + str(self.on_first_segment) +
+                    ", On Second Segment:" + str(self.on_second_segment) + ", Collinear:" + str(self.collinear))
 
     def intersect(self, first_edge, second_edge):
         """
@@ -57,7 +63,11 @@ class Intersection:
             first_edge = first_edge.to_edge2()
             second_edge = second_edge.to_edge2()
             intersection = self.intersect(first_edge, second_edge)
-            intersection.point = intersection.point.to_point3()
+            if isinstance(intersection, list):
+                for intersect in intersection:
+                    intersect.point = intersect.point.to_point3()
+            else:
+                intersection.point = intersection.point.to_point3()
             return intersection
 
         if is_edge2(first_edge) and is_edge2(second_edge):
