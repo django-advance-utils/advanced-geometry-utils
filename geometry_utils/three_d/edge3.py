@@ -349,14 +349,6 @@ class Edge3:
         else:
             raise TypeError("Edge offset is done by an object of Vector3")
 
-    def is_incomplete_circle(self):
-        return self.is_arc() and self.p2 != self.p1
-
-    def complete_circle(self):
-        if self.is_incomplete_circle():
-            self.p2 = copy.deepcopy(self.p1)
-        return self
-
     def rotate(self, rotation_angle):
         if is_float(rotation_angle):
             rotation_matrix = Matrix4.z_rotation(rotation_angle)

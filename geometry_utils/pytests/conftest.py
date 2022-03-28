@@ -313,6 +313,11 @@ def test_box2_4():
     return AxisAlignedBox2(Point2(0.0, 0.0), Point2(0.0, 0.0))
 
 
+@pytest.fixture(scope="session")
+def test_box2_5():
+    return AxisAlignedBox2()
+
+
 '''
 AxisAlignedBox3
 '''
@@ -336,6 +341,11 @@ def test_box3_3():
 @pytest.fixture(scope="session")
 def test_box3_4():
     return AxisAlignedBox3(Point3(0.0, 0.0, 0.0), Point3(0.0, 0.0, 0.0))
+
+
+@pytest.fixture(scope="session")
+def test_box3_5():
+    return AxisAlignedBox3()
 
 
 '''

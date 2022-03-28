@@ -186,7 +186,7 @@ class AxisAlignedBox3:
             return self.max != box.max or self.min != box.min
         raise TypeError("Comparison must be with an object of AxisAlignedBox3")
 
-    def empty(self):
+    def is_empty(self):
         """
         Checks if self is empty
 
