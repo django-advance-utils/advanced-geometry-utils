@@ -15,7 +15,7 @@ def test_intersection_print_string(test_edge2_2, test_edge2_3):
     intersection = Intersection()
     intersection.intersect(test_edge2_2, test_edge2_3)
     assert intersection.__str__() == ("Intersection(point:Point2(x:0.00, y:0.00), Vectors Intersect:True, On First "
-                                      "Segment:True, On Second Segment:True, Collinear:True ")
+                                      "Segment:True, On Second Segment:True, Collinear:True")
 
 
 def test_intersection_on_collinear_edge2_lines(test_edge2_2, test_edge2_3, test_point2_4):
@@ -35,7 +35,6 @@ def test_intersection_on_non_collinear_edge2_lines(test_point2_1):
 
     intersection = Intersection()
     intersection.intersect(vertical_edge, horizontal_edge)
-    print(intersection.point)
     assert intersection.point == test_point2_1
     assert intersection.vectors_intersect
     assert intersection.on_first_segment
@@ -58,6 +57,7 @@ def test_intersection_on_edge2_line_and_edge2_arc(test_edge2_2, test_edge2_5, te
 def test_intersection_on_edge2_line_and_edge2_circle(test_edge2_2, test_edge2_6):
     intersection = Intersection()
     intersection.intersect(test_edge2_2, test_edge2_6)
+    print (intersection.point)
     assert intersection.point == Point2(3.54, 3.54)
     assert intersection.vectors_intersect
     assert intersection.on_second_segment
@@ -69,6 +69,7 @@ def test_intersection_on_edge2_line_and_edge2_circle(test_edge2_2, test_edge2_6)
 def test_intersection_on_collinear_edge3_lines(test_edge3_2, test_edge3_5, test_point3_1):
     intersection = Intersection()
     intersection.intersect(test_edge3_2, test_edge3_5)
+    print (intersection.point)
     assert intersection.point == test_point3_1
     assert intersection.vectors_intersect
     assert intersection.on_first_segment
