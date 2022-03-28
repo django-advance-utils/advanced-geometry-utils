@@ -171,6 +171,7 @@ class AxisAlignedBox3:
         """
         if is_box3(box):
             return self.max == box.max and self.min == box.min
+        raise TypeError("Comparison must be with an object of AxisAlignedBox3")
 
     def __ne__(self, box):
         """

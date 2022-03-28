@@ -48,10 +48,10 @@ def test_box3_invalid_includes_edge3(test_edge3_1):
     assert test_box.min == Point3(0.0, 0.0, 0.0) and test_box.max == Point3(0.0, 0.0, 0.0)
 
 
-def test_box3_includes_edge3(test_edge3_3):
+def test_box3_includes_edge3(test_edge3_2):
     test_box = AxisAlignedBox3(Point3(0.0, 0.0, 0.0), Point3(0.0, 0.0, 0.0))
-    test_box.include(test_edge3_3)
-    assert test_box.min == Point3(0.0, 0.0, 0.0) and test_box.max == Point3(4.0, 4.0, 4.0)
+    test_box.include(test_edge3_2)
+    assert test_box.min == Point3(0.0, 0.0, 0.0) and test_box.max == Point3(2.0, 2.0, 2.0)
 
 
 def test_box3_include_float(test_box3_1):
