@@ -305,6 +305,26 @@ class Vector2:
             self.y = 0.0
         return self
 
+    def compute_angle(self, other_vector):
+        if is_vector2(other_vector):
+            x_diff = self.x - other_vector.x
+            y_diff = self.y - other_vector.y
+
+            if xdiff == 0:
+                if ydiff < 0:
+                    angle = 0
+                else:
+                    angle = PI
+            elif ydiff == 0:
+                if xdiff < 0:
+                    angle = HALF_PI
+                else:
+                    angle = ONE_AND_HALF_PI
+            else:
+                angle = PI + math.atan2(xdif, ydif)
+
+            return angle
+
 
 def is_vector2(input_variable):
     return isinstance(input_variable, Vector2)
