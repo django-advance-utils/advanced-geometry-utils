@@ -173,6 +173,83 @@ def test_path3_offset():
     assert path == offset_path
 
 
+def test_path3_offset_ppp():
+    path = Path3()
+    path.list_of_edges = [Edge3(Point3(0.0, 0.0, 1.0), Point3(1.0, 0.0, 1.0)),
+                          Edge3(Point3(1.0, 0.0, 1.0), Point3(1.0, 1.0, 1.0)),
+                          Edge3(Point3(1.0, 1.0, 1.0), Point3(0.0, 1.0, 1.0)),
+                          Edge3(Point3(0.0, 1.0, 1.0), Point3(0.0, 0.0, 1.0))]
+    path.offset(Vector3(1.0, 1.0, 1.0))
+
+    offset_path = Path2()
+    offset_path.list_of_edges = [Edge2(Point2(1.0, 1.0), Point2(2.0, 1.0)),
+                                 Edge2(Point2(2.0, 1.0), Point2(2.0, 2.0)),
+                                 Edge2(Point2(2.0, 2.0), Point2(1.0, 2.0)),
+                                 Edge2(Point2(1.0, 2.0), Point2(1.0, 1.0))]
+
+    assert path == offset_path
+
+
+def test_path2_offset_mm():
+    path = Path2()
+    path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 0.0)),
+                          Edge2(Point2(1.0, 0.0), Point2(1.0, 1.0)),
+                          Edge2(Point2(1.0, 1.0), Point2(0.0, 1.0)),
+                          Edge2(Point2(0.0, 1.0), Point2(0.0, 0.0))]
+    path.offset(Vector2(1.0, 1.0), 'mm')
+
+    offset_path = Path2()
+    offset_path.list_of_edges = [Edge2(Point2(1.0, 1.0), Point2(0.0, 1.0)),
+                                 Edge2(Point2(0.0, 1.0), Point2(0.0, 0.0)),
+                                 Edge2(Point2(0.0, 0.0), Point2(1.0, 0.0)),
+                                 Edge2(Point2(1.0, 0.0), Point2(1.0, 1.0))]
+
+    assert path == offset_path
+
+
+def test_path2_offset_pm():
+    path = Path2()
+    path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 0.0)),
+                          Edge2(Point2(1.0, 0.0), Point2(1.0, 1.0)),
+                          Edge2(Point2(1.0, 1.0), Point2(0.0, 1.0)),
+                          Edge2(Point2(0.0, 1.0), Point2(0.0, 0.0))]
+
+    path.offset(Vector2(1.0, 1.0), 'pm')
+
+    offset_path = Path2()
+    offset_path.list_of_edges = [Edge2(Point2(1.0, 1.0), Point2(0.0, 1.0)),
+                                 Edge2(Point2(0.0, 1.0), Point2(0.0, 2.0)),
+                                 Edge2(Point2(0.0, 2.0), Point2(1.0, 2.0)),
+                                 Edge2(Point2(1.0, 2.0), Point2(1.0, 1.0))]
+
+    assert path == offset_path
+
+
+def test_path2_offset_mp():
+    path = Path2()
+    path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(1.0, 0.0)),
+                          Edge2(Point2(1.0, 0.0), Point2(1.0, 1.0)),
+                          Edge2(Point2(1.0, 1.0), Point2(0.0, 1.0)),
+                          Edge2(Point2(0.0, 1.0), Point2(0.0, 0.0))]
+
+    path.offset(Vector2(1.0, 1.0), 'mp')
+
+    offset_path = Path2()
+    offset_path.list_of_edges = [Edge2(Point2(1.0, 1.0), Point2(2.0, 1.0)),
+                                 Edge2(Point2(2.0, 1.0), Point2(2.0, 0.0)),
+                                 Edge2(Point2(2.0, 0.0), Point2(1.0, 0.0)),
+                                 Edge2(Point2(1.0, 0.0), Point2(1.0, 1.0))]
+
+    assert path == offset_path
+
+
+def test_path2_offset_with_float_argument(path2_1):
+    with pytest.raises(TypeError):
+        return path2_1.offset(9.0)
+
+
+
+
 def test_path3_offset_with_float_argument(path3_1):
     with pytest.raises(TypeError):
         return path3_1.offset(9.0)
