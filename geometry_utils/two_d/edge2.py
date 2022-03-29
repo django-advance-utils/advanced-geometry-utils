@@ -339,22 +339,22 @@ class Edge2:
         return (not self.is_arc()) and (not self.p1 == self.p2)
 
     def get_arc_start_angle(self, rad=False):
-        p1_vector = self.p1.to_vector2()
-        centre_vector = self.centre.to_vector2()
-        angle = p1_vector.compute_angle(centre_vector)
-        # angle = math.atan2(self.p1.y - self.centre.y, self.p1.x - self.centre.x)
-        # if not rad:
-        #     angle = radians_to_degrees(angle)
-        # return angle
+        # p1_vector = self.p1.to_vector2()
+        # centre_vector = self.centre.to_vector2()
+        # angle = p1_vector.compute_angle(centre_vector)
+        angle = math.atan2(self.p1.y - self.centre.y, self.p1.x - self.centre.x)
+        if not rad:
+            angle = radians_to_degrees(angle)
+        return angle
 
     def get_arc_end_angle(self, rad=False):
-        p2_vector = self.p2.to_vector2()
-        centre_vector = self.centre.to_vector2()
-        angle = p2_vector.compute_angle(centre_vector)
-        # angle = math.atan2(self.p2.y - self.centre.y, self.p2.x - self.centre.x)
-        # if not rad:
-        #     angle = radians_to_degrees(angle)
-        # return angle
+        # p2_vector = self.p2.to_vector2()
+        # centre_vector = self.centre.to_vector2()
+        # angle = p2_vector.compute_angle(centre_vector)
+        angle = math.atan2(self.p2.y - self.centre.y, self.p2.x - self.centre.x)
+        if not rad:
+            angle = radians_to_degrees(angle)
+        return angle
 
     def flatten_arc(self):
         arc_start_angle = self.get_arc_start_angle(True)
@@ -384,7 +384,7 @@ class Edge2:
             else:
                 temp.x = self.centre.x + self.radius * x_factor
                 temp.y = self.centre.y + self.radius * y_factor
-            part_point = Point2(temp.x - self.p1.x * x_factor, temp.y - self.p1.y * y_factor)
+            part_point = Point2(temp.x, temp.y)
             points.append(part_point)
             if self.clockwise:
                 number -= 1

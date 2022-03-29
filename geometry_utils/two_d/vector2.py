@@ -1,7 +1,7 @@
 import math
 import geometry_utils.three_d.vector3
 
-from geometry_utils.maths_utility import is_int_or_float, are_ints_or_floats, floats_are_close, radians_to_degrees, EPSILON
+from geometry_utils.maths_utility import is_int_or_float, are_ints_or_floats, floats_are_close, radians_to_degrees, EPSILON, HALF_PI, PI, ONE_AND_HALF_PI, TWO_PI
 
 
 class Vector2:
@@ -307,19 +307,19 @@ class Vector2:
 
     def compute_angle(self, other_vector):
         if is_vector2(other_vector):
-            x_diff = self.x - other_vector.x
-            y_diff = self.y - other_vector.y
+            x_diff = self.x - other_vector.x  # -6.5
+            y_diff = self.y - other_vector.y # 0
 
-            if xdiff == 0:
-                if ydiff < 0:
+            if x_diff == 0:
+                if y_diff < 0:
                     angle = 0
                 else:
                     angle = PI
-            elif ydiff == 0:
-                if xdiff < 0:
-                    angle = HALF_PI
+            elif y_diff == 0:
+                if x_diff < 0:
+                    angle = PI
                 else:
-                    angle = ONE_AND_HALF_PI
+                    angle = 0
             else:
                 angle = PI + math.atan2(xdif, ydif)
 
