@@ -358,16 +358,16 @@ class Path3:
             return self
 
     def transform(self, transformation_matrix):
-        old_area = self.get_enclosed_area()
+        # old_area = self.get_enclosed_area()
         for edge in self.list_of_edges:
             edge.transform(transformation_matrix)
-        new_area = self.get_enclosed_area()
-
-        if old_area is not None and new_area is not None:
-            if not floats_are_close(old_area, new_area):
-                for edge in self.list_of_edges:
-                    if edge.is_arc():
-                        edge.clockwise = not edge.clockwise
+        # new_area = self.get_enclosed_area()
+        #
+        # if old_area is not None and new_area is not None:
+        #     if not floats_are_close(old_area, new_area):
+        #         for edge in self.list_of_edges:
+        #             if edge.is_arc():
+        #                 edge.clockwise = not edge.clockwise
         self.update_path()
         return self
 

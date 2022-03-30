@@ -77,6 +77,12 @@ class Edge2:
                 raise TypeError("Radius must be an int or float")
 
     def __str__(self):
+        """
+        Prints the attributes of the edge
+
+        :return: the string of the edge
+        :rtype: str
+        """
         return ("Edge2(p1:" + str(self.p1) + ", p2:" + str(self.p2) + ", centre:" + str(self.centre) +
                 ", radius:" + str(self.radius) + ", clockwise:" + str(self.clockwise) +
                 ", large:" + str(self.large) + ")")
@@ -339,12 +345,18 @@ class Edge2:
         return (not self.is_arc()) and (not self.p1 == self.p2)
 
     def get_arc_start_angle(self, rad=False):
+        # p1_vector = self.p1.to_vector2()
+        # centre_vector = self.centre.to_vector2()
+        # angle = p1_vector.compute_angle(centre_vector)
         angle = math.atan2(self.p1.y - self.centre.y, self.p1.x - self.centre.x)
         if not rad:
             angle = radians_to_degrees(angle)
         return angle
 
     def get_arc_end_angle(self, rad=False):
+        # p2_vector = self.p2.to_vector2()
+        # centre_vector = self.centre.to_vector2()
+        # angle = p2_vector.compute_angle(centre_vector)
         angle = math.atan2(self.p2.y - self.centre.y, self.p2.x - self.centre.x)
         if not rad:
             angle = radians_to_degrees(angle)
@@ -353,6 +365,9 @@ class Edge2:
     def flatten_arc(self):
         arc_start_angle = self.get_arc_start_angle(True)
         arc_end_angle = self.get_arc_end_angle(True)
+
+        arc_vector = self.p2 - self.p1
+        signed = Vector2(math.copysign(1, arc_vector.x), math.copysign(1, arc_vector.y))
 
         if (not self.clockwise and arc_start_angle > arc_end_angle) or (self.clockwise and arc_start_angle < arc_end_angle):
             arc_start_angle, arc_end_angle = arc_end_angle, arc_start_angle
@@ -377,8 +392,8 @@ class Edge2:
                 temp = copy.deepcopy(self.p2)
             else:
                 temp.x = self.centre.x + self.radius * x_factor
-                temp.y = self.centre.y + self.radius * y_factor
-            part_point = Point2(temp.x, temp.y)
+                temp.y = self.centre.x + self.radius * y_factor
+            part_point = Point2(self.p1.x + (temp.x - self.p1.x),self.p1.y + (temp.y - self.p1.y))
             points.append(part_point)
             if self.clockwise:
                 number -= 1
@@ -499,8 +514,16 @@ class Edge2:
     def transform(self, transformation_matrix):
         self.p1 = transformation_matrix * self.p1
         self.p2 = transformation_matrix * self.p2
-        self.centre = self.calculate_centre()
+        self.centre = transformation_matrix * self.centre
+        self.clockwise = self.is_clockwise_arc()
         return self
+
+    def is_clockwise_arc(self):
+        midpoint = self.point_parametric(0.5)
+        p2_p1_vector = self.p2 - self.p1
+        midpoint_p1_vector = midpoint - self.p1
+        z_sign = p2_p1_vector.x * midpoint_p1_vector.y - p2_p1_vector.y * midpoint_p1_vector.x
+        return z_sign > 1
 
     def to_edge3(self):
         edge_3d = geometry_utils.three_d.edge3.Edge3(self.p1.to_point3(), self.p2.to_point3(), None,

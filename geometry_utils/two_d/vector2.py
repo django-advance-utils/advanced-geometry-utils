@@ -58,6 +58,12 @@ class Vector2:
             raise TypeError("Vector2 argument must be an int or float")
 
     def __str__(self):
+        """
+        Prints the attributes of the vector
+
+        :return: the string of the vector
+        :rtype: str
+        """
         return "Vector2(x:" + str("{:.2f}".format(self.x)) + ", y:" + str("{:.2f}".format(self.y)) + ")"
 
     def __add__(self, other_vector):
@@ -134,6 +140,15 @@ class Vector2:
         raise TypeError("Comparison must be with another object of Vector2")
 
     def equal(self, other, tol=0.01):
+        """
+        Compares the equality of the vector and another 2D vector with tolerance input
+
+        :param  other_vector: the other 2D vector
+        :type   other_vector: Vector2
+        :return:the vector equality
+        :rtype: bool
+        :raises:TypeError: Wrong argument type
+        """
         return abs(self.x - other.x) <= tol and abs(self.y - other.y) <= tol
 
 

@@ -460,6 +460,12 @@ class Edge3:
             list_of_arc_edges.append(Edge3(previous_point, point))
         return list_of_arc_edges
 
+    def is_clockwise_arc(self):
+        p2_p1_vector = self.p2 - self.p1
+        via_p1_vector = self.via - self.p1
+        z_sign = p2_p1_vector.x * via_p1_vector.y - p2_p1_vector.y * via_p1_vector.x
+        return z_sign > 1
+
 
 def is_edge3(input_variable):
     return isinstance(input_variable, Edge3)
