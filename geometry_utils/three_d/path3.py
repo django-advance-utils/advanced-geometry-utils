@@ -351,9 +351,9 @@ class Path3:
 
             self.list_of_edges = [
                 Edge3(Point3(circle_centre.x, circle_centre.y + circle_radius, circle_centre.z),
-                      Point3(circle_centre.x, circle_centre.y - circle_radius, circle_centre.z), circle_radius, False),
+                      Point3(circle_centre.x, circle_centre.y - circle_radius, circle_centre.z), radius=circle_radius, clockwise=False),
                 Edge3(Point3(circle_centre.x, circle_centre.y - circle_radius, circle_centre.z),
-                      Point3(circle_centre.x, circle_centre.y + circle_radius, circle_centre.z), circle_radius, False)
+                      Point3(circle_centre.x, circle_centre.y + circle_radius, circle_centre.z), radius=circle_radius, clockwise=False)
             ]
             return self
 

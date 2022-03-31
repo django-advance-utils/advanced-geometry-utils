@@ -344,12 +344,15 @@ class Edge3:
     def transform(self, transformation_matrix):
         self.p1 = transformation_matrix * self.p1
         self.p2 = transformation_matrix * self.p2
-        self.centre = self.calculate_centre()
         transformed_centre = transformation_matrix * self.centre
+        self.centre = self.calculate_centre()
+        transformed_via = transformation_matrix * self.via
+        self.via = self.get_via()
+
         if self.is_arc():
-            if self.centre != transformed_centre:
+            if self.centre != transformed_centre or self.via != transformed_via:
                 self.clockwise = not self.clockwise
-                self.centre = self.get_arc_centre_with_start_end_radius(self.clockwise)
+                self.centre = self.calculate_centre()
                 self.via = self.get_via()
         return self
 
