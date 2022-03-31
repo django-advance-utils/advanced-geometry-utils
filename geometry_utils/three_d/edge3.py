@@ -90,6 +90,14 @@ class Edge3:
         edge_2d_midpoint = edge_2d.point_parametric(0.5)
         return Point3(edge_2d_midpoint.x, edge_2d_midpoint.y, self.p1.z)
 
+    def update_via(self):
+        a = self.p1 - self.centre
+        b = self.p2 - self.centre
+
+        m = a + b
+        m = m.normalise() * self.radius
+        self.via = self.centre + m
+
     def __str__(self):
         return ("Edge3(p1:" + str(self.p1) + ", p2:" + str(self.p2) + ", via:" + str(self.via) +
                 ", centre:" + str(self.centre) + ", radius:" + str(self.radius) + ", clockwise:" + str(self.clockwise) +
@@ -337,6 +345,12 @@ class Edge3:
         self.p1 = transformation_matrix * self.p1
         self.p2 = transformation_matrix * self.p2
         self.centre = self.calculate_centre()
+        transformed_centre = transformation_matrix * self.centre
+        if self.is_arc():
+            if self.centre != transformed_centre:
+                self.clockwise = not self.clockwise
+                self.centre = self.get_arc_centre_with_start_end_radius(self.clockwise)
+                self.via = self.get_via()
         return self
 
     def offset(self, vector):
@@ -460,11 +474,48 @@ class Edge3:
             list_of_arc_edges.append(Edge3(previous_point, point))
         return list_of_arc_edges
 
-    def is_clockwise_arc(self):
-        p2_p1_vector = self.p2 - self.p1
-        via_p1_vector = self.via - self.p1
-        z_sign = p2_p1_vector.x * via_p1_vector.y - p2_p1_vector.y * via_p1_vector.x
-        return z_sign > 1
+    # def is_clockwise_arc(self):
+
+        # self.update_via()
+        # p2_p1_vector = self.p2 - self.p1
+        # via_p1_vector = self.via - self.p1
+        # z_sign = p2_p1_vector.x * via_p1_vector.y - p2_p1_vector.y * via_p1_vector.x
+        # return z_sign > 1
+
+        # theta_1 = math.atan2(self.centre.y - self.p1.y, self.centre.x - self.p1.x)
+        # theta_2 = math.atan2(self.p2.y - self.centre.y, self.p2.x - self.centre.x)
+        # theta = theta_2 + theta_1
+        # if theta < 0:
+        #     theta += TWO_PI
+        # elif theta > TWO_PI:
+        #     theta -= TWO_PI
+        # return theta < PI
+
+        # x = self.p1 - self.centre
+        # y = self.p2 - self.centre
+        # z = Vector3(x.x * y.x + x.y * y.y, x.x * y.y - x.y * y.x, 0)
+        # theta = math.atan2(z.y, z.x)
+        # return theta > 1
+
+        # phi = ((self.via.x - self.p1.x) * (self.p2.y - self.p1.y)) - ((self.via.y - self.p2.y) * (self.p2.x - self.p1.x))
+        # return phi > 0
+
+    def get_arc_centre_with_start_end_radius(self, clockwise):
+        start = self.p1
+        end = self.p2
+        radius = self.radius
+
+        d = math.sqrt(math.pow((end.x - start.x), 2) + math.pow((end.y - start.y), 2))
+        m = Point3((start.x + end.x) / 2, (start.y + end.y) / 2, 0.0)
+        n = Point3((start.x - end.x) / d, (start.y - end.y) / d, 0.0)
+        n_s = Vector3(-n.y, n.x, 0.0)
+        h = math.sqrt(math.pow(radius, 2) - (math.pow(d, 2) / 4))
+
+        if clockwise:
+            c = m + (n_s * h)
+        else:
+            c = m - (n_s * h)
+        return c
 
 
 def is_edge3(input_variable):
