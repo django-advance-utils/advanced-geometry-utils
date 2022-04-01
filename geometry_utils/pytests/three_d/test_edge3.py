@@ -42,9 +42,9 @@ def test_edge3_point_parametric(test_edge3_1, test_edge3_2, test_edge3_3):
     assert test_edge3_3.point_parametric(0.5) == Point3(1.0, 1.0, 0.0)
 
 
-def test_edge3_point_parametric_with_float_argument(test_edge3_1):
+def test_edge3_point_parametric_with_point_argument(test_edge3_1, test_point3_1):
     with pytest.raises(TypeError):
-        return test_edge3_1.point_parametric(9.0)
+        return test_edge3_1.point_parametric(test_point3_1)
 
 
 def test_edge3_parametric_point(test_edge3_2, test_edge3_4):
@@ -72,7 +72,9 @@ def test_edge3_arc_get_line_tangent(test_edge3_3):
 
 
 def test_edge3_get_arc_tangent(test_edge3_3):
-    assert test_edge3_3.get_arc_tangent(Point3(1.0, 1.0, 0.0)) == [Vector3(-1.0, 0.0, 0.0), Vector3(0.0, 0.0, -1.0)]
+    arc_tangent = test_edge3_3.get_arc_tangent(Point3(1.0, 1.0, 0.0))
+    assert arc_tangent[0] == Vector3(-1.0, 0.0, 0.0)
+    assert arc_tangent[1] == Vector3(0.0, 0.0, -1.0)
     assert Edge3(Point3(0.0, 0.0, 0.0), Point3(2.0, 0.0, 0.0), radius=1.0,
                  clockwise=False).get_arc_tangent(Point3(1.0, 1.0, 0.0)) == [Vector3(1.0, 0.0, 0.0),
                                                                              Vector3(0.0, 0.0, 1.0)]
