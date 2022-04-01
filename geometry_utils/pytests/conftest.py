@@ -520,7 +520,3 @@ Intersection
 def intersection1():
     return Intersection()
 
-
-@pytest.fixture(scope="session")
-def intersection2():
-    return Intersection()
