@@ -738,19 +738,6 @@ class Edge2:
                 self.centre = self.calculate_centre()
         return self
 
-    def is_clockwise_arc(self):
-        """
-        Tests if the arc edge is clockwise
-
-        :return: if the arc is clockwise
-        :rtype: bool
-        """
-        midpoint = self.point_parametric(0.5)
-        p2_p1_vector = self.p2 - self.p1
-        midpoint_p1_vector = midpoint - self.p1
-        z_sign = p2_p1_vector.x * midpoint_p1_vector.y - p2_p1_vector.y * midpoint_p1_vector.x
-        return z_sign > 1
-
     def to_edge3(self):
         """
         Converts the 2D edge to a 3D edge

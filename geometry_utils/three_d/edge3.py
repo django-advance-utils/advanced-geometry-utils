@@ -354,7 +354,7 @@ class Edge3:
         :return: if the edge is a line
         :rtype bool
         """
-        return not self.is_arc and not self.p1 == self.p2
+        return not self.is_arc() and not self.p1 == self.p2
 
     def get_line_tangent(self):
         """
@@ -732,19 +732,6 @@ class Edge3:
         for previous_point, point in zip(points, points[1:]):
             list_of_arc_edges.append(Edge3(previous_point, point))
         return list_of_arc_edges
-
-    def is_clockwise_arc(self):
-        """
-        Tests if the arc edge is clockwise
-
-        :return: if the arc is clockwise
-        :rtype: bool
-        """
-        self.update_via()
-        p2_p1_vector = self.p2 - self.p1
-        via_p1_vector = self.via - self.p1
-        z_sign = p2_p1_vector.x * via_p1_vector.y - p2_p1_vector.y * via_p1_vector.x
-        return z_sign > 1
 
     def get_arc_centre_with_start_end_radius(self, clockwise):
         """

@@ -11,12 +11,12 @@ from math import sqrt
 
 def test_edge2_string_point_arguments():
     with pytest.raises(TypeError):
-        return Edge3("Point3(0.0, 0.0)", "Point3(0.0, 0.0)")
+        return Edge3("Point3(0.0, 0.0)", "Point3(0.0, 0.0)", "Point3(0.0, 0.0")
 
 
 def test_edge2_string_radius_argument():
     with pytest.raises(TypeError):
-        return Edge3(Point3(0.0, 0.0), Point3(0.0, 0.0), "0.0")
+        return Edge3(Point3(0.0, 0.0), Point3(0.0, 0.0), Point3(0.0, 0.0), "0.0")
 
 
 def test_edge3_print_string(test_edge3_1):
@@ -56,10 +56,6 @@ def test_edge3_is_line(test_edge3_2):
     assert test_edge3_2.is_line()
 
 
-def test_edge2_is_clockwise_arc(test_edge3_3):
-    assert test_edge3_3.is_clockwise_arc()
-
-
 def test_edge3_get_line_tangent(test_edge3_2):
     assert test_edge3_2.get_line_tangent() == Vector3(2.0 / sqrt(12.0), 2.0 / sqrt(12.0), 2.0 / sqrt(12.0))
 
@@ -80,13 +76,13 @@ def test_edge3_get_arc_normal_return_type(test_edge3_3, test_point3_1):
 
 
 def test_edge3_get_arc_normal_arithmetic(test_edge3_3):
-    assert test_edge3_3.get_arc_normal(Point3(1.0, 0.0, 0.0)) == Vector3(-1.0, 0.0, 0.0)
-    assert test_edge3_3.get_arc_normal(Point3(0.0, 1.0, 0.0)) == Vector3(0.0, -1.0, 0.0)
+    assert test_edge3_3.get_arc_normal(Point3(2.0, 0.0, 0.0)) == Vector3(-1.0, 0.0, 0.0)
+    assert test_edge3_3.get_arc_normal(Point3(1.0, 1.0, 0.0)) == Vector3(0.0, -1.0, 0.0)
 
 
-def test_edge3_line_get_arc_normal_arithmetic(test_edge3_3):
+def test_edge3_line_get_arc_normal_arithmetic(test_edge3_2):
     with pytest.raises(TypeError):
-        return test_edge3_3.get_arc_normal(Point3(0.0, 0.0, 0.0))
+        return test_edge3_2.get_arc_normal(Point3(0.0, 0.0, 0.0))
 
 
 def test_edge3_arc_normal_arithmetic_with_float_argument(test_edge3_3):
