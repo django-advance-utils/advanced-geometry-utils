@@ -366,9 +366,6 @@ class Edge2:
         arc_start_angle = self.get_arc_start_angle(True)
         arc_end_angle = self.get_arc_end_angle(True)
 
-        arc_vector = self.p2 - self.p1
-        signed = Vector2(math.copysign(1, arc_vector.x), math.copysign(1, arc_vector.y))
-
         if (not self.clockwise and arc_start_angle > arc_end_angle) or (self.clockwise and arc_start_angle < arc_end_angle):
             arc_start_angle, arc_end_angle = arc_end_angle, arc_start_angle
 
@@ -392,8 +389,8 @@ class Edge2:
                 temp = copy.deepcopy(self.p2)
             else:
                 temp.x = self.centre.x + self.radius * x_factor
-                temp.y = self.centre.x + self.radius * y_factor
-            part_point = Point2(self.p1.x + (temp.x - self.p1.x),self.p1.y + (temp.y - self.p1.y))
+                temp.y = self.centre.y + self.radius * y_factor
+            part_point = Point2(temp.x, temp.y)
             points.append(part_point)
             if self.clockwise:
                 number -= 1
@@ -515,7 +512,8 @@ class Edge2:
         self.p1 = transformation_matrix * self.p1
         self.p2 = transformation_matrix * self.p2
         self.centre = transformation_matrix * self.centre
-        self.clockwise = self.is_clockwise_arc()
+        if self.is_arc():
+            self.clockwise = self.is_clockwise_arc()
         return self
 
     def is_clockwise_arc(self):
