@@ -381,9 +381,9 @@ def test_edge2_vector_within_arc(test_edge2_6):
     assert test_edge2_6.vector_within_arc(Vector2(5.0, 0.0))
 
 
-def test_edge2_line_vector_within_arc(test_edge2_5):
+def test_edge2_line_vector_within_arc(test_edge2_2):
     with pytest.raises(TypeError):
-        test_edge2_5.vector_within_arc(Vector2(0.0, 0.0))
+        test_edge2_2.vector_within_arc(Vector2(0.0, 0.0))
 
 
 def test_edge2_vector_within_arc_float_argument(test_edge2_5):
