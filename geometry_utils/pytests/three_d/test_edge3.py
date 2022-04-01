@@ -35,10 +35,16 @@ def test_edge2_to_float_equality(test_edge3_1):
         assert test_edge3_1 == 9.0
 
 
-def test_edge3_point_parametric(test_edge3_1, test_edge3_2):
+def test_edge3_point_parametric(test_edge3_1, test_edge3_2, test_edge3_3):
     assert test_edge3_2.point_parametric(0.0) == test_edge3_2.p1
     assert test_edge3_2.point_parametric(1.0) == test_edge3_2.p2
-    assert test_edge3_1.point_parametric(0.5) == test_edge3_1.p1  # p1 = p2
+    assert test_edge3_1.point_parametric(0.5) == test_edge3_1.p1
+    assert test_edge3_3.point_parametric(0.5) == Point3(1.0, 1.0, 0.0)
+
+
+def test_edge3_point_parametric_with_float_argument(test_edge3_1):
+    with pytest.raises(TypeError):
+        return test_edge3_1.point_parametric(9.0)
 
 
 def test_edge3_parametric_point(test_edge3_2, test_edge3_4):
@@ -63,6 +69,23 @@ def test_edge3_get_line_tangent(test_edge3_2):
 def test_edge3_arc_get_line_tangent(test_edge3_3):
     with pytest.raises(TypeError):
         return test_edge3_3.get_line_tangent()
+
+
+def test_edge3_get_arc_tangent(test_edge3_3):
+    assert test_edge3_3.get_arc_tangent(Point3(1.0, 1.0, 0.0)) == [Vector3(-1.0, 0.0, 0.0), Vector3(0.0, 0.0, -1.0)]
+    assert Edge3(Point3(0.0, 0.0, 0.0), Point3(2.0, 0.0, 0.0), radius=1.0,
+                 clockwise=False).get_arc_tangent(Point3(1.0, 1.0, 0.0)) == [Vector3(1.0, 0.0, 0.0),
+                                                                             Vector3(0.0, 0.0, 1.0)]
+
+
+def test_edge3_line_get_arc_tangent(test_edge3_2):
+    with pytest.raises(TypeError):
+        test_edge3_2.get_arc_tangent(Point3(0.0, 0.0, 0.0))
+
+
+def test_edge3_get_arc_tangent_with_float_argument(test_edge3_3):
+    with pytest.raises(TypeError):
+        test_edge3_3.get_arc_tangent(9.0)
 
 
 def test_edge3_calculate_centre(test_edge3_2, test_edge3_3, test_edge3_4):
@@ -90,5 +113,22 @@ def test_edge3_arc_normal_arithmetic_with_float_argument(test_edge3_3):
         return test_edge3_3.get_arc_normal(9.0)
 
 
+def test_edge3_get_plane_normal(test_edge3_2):
+    assert test_edge3_2.get_plane_normal() == Vector3(0.0, 0.0, 0.0)
+
+
 def test_edge3_get_edge_bounds(test_edge3_2):
     assert test_edge3_2.get_edge_bounds() == AxisAlignedBox3(Point3(0.0, 0.0, 0.0), Point3(2.0, 2.0, 2.0))
+
+
+def test_edge3_get_arc_start_angle(test_edge3_3):
+    assert test_edge3_3.get_arc_start_angle() == 180.0
+
+
+def test_edge3_get_arc_end_angle(test_edge3_3):
+    assert test_edge3_3.get_arc_end_angle() == 0.0
+
+
+def test_edge3_reverse():
+    assert Edge3(Point3(0.0, 0.0, 0.0), Point3(2.0, 0.0, 0.0), radius=1.0, clockwise=True).reverse() == \
+           Edge3(Point3(2.0, 0.0, 0.0), Point3(0.0, 0.0, 0.0), radius=1.0, clockwise=False)
