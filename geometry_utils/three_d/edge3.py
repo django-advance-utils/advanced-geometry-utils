@@ -36,20 +36,90 @@ class Edge3:
 
     Methods:
     ________
+    __str__(): string
+        Returns the attributes of the 3D edge in string format
+    __eq__(Edge3): bool
+        Returns the equality comparison of the edge with another 3D edge
+    __ne__(Edge3): bool
+        Returns the inequality comparison of the edge with another 3D edge
     calculate_arc_centre(): Point3
         returns the calculated centre of the edge
     is_arc(): bool
         returns True if the edge is an arc
+    midpoint(): Point3
+        returns the midpoint of the 3D edge
+    get_via(): Point3
+        returns the point between the start and end points on the edge
+    update_via(): Point3
+        returns the updated edge via point
+    is_clockwise_arc(): bool
+        tests if the arc edge is clockwise
     point_parametric(int/float): Point2
         returns the point along the edge from 0 = p1 to 1 = p2
     parametric_point(Point2): int/float
         returns the number along the edge from p1 = 0 to p2 = 1
-    get_tangent(): int/float
-        returns the tangent of the edge
+    get_plane_normal(): Vector2
+        returns the vector normal to the edge plane
+    get_arc_normal(Point3): Vector3
+        returns the normal to an arc edge at specified 3D point
+    get_arc_tangent(Point3): Vector3, Vector3
+        returns the two possible tangents of the arc edge at a specified 3D point
+    get_line_tangent(Point3): Vector3
+        returns the tangent of the line edge
     get_sweep(): int/float
         returns the sweep of the edge
     get_edge_bounds(): AxisAlignedBox3
         returns the bounds of the edge in 2D points
+    is_circle(): bool
+        tests if the arc edge is a circle
+    get_arc_start_angle(bool): float
+        returns the angle of the start point of the arc in radians or degrees
+    get_arc_end_angle(bool): float
+        returns the angle of the end point of the arc in radians or degrees
+    reverse(): Edge3
+        reverses the direction of the edge and swaps the start and end positions
+    mirror_x(): Edge3
+        mirrors the edge about the x axis
+    mirror_y(): Edge3
+        mirrors the edge about the y axis
+    mirror_z(): Edge3
+        mirrors the edge about the y axis
+    mirror_origin(): Edge3
+        mirrors the edge about the origin
+    transform(Matrix4): Edge2
+        returns the edge transformed with the specified 4x4 matrix
+    offset(Vector3): Edge3
+        offsets the edge by the specified 3D vector and direction
+    rotate(float): Edge3
+        rotates the edge about the z axis with specified rotation angle
+    to_vector3(): Vector3
+        returns the 3D vector from the edge start to end points
+    to_edge2(): Edge2
+        returns a 2D edge from the 3D edge
+    angle_to_edge(Edge3): float
+        returns the angle of the edge to another 3D edge
+    angle_to_x_axis(): flaot
+        returns the angle of the edge to the x axis
+    is_perpendicular_to(Edge3): bool
+        returns the perpendicular comparison of the edge with another 3D edge
+    minimum_z(): float
+        returns the minimum z coordinate of the edge
+    maximum_z(): float
+        returns the maximum z coordinate of the edge
+    minimum_y(): float
+        returns the minimum y coordinate of the edge
+    maximum_y(): float
+        returns the maximum y coordinate of the edge
+    minimum_x(): float
+        returns the minimum x coordinate of the edge
+    maximum_x(): float
+        returns the maximum x coordinate of the edge
+    flatten_arc(): list
+        returns a list of line edges about the arc circumference
+    is_clockwise_arc(): bool
+        tests if the arc edge is clockwise
+    get_arc_centre_with_start_end_radius(bool): Point3
+        returns the arc centre from specified edge direction, start point, end point and radius
     """
 
     def __init__(self,
@@ -83,22 +153,13 @@ class Edge3:
             if not is_int_or_float(radius):
                 raise TypeError("Fourth argument must be an int or float")
 
-    def get_via(self):
-        edge_2d = geometry_utils.two_d.edge2.Edge2(geometry_utils.two_d.point2.Point2(self.p1.x, self.p1.y),
-                                                   geometry_utils.two_d.point2.Point2(self.p2.x, self.p2.y),
-                                                   self.radius, self.clockwise, self.large)
-        edge_2d_midpoint = edge_2d.point_parametric(0.5)
-        return Point3(edge_2d_midpoint.x, edge_2d_midpoint.y, self.p1.z)
-
-    def update_via(self):
-        a = self.p1 - self.centre
-        b = self.p2 - self.centre
-
-        m = a + b
-        m = m.normalise() * self.radius
-        self.via = self.centre + m
-
     def __str__(self):
+        """
+        Prints the attributes of the 3D edge
+
+        :return: the string of the edge
+        :rtype: str
+        """
         return ("Edge3(p1:" + str(self.p1) + ", p2:" + str(self.p2) + ", via:" + str(self.via) +
                 ", centre:" + str(self.centre) + ", radius:" + str(self.radius) + ", clockwise:" + str(self.clockwise) +
                 ", large:" + str(self.large) + ")")
@@ -119,14 +180,6 @@ class Edge3:
                         self.centre == other_edge.centre and self.clockwise == other_edge.clockwise)
             return equality
         raise TypeError("Comparison must be with another object of Edge3")
-
-    def is_clockwise(self):
-        se = self.p2 - self.via
-        sm = self.p1 - self.via
-
-        cp = se.cross(sm)
-
-        return cp > 0
 
     def calculate_centre(self):
         """
@@ -154,7 +207,54 @@ class Edge3:
         return self.radius > DOUBLE_EPSILON
 
     def midpoint(self):
+        """
+        Calculates the midpoint of the 3D edge
+
+        :return: point in the middle of the edge
+        :rtype: Point3
+        """
         return self.point_parametric(0.5)
+
+    def get_via(self):
+        """
+        Calculates the point between the start and end of the 3D edge
+
+        :return: point between the edge
+        :rtype: Point3
+        """
+        edge_2d = geometry_utils.two_d.edge2.Edge2(geometry_utils.two_d.point2.Point2(self.p1.x, self.p1.y),
+                                                   geometry_utils.two_d.point2.Point2(self.p2.x, self.p2.y),
+                                                   self.radius, self.clockwise, self.large)
+        edge_2d_midpoint = edge_2d.point_parametric(0.5)
+        return Point3(edge_2d_midpoint.x, edge_2d_midpoint.y, self.p1.z)
+
+    def update_via(self):
+        """
+        Updates the via value of the edge
+
+        :return: the new via value
+        :rtype: Point3
+        """
+        a = self.p1 - self.centre
+        b = self.p2 - self.centre
+
+        m = a + b
+        m = m.normalise() * self.radius
+        self.via = self.centre + m
+
+    def is_clockwise(self):
+        """
+        Tests if the 3D arc edge is clockwise
+
+        :return: if the arc is clockwise
+        :rtype: bool
+        """
+        se = self.p2 - self.via
+        sm = self.p1 - self.via
+
+        cp = se.cross(sm)
+
+        return cp > 0
 
     def point_parametric(self, s):
         """
@@ -213,6 +313,12 @@ class Edge3:
             raise TypeError("Point parametric must be with an int or float")
 
     def get_plane_normal(self):
+        """
+        Find the vector normal to the plane on which the edge is on
+
+        :return: plane vector normal
+        :rtype: Vector3
+        """
         return self.p1.to_vector3().cross(self.p2.to_vector3())
 
     def parametric_point(self, point):
@@ -242,20 +348,35 @@ class Edge3:
             raise TypeError("Argument must be an object of Point3")
 
     def is_line(self):
+        """
+        Tests if the edge is a line
+
+        :return: if the edge is a line
+        :rtype bool
+        """
         return not self.is_arc and not self.p1 == self.p2
 
     def get_line_tangent(self):
         """
-        Calculates the tangent of the edge
+        Gets the vector tangent to a line
 
-        :return:the resulting tangent of the edge
-        :rtype: int/float
+        :return: the resulting line tangent
+        :rtype: Vector3
+        :raises: wrong argument type
         """
         if self.is_arc():
             raise TypeError("Line tangent can not be derived for an arc")
         return (self.p2 - self.p1).normalised()
 
     def get_arc_normal(self, point):
+        """
+        Gets the vector normal to an arc at a specified 3D point
+
+        :param point: point on arc to find normal at
+        :return: the resulting arc normal
+        :rtype: Vector3
+        :raises: wrong arguments types
+        """
         if is_point3(point):
             if self.is_arc():
                 return (self.centre - point).normalised()
@@ -264,17 +385,19 @@ class Edge3:
 
     def get_arc_tangent(self, point):
         """
-        Calculates the tangent of the edge
+        Calculates the tangent of the arc edge at a specified 2D point
 
-        :return:the resulting tangent of the edge
-        :rtype: int/float
+        :param point: point on arc to find tangent at
+        :return:the two resulting possible tangents of the edge
+        :rtype: Vector3, Vector3
+        :raises: wrong arguments types
         """
         if is_point3(point):
             if self.is_arc():
                 if self.clockwise:
-                    return self.get_arc_normal(point).get_perpendicular()
+                    return self.get_arc_normal(point).get_perpendicular(Vector3(), Vector3)
                 else:
-                    return self.get_arc_normal(point).get_perpendicular().inverse()
+                    return self.get_arc_normal(point).get_perpendicular(Vector3(), Vector3()).invert()
             raise TypeError("Arc tangent can not be derived for a line")
         raise TypeError("Input argument must be an object of Point3")
 
@@ -291,25 +414,53 @@ class Edge3:
         return bounds
 
     def is_circle(self):
+        """
+        Tests if the arc edge is a circle
+
+        :return: if the arc edge is a circle
+        :rtype bool
+        """
         return self.is_arc() and self.p1 == self.p2
 
     def get_arc_start_angle(self, rad=False):
+        """
+        Calculates the angle of the start point of the arc
+
+        :param rad: if the result should be in rad
+        :return: arc start angle
+        :rtype: float
+        """
         edge_2d = self.to_edge2()
         angle = edge_2d.get_arc_start_angle(rad)
         return angle
 
     def get_arc_end_angle(self, rad=False):
+        """
+        Calculates the angle of the end point of the arc
+
+        :param rad: if the result should be in rad
+        :return: arc end angle
+        :rtype: float
+        """
         edge_2d = self.to_edge2()
         angle = edge_2d.get_arc_end_angle(rad)
         return angle
 
     def reverse(self):
+        """
+        Reverses the direction of the edge
+
+        """
         self.p1, self.p2 = self.p2, self.p1
         if self.is_arc():
             self.clockwise = not self.clockwise
         return self
 
     def mirror_x(self):
+        """
+        Mirrors the edge about the x axis
+
+        """
         self.p1.mirror_x()
         self.p2.mirror_x()
         self.centre = self.calculate_centre()
@@ -318,6 +469,10 @@ class Edge3:
         return self
 
     def mirror_y(self):
+        """
+        Mirrors the edge about the y axis
+
+        """
         self.p1.mirror_y()
         self.p2.mirror_y()
         self.centre = self.calculate_centre()
@@ -326,6 +481,10 @@ class Edge3:
         return self
 
     def mirror_z(self):
+        """
+        Mirrors the edge about the z axis
+
+        """
         self.p1.mirror_z()
         self.p2.mirror_z()
         self.centre = self.calculate_centre()
@@ -334,6 +493,10 @@ class Edge3:
         return self
 
     def mirror_origin(self):
+        """
+        Mirrors the edge about the origin
+
+        """
         self.p1.mirror_origin()
         self.p2.mirror_origin()
         self.centre = self.calculate_centre()
@@ -342,6 +505,11 @@ class Edge3:
         return self
 
     def transform(self, transformation_matrix):
+        """
+        Transforms an edge with provided 4x4 matrix
+
+        :param transformation_matrix: 4x4 matrix to transform the edge
+        """
         self.p1 = transformation_matrix * self.p1
         self.p2 = transformation_matrix * self.p2
         transformed_centre = transformation_matrix * self.centre
@@ -357,6 +525,12 @@ class Edge3:
         return self
 
     def offset(self, vector):
+        """
+        Offsets the edge by the provided 3D vector
+
+        :param vector: the 3D vector by which the edge is to be offset by
+        :raises wrong argument type
+        """
         if is_vector3(vector):
             self.p1 += vector
             self.p2 += vector
@@ -367,6 +541,12 @@ class Edge3:
             raise TypeError("Edge offset is done by an object of Vector3")
 
     def rotate(self, rotation_angle):
+        """
+        Rotates the 3D edge about the z axis with a rotation angle
+
+        :param rotation_angle: the angle with which the edge rotation is done
+        :raises wrong angle argument type
+        """
         if is_float(rotation_angle):
             rotation_matrix = Matrix4.z_rotation(rotation_angle)
 
@@ -378,9 +558,21 @@ class Edge3:
         raise TypeError("Rotation angle must be a float")
 
     def to_vector3(self):
+        """
+        Derives the vector of the edge from the start point to the end point
+
+        :return: edge vector
+        :rtype: Vector3
+        """
         return self.p2 - self.p1
 
     def to_edge2(self):
+        """
+        Converts the 3D edge to a 2D edge
+
+        :return: the resulting Edge2 object
+        :rtype: Edge3
+        """
         edge_2d = geometry_utils.two_d.edge2.Edge2(self.p1.to_point2(), self.p2.to_point2(),
                                                    self.radius, self.clockwise, self.large)
         # edge_2d.name = self.name
@@ -392,6 +584,13 @@ class Edge3:
         return edge_2d
 
     def angle_to_edge(self, other_edge):
+        """
+        Returns the angle the 3D edge makes with another 3D edge in radians
+
+        :return: the angle to the other 3D edge
+        :rtype: float
+        :raises: edge type error if any of the edges is an arc
+        """
         if is_edge3(other_edge):
             if self.is_arc() or other_edge.is_arc():
                 raise TypeError("Angle check can not be found from an arc")
@@ -399,6 +598,13 @@ class Edge3:
         raise TypeError("Angle check must be done with another object Edge2")
 
     def angle_to_x_axis(self):
+        """
+        Returns the angle the edge makes with the x axis in radians
+
+        :return: the angle to x axis
+        :rtype: float
+        :raises: edge type error if it is an arc
+        """
         if self.is_arc():
             raise TypeError()
         self_vector = self.to_vector3()
@@ -408,30 +614,80 @@ class Edge3:
             return math.acos(self_vector.x)
 
     def is_perpendicular_to(self, other_edge):
+        """
+        Tests if the 3D edge is perpendicular to another 3D edge
+
+        :param other_edge: the other 3D edge
+        :return: if the two edges are perpendicular to each other
+        :rtype: bool
+        :raises: wrong argument type
+        """
         if is_edge3(other_edge):
             return (self.angle_to_edge(other_edge) == HALF_PI or self.angle_to_edge(other_edge) == -ONE_AND_HALF_PI or
                     self.angle_to_edge(other_edge) == -HALF_PI or self.angle_to_edge(other_edge) == ONE_AND_HALF_PI)
         raise TypeError("Perpendicular check must be with an Edge3 object")
 
     def minimum_z(self):
+        """
+        Returns the minimum z coordinate of an edge
+
+        :return: the minimum z coordinate value
+        :rtype: float
+        """
         return min(self.p1.z, self.p2.z)
 
     def maximum_z(self):
+        """
+        Returns the maximum z coordinate of an edge
+
+        :return: the maximum z coordinate value
+        :rtype: float
+        """
         return max(self.p1.z, self.p2.z)
 
     def minimum_y(self):
+        """
+        Returns the minimum y coordinate of an edge
+
+        :return: the minimum y coordinate value
+        :rtype: float
+        """
         return min(self.p1.y, self.p2.y)
 
     def maximum_y(self):
+        """
+        Returns the maximum y coordinate of an edge
+
+        :return: the maximum y coordinate value
+        :rtype: float
+        """
         return max(self.p1.y, self.p2.y)
 
     def minimum_x(self):
+        """
+        Returns the minimum x coordinate of an edge
+
+        :return: the minimum x coordinate value
+        :rtype: float
+        """
         return min(self.p1.x, self.p2.x)
 
     def maximum_x(self):
+        """
+        Returns the maximum x coordinate of an edge
+
+        :return: the maximum x coordinate value
+        :rtype: float
+        """
         return max(self.p1.x, self.p2.x)
 
     def flatten_arc(self):
+        """
+        Returns a list of line edges that define the arc circumference
+
+        :return: list of line edges
+        :rtype: list
+        """
         arc_start_angle = self.get_arc_start_angle(True)
         arc_end_angle = self.get_arc_end_angle(True)
 
@@ -477,33 +733,27 @@ class Edge3:
             list_of_arc_edges.append(Edge3(previous_point, point))
         return list_of_arc_edges
 
-    # def is_clockwise_arc(self):
+    def is_clockwise_arc(self):
+        """
+        Tests if the arc edge is clockwise
 
-        # self.update_via()
-        # p2_p1_vector = self.p2 - self.p1
-        # via_p1_vector = self.via - self.p1
-        # z_sign = p2_p1_vector.x * via_p1_vector.y - p2_p1_vector.y * via_p1_vector.x
-        # return z_sign > 1
-
-        # theta_1 = math.atan2(self.centre.y - self.p1.y, self.centre.x - self.p1.x)
-        # theta_2 = math.atan2(self.p2.y - self.centre.y, self.p2.x - self.centre.x)
-        # theta = theta_2 + theta_1
-        # if theta < 0:
-        #     theta += TWO_PI
-        # elif theta > TWO_PI:
-        #     theta -= TWO_PI
-        # return theta < PI
-
-        # x = self.p1 - self.centre
-        # y = self.p2 - self.centre
-        # z = Vector3(x.x * y.x + x.y * y.y, x.x * y.y - x.y * y.x, 0)
-        # theta = math.atan2(z.y, z.x)
-        # return theta > 1
-
-        # phi = ((self.via.x - self.p1.x) * (self.p2.y - self.p1.y)) - ((self.via.y - self.p2.y) * (self.p2.x - self.p1.x))
-        # return phi > 0
+        :return: if the arc is clockwise
+        :rtype: bool
+        """
+        self.update_via()
+        p2_p1_vector = self.p2 - self.p1
+        via_p1_vector = self.via - self.p1
+        z_sign = p2_p1_vector.x * via_p1_vector.y - p2_p1_vector.y * via_p1_vector.x
+        return z_sign > 1
 
     def get_arc_centre_with_start_end_radius(self, clockwise):
+        """
+        Calculates the arc centre from the start point, end point, radius and provided edge direction
+
+        :param clockwise: if the edge is clockwise or counterclockwise
+        :return: arc centre
+        :rtype: Point3
+        """
         start = self.p1
         end = self.p2
         radius = self.radius
@@ -522,4 +772,10 @@ class Edge3:
 
 
 def is_edge3(input_variable):
+    """
+    Checks if the input variable is an object of Edge3
+
+    :param input_variable: the input variable to be checked
+    :return: bool
+    """
     return isinstance(input_variable, Edge3)

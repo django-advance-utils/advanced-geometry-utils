@@ -33,6 +33,12 @@ class Edge2:
 
     Methods:
     ________
+    __str__(): string
+        Returns the attributes of the 2D edge in string format
+    __eq__(Edge2): bool
+        Returns the equality comparison of the edge with another 2D edge
+    __ne__(Edge2): bool
+        Returns the inequality comparison of the edge with another 2D edge
     calculate_arc_centre(): Point2
         returns the calculated centre of the edge
     is_arc(): bool
@@ -41,14 +47,68 @@ class Edge2:
         returns the point along the edge from 0 = p1 to 1 = p2
     parametric_point(Point2): int/float
         returns the number along the edge from p1 = 0 to p2 = 1
-    get_tangent(): int/float
-        returns the tangent of the edge
-    get_sweep(): int/float
+    get_arc_normal(Point2): Vector2
+        returns the normal to an arc edge at specified 2D point
+    get_line_normal(): Vector2
+        returns the normal to line edge
+    get_arc_tangent(Point2): Vector2
+        returns the tangent of the arc edge at a specified 2D point
+    get_line_tangent(Point2): Vector2
+        returns the tangent of the line edge
+    get_sweep_angle(): int/float
         returns the sweep of the edge
     get_edge_bounds(): AxisAlignedBox2
         returns the bounds of the edge in 2D points
-    intersect(Edge2, list):
-        returns an intersection of the edge with another edge and appends the list of intersections
+    offset(Vector2): Edge2
+        offsets the edge by the specified 2D vector and direction
+    reverse(): Edge2
+        reverses the direction of the edge and swaps the start and end positions
+    mirror_x(): Edge2
+        mirrors the edge about the x axis
+    mirror_y(): Edge2
+        mirrors the edge about the y axis
+    mirror_origin(): Edge2
+        mirrors the edge about the origin
+    is_circle(): bool
+        tests if the arc edge is a circle
+    is_line(): bool
+        tests if the edge is a line
+    get_arc_start_angle(bool): float
+        returns the angle of the start point of the arc in radians or degrees
+    get_arc_end_angle(bool): float
+        returns the angle of the end point of the arc in radians or degrees
+    flatten_arc(): list
+        returns a list of line edges about the arc circumference
+    rotate(float): Edge2
+        rotates the edge about the z axis with specified rotation angle
+    is_parallel_to(Edge2): bool
+        returns the parallel comparison of the edge with another 2D edge
+    is_perpendicular_to(Edge2): bool
+        returns the perpendicular comparison of the edge with another 2D edge
+    get_slope(): float/str
+        returns the slope of the edge and 'vertical' if the edge is vertical
+    edge_length(): float
+        returns the length of the edge
+    angle_to_x_axis(): flaot
+        returns the angle of the edge to the x axis
+    angle_to_edge(Edge2): float
+        returns the angle of the edge to another 2D edge
+    minimum_y(): float
+        returns the minimum y coordinate of the edge
+    maximum_y(): float
+        returns the maximum y coordinate of the edge
+    minimum_x(): float
+        returns the minimum x coordinate of the edge
+    maximum_x(): float
+        returns the maximum x coordinate of the edge
+    vector_within_arc(Vector2): bool
+        tests if the specified vector is within the arc edge
+    transform(Matrix3): Edge2
+        returns the edge transformed with the specified 3x3 matrix
+    is_clockwise_arc(): bool
+        tests if the arc edge is clockwise
+    to_edge3(): Edge3
+        returns a 3D edge from the 2D edge
     """
 
     def __init__(self,
@@ -78,7 +138,7 @@ class Edge2:
 
     def __str__(self):
         """
-        Prints the attributes of the edge
+        Prints the attributes of the 2D edge
 
         :return: the string of the edge
         :rtype: str
@@ -235,6 +295,14 @@ class Edge2:
         raise TypeError("Argument must be an object of Point2")
 
     def get_arc_normal(self, point):
+        """
+        Gets the vector normal to an arc at a specified 2D point
+
+        :param point: point on arc to find normal at
+        :return: the resulting arc normal
+        :rtype: Vector2
+        :raises: wrong arguments types
+        """
         if is_point2(point):
             if self.is_arc():
                 return (self.centre - point).normalised()
@@ -242,16 +310,25 @@ class Edge2:
         raise TypeError("Input argument must be an object of Point2")
 
     def get_line_normal(self):
+        """
+        Gets the vector normal to a line
+
+        :return: the resulting line normal
+        :rtype: Vector2
+        :raises: wrong argument type
+        """
         if not self.is_arc():
             return self.get_line_tangent().get_perpendicular()
         raise TypeError("Get Line Normal can not be derived for an arc")
 
     def get_arc_tangent(self, point):
         """
-        Calculates the tangent of the edge
+        Calculates the tangent of the arc edge at a specified 2D point
 
+        :param point: point on arc to find tangent at
         :return:the resulting tangent of the edge
-        :rtype: int/float
+        :rtype: Vector2
+        :raises: wrong arguments types
         """
         if is_point2(point):
             if self.is_arc():
@@ -263,6 +340,13 @@ class Edge2:
         raise TypeError("Input argument must be an object of Point2")
 
     def get_line_tangent(self):
+        """
+        Gets the vector tangent to a line
+
+        :return: the resulting line tangent
+        :rtype: Vector2
+        :raises: wrong argument type
+        """
         if self.is_arc():
             raise TypeError("Line tangent can not be derived for an arc")
         return (self.p2 - self.p1).normalised()
@@ -298,7 +382,7 @@ class Edge2:
         Offsets the edge by the provided 2D vector
 
         :param vector: the 2D vector by which the edge is to be offset by
-
+        :raises wrong argument type
         """
         if is_vector2(vector):
             self.p1 += vector
@@ -309,12 +393,20 @@ class Edge2:
             raise TypeError("Edge offset is done by an object of Vector2")
 
     def reverse(self):
+        """
+        Reverses the direction of the edge
+
+        """
         self.p1, self.p2 = self.p2, self.p1
         if self.is_arc():
             self.clockwise = not self.clockwise
         return self
 
     def mirror_x(self):
+        """
+        Mirrors the edge about the x axis
+
+        """
         self.p1.mirror_x()
         self.p2.mirror_x()
         self.centre = self.calculate_centre()
@@ -323,6 +415,10 @@ class Edge2:
         return self
 
     def mirror_y(self):
+        """
+        Mirrors the edge about the y axis
+
+        """
         self.p1.mirror_y()
         self.p2.mirror_y()
         self.centre = self.calculate_centre()
@@ -331,6 +427,10 @@ class Edge2:
         return self
 
     def mirror_origin(self):
+        """
+        Mirrors the edge about the origin
+
+        """
         self.p1.mirror_origin()
         self.p2.mirror_origin()
         self.centre = self.calculate_centre()
@@ -339,30 +439,56 @@ class Edge2:
         return self
 
     def is_circle(self):
+        """
+        Tests if the arc edge is a circle
+
+        :return: if the arc edge is a circle
+        :rtype bool
+        """
         return self.is_arc() and self.p1 == self.p2
 
     def is_line(self):
+        """
+        Tests if the edge is a line
+
+        :return: if the edge is a line
+        :rtype bool
+        """
         return (not self.is_arc()) and (not self.p1 == self.p2)
 
     def get_arc_start_angle(self, rad=False):
-        # p1_vector = self.p1.to_vector2()
-        # centre_vector = self.centre.to_vector2()
-        # angle = p1_vector.compute_angle(centre_vector)
+        """
+        Calculates the angle of the start point of the arc
+
+        :param rad: if the result should be in rad
+        :return: arc start angle
+        :rtype: float
+        """
         angle = math.atan2(self.p1.y - self.centre.y, self.p1.x - self.centre.x)
         if not rad:
             angle = radians_to_degrees(angle)
         return angle
 
     def get_arc_end_angle(self, rad=False):
-        # p2_vector = self.p2.to_vector2()
-        # centre_vector = self.centre.to_vector2()
-        # angle = p2_vector.compute_angle(centre_vector)
+        """
+        Calculates the angle of the end point of the arc
+
+        :param rad: if the result should be in rad
+        :return: arc end angle
+        :rtype: float
+        """
         angle = math.atan2(self.p2.y - self.centre.y, self.p2.x - self.centre.x)
         if not rad:
             angle = radians_to_degrees(angle)
         return angle
 
     def flatten_arc(self):
+        """
+        Returns a list of line edges that define the arc circumference
+
+        :return: list of line edges
+        :rtype: list
+        """
         arc_start_angle = self.get_arc_start_angle(True)
         arc_end_angle = self.get_arc_end_angle(True)
 
@@ -408,6 +534,12 @@ class Edge2:
         return list_of_arc_edges
 
     def rotate(self, rotation_angle):
+        """
+        Rotates the 2D edge about the z axis with a rotation angle
+
+        :param rotation_angle: the angle with which the edge rotation is done
+        :raises wrong angle argument type
+        """
         if is_float(rotation_angle):
             rotation_matrix = Matrix3.rotation(rotation_angle)
 
@@ -419,17 +551,40 @@ class Edge2:
         raise TypeError("Rotation angle must be a float")
 
     def is_parallel_to(self, other_edge):
+        """
+        Tests if the 2D edge is parallel to another 2D edge
+
+        :param other_edge: the other 2D edge
+        :return: if the two edges are parallel to each other
+        :rtype: bool
+        :raises: wrong argument type
+        """
         if is_edge2(other_edge):
             return self.get_slope() == other_edge.get_slope()
         raise TypeError("Parallel check must be with an Edge2 object")
 
     def is_perpendicular_to(self, other_edge):
+        """
+        Tests if the 2D edge is perpendicular to another 2D edge
+
+        :param other_edge: the other 2D edge
+        :return: if the two edges are perpendicular to each other
+        :rtype: bool
+        :raises: wrong argument type
+        """
         if is_edge2(other_edge):
             return (self.angle_to_edge(other_edge) == HALF_PI or self.angle_to_edge(other_edge) == -ONE_AND_HALF_PI or
                     self.angle_to_edge(other_edge) == -HALF_PI or self.angle_to_edge(other_edge) == ONE_AND_HALF_PI)
         raise TypeError("Perpendicular check must be with an Edge2 object")
 
     def get_slope(self):
+        """
+        Returns the slope of a line edge
+
+        :return: the slope of the line or 'vertical' if the edge is a vertical edge
+        :rtype: float/str
+        :raises: edge type error if it is an arc
+        """
         if self.is_arc():
             raise TypeError("Slope can not be derived for an arc")
         numerator = self.p2.y - self.p1.y
@@ -439,6 +594,12 @@ class Edge2:
         return numerator / denominator
 
     def edge_length(self):
+        """
+        Returns the length of the edge if it is an arc or line
+
+        :return: the length of the edge
+        :rtype: float
+        """
         if self.is_arc():
             ellipse = Ellipse(self.p1, self.centre, self.p2, self.radius, self.radius, self.clockwise)
             sweep = ellipse.get_arc_sweep()
@@ -446,11 +607,25 @@ class Edge2:
         return self.p1.distance_to(self.p2)
 
     def angle_to_x_axis(self):
+        """
+        Returns the angle the edge makes with the x axis in radians
+
+        :return: the angle to x axis
+        :rtype: float
+        :raises: edge type error if it is an arc
+        """
         if self.is_arc():
             raise TypeError("X-axis angle can not be derived for an arc")
         return math.atan2(self.p2.y - self.p1.y, self.p2.x - self.p1.x)
 
     def angle_to_edge(self, other_edge):
+        """
+        Returns the angle the 2D edge makes with another 2D edge in radians
+
+        :return: the angle to the other 2D edge
+        :rtype: float
+        :raises: edge type error if any of the edges is an arc
+        """
         if is_edge2(other_edge):
             if self.is_arc() or other_edge.is_arc():
                 raise TypeError("Angle check can not be found from an arc")
@@ -458,18 +633,49 @@ class Edge2:
         raise TypeError("Angle check must be done with another object Edge2")
 
     def minimum_y(self):
+        """
+        Returns the minimum y coordinate of an edge
+
+        :return: the minimum y coordinate value
+        :rtype: float
+        """
         return min(self.p1.y, self.p2.y)
 
     def maximum_y(self):
+        """
+        Returns the maximum y coordinate of an edge
+
+        :return: the maximum y coordinate value
+        :rtype: float
+        """
         return max(self.p1.y, self.p2.y)
 
     def minimum_x(self):
+        """
+        Returns the minimum x coordinate of an edge
+
+        :return: the minimum x coordinate value
+        :rtype: float
+        """
         return min(self.p1.x, self.p2.x)
 
     def maximum_x(self):
+        """
+        Returns the maximum x coordinate of an edge
+
+        :return: the maximum x coordinate value
+        :rtype: float
+        """
         return max(self.p1.x, self.p2.x)
 
     def vector_within_arc(self, vector):
+        """
+        Tests if the 2D vector is within an arc edge
+
+        :param vector: the 2D vector to test its position in the 2D edge
+        :return: if the vector is within the arc
+
+        """
         if is_vector2(vector) and self.is_arc():
             start_dash = self.p1 - self.centre
             end_dash = self.p2 - self.centre
@@ -507,16 +713,37 @@ class Edge2:
 
             return (((theta > start) or floats_are_close(theta, start)) and
                     ((theta < end) or floats_are_close(theta, end)))
+        if not self.is_arc():
+            raise TypeError("Check must be done with an arc edge")
+        if not is_vector2(vector):
+            raise TypeError("Argument must be a 2D vector object")
 
     def transform(self, transformation_matrix):
+        """
+        Transforms an edge with provided 3x3 matrix
+
+        :param transformation_matrix: 3x3 matrix to transform the edge
+        """
         self.p1 = transformation_matrix * self.p1
         self.p2 = transformation_matrix * self.p2
-        self.centre = transformation_matrix * self.centre
+        transformed_centre = transformation_matrix * self.centre
+        self.centre = self.calculate_centre()
+        transformed_midpoint = transformation_matrix * self.point_parametric(0.5)
+        self.via = self.get_via()
+
         if self.is_arc():
-            self.clockwise = self.is_clockwise_arc()
+            if self.centre != transformed_centre or self.via != transformed_midpoint:
+                self.clockwise = not self.clockwise
+                self.centre = self.calculate_centre()
         return self
 
     def is_clockwise_arc(self):
+        """
+        Tests if the arc edge is clockwise
+
+        :return: if the arc is clockwise
+        :rtype: bool
+        """
         midpoint = self.point_parametric(0.5)
         p2_p1_vector = self.p2 - self.p1
         midpoint_p1_vector = midpoint - self.p1
@@ -524,6 +751,12 @@ class Edge2:
         return z_sign > 1
 
     def to_edge3(self):
+        """
+        Converts the 2D edge to a 3D edge
+
+        :return: the resulting Edge3 object
+        :rtype: Edge3
+        """
         edge_3d = geometry_utils.three_d.edge3.Edge3(self.p1.to_point3(), self.p2.to_point3(), None,
                                                      self.radius, self.clockwise, self.large)
 
@@ -536,4 +769,10 @@ class Edge2:
         return edge_3d
 
 def is_edge2(input_variable):
+    """
+    Checks if the input variable is an object of Edge2
+
+    :param input_variable: the input variable to be checked
+    :return: bool
+    """
     return isinstance(input_variable, Edge2)

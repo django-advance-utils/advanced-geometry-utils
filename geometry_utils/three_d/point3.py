@@ -22,6 +22,8 @@ class Point3:
 
     Methods:
     ________
+    __str__(): string
+        Returns the attributes of the 3D point in string format
     __add__(Vector3): Point3
         Returns the addition of the point with another 3D point or a 3D vector
     __sub__(Vector3/Point3): Point3/Vector3
@@ -34,10 +36,32 @@ class Point3:
         Returns the less than or equal to comparison of the point with another 3D point
     __ge__(Point3): bool
         Returns the greater than or equal to comparison of the point with another 3D point
+    __lt__(Point3): bool
+        Returns the less than comparison of the point with another 3D point
+    __gt__(Point3): bool
+        Returns the greater than comparison of the point with another 3D point
+    equal(Point3, float): bool
+        Returns the equality comparison of the vector with another 3D point with specified tolerance
     to_vector(): Vector2
         Returns the vector representation of the point
     distance_to(other_point): int/float
         Returns the pythagorean length of the difference between the point and another 3D point
+    mirror_x(): Point3
+        Mirrors the 3D point about the x axis
+    mirror_y(): Point3
+        Mirrors the 3D point about the y axis
+    mirror_z(): Point3
+        Mirrors the 3D point about the z axis
+    mirror_origin(): Point3
+        Mirrors the 3D point about the origin
+    mirrored_origin(): Point3
+        Returns the 3D point mirrored about the origin
+    from_comma_string(str): Point3
+        Returns a 3D point from a string input
+    to_point2(): Point2
+        Returns a 2D point from the 3D point discarding z coordinate value
+    accuracy_fix(): Point3
+        Converts the 3D point coordinates with very low values to 0.0
     """
 
     def __init__(self, x=0.0, y=0.0, z=0.0, w=1):
@@ -51,6 +75,12 @@ class Point3:
             raise TypeError("Point3 argument must be an int or float")
 
     def __str__(self):
+        """
+        Prints the attributes of the 3D point
+
+        :return: the string of the point
+        :rtype: str
+        """
         return ("Point3(x:" + str("{:.2f}".format(self.x)) +
                 ", y:" + str("{:.2f}".format(self.y)) +
                 ", z:" + str("{:.2f}".format(self.z)) + ")")
@@ -87,7 +117,7 @@ class Point3:
 
     def __eq__(self, other_point):
         """
-        Compares the equality of self and other point.
+        Compares the equality of self and other 3D point.
 
         :param   other_point: the other vector
         :type    other_point: Point3
@@ -103,7 +133,7 @@ class Point3:
 
     def __ne__(self, other_point):
         """
-        Compares the inequality of self with another vector.
+        Compares the inequality of self with another 3D point
 
         :param   other_point: the other vector
         :type    other_point: Point3
@@ -119,7 +149,7 @@ class Point3:
 
     def __le__(self, other_point):
         """
-        Tests if self is less than or equal to the other vector.
+        Compares if the point is less than or equal to another 3D point in a 3D space
 
         :param   other_point: the other point
         :type    other_point: Point3
@@ -133,7 +163,7 @@ class Point3:
 
     def __ge__(self, other_point):
         """
-        Tests if self is greater than or equal to the other vector.
+        Compares if the point is greater than or equal to another 3D point in a 3D space
 
         :param   other_point: the other point
         :type    other_point: Point3
@@ -146,11 +176,29 @@ class Point3:
         raise TypeError("Comparison must be done with another object of Point3")
 
     def __lt__(self, other_point):
+        """
+        Compares if the point is less than another 3D point in a 3D space
+
+        :param   other_point: the other 3D point
+        :type    other_point: Point3
+        :return: the point greater than or equal to comparison
+        :rtype:  bool
+        :raises: TypeError: Wrong argument type
+        """
         if is_point3(other_point):
             return self.x < other_point.x and self.y < other_point.y and self.z < other_point.z
         raise TypeError("Comparison must be done with another object of Point3")
 
     def __gt__(self, other_point):
+        """
+        Compares if the point is greater than another 3D point in a 3D space
+
+        :param   other_point: the other 3D point
+        :type    other_point: Point3
+        :return: the point greater than or equal to comparison
+        :rtype:  bool
+        :raises: TypeError: Wrong argument type
+        """
         if is_point3(other_point):
             return self.x > other_point.x and self.y > other_point.y and self.z > other_point.z
         raise TypeError("Comparison must be done with another object of Point3")
@@ -180,39 +228,75 @@ class Point3:
 
     @classmethod
     def from_comma_string(cls, string):
+        """
+        Creates a Point3 object from a string
+
+        :param string: String containing the 3D point coordinates
+        :return: a Point3 object
+        """
         v = string.split(',')
         return cls(float(v[0]), float(v[1]), float(v[2]))
 
     def mirror_x(self):
+        """
+        Mirrors the 3D point about the x axis
+
+        """
         self.y = -self.y
         self.z = -self.z
         return self
 
     def mirror_y(self):
+        """
+        Mirrors the 3D point about the y axis
+
+        """
         self.x = -self.x
         self.z = -self.z
         return self
 
     def mirror_z(self):
+        """
+        Mirrors the 3D point about the z axis
+
+        """
         self.x = -self.x
         self.y = -self.y
         return self
 
     def mirror_origin(self):
+        """
+        Mirrors the 3D point about the origin
+
+        """
         self.x = -self.x
         self.y = -self.y
         self.z = -self.z
         return self
 
     def mirrored_origin(self):
+        """
+        Returns the 3D point mirrored about the origin
+
+        :return: Point3
+        """
         return Point3(-self.x, -self.y, -self.z)
 
     def to_point2(self):
+        """
+        Converts the 3D point to a 2D point
+
+        :return: a Point2 object
+        """
         point_2d = geometry_utils.two_d.point2.Point2(self.x, self.y, self.w)
         point_2d.name = self.name
         return point_2d
 
     def accuracy_fix(self):
+        """
+        Converts the 3D point coordinates with very low values to 0.0
+
+        """
         if -EPSILON < self.x < EPSILON:
             self.x = 0.0
         if -EPSILON < self.y < EPSILON:
@@ -223,4 +307,10 @@ class Point3:
 
 
 def is_point3(input_variable):
+    """
+    Checks if the input variable is an object of Point3
+
+    :param input_variable: the input variable to be checked
+    :return: bool
+    """
     return isinstance(input_variable, Point3)

@@ -20,6 +20,8 @@ class Point2:
 
     Methods:
     ________
+    __str__(): string
+        Returns the attributes of the 2D point in string format
     __add__(Vector2): Point2
         Returns the addition of the point with a 2D vector
     __sub__(Vector2/Point2): Point2/Vector2
@@ -32,10 +34,28 @@ class Point2:
         Returns the less than or equal to comparison of the point with another 2D point
     __ge__(Point2): bool
         Returns the greater than or equal to comparison of the point with another 2D point
+    __lt__(Point2): bool
+        Returns the less than comparison of the point with another 2D point
+    __gt__(Point2): bool
+        Returns the greater than comparison of the point with another 2D point
+    equal(Point2, float): bool
+        Returns the equality comparison of the vector with another 2D point with specified tolerance
     to_vector(): Vector2
         Returns the vector representation of the point
     distance_to(other_point): float
         Returns the pythagorean length of the difference between the point and another 2D point
+    mirror_y(): Point2
+        Mirrors the 2D point about the y axis
+    mirror_x(): Point2
+        Mirrors the 2D point about the x axis
+    mirror_origin(): Point2
+        Mirrors the 2D point about the origin
+    from_comma_string(str): Point2
+        Returns a 2D point from a string input
+    to_point3(): Point3
+        Returns a 3D point from the 2D point with a z coordinate value of 0.0
+    accuracy_fix(): Vector2
+        Converts the 2D point coordinates with very low values to 0.0
     """
 
     def __init__(self, x=0.0, y=0.0, w=1):
@@ -48,6 +68,12 @@ class Point2:
             raise TypeError("Point2 argument must be an int or float")
 
     def __str__(self):
+        """
+        Prints the attributes of the 2D point
+
+        :return: the string of the point
+        :rtype: str
+        """
         return "Point2(x:" + str("{:.2f}".format(self.x)) + ", y:" + str("{:.2f}".format(self.y)) + ")"
 
     def __add__(self, vector):
@@ -94,9 +120,6 @@ class Point2:
             return floats_are_close(self.x, other_point.x) and floats_are_close(self.y, other_point.y)
         raise TypeError("Equality comparison of a Point2 object must be done with another object of Point2")
 
-    def equal(self, other, tol=0.01):
-        return abs(self.x - other.x) <= tol and abs(self.y - other.y) <= tol
-
     def __ne__(self, other_point):
         """
         Compares the inequality of the point with another 2D point
@@ -142,14 +165,48 @@ class Point2:
                         "Point2")
 
     def __lt__(self, other_point):
+        """
+        Compares if the point is less than another 2D point in a 2D space
+
+        :param   other_point: the other 2D point
+        :type    other_point: Point2
+        :return: the point greater than or equal to comparison
+        :rtype:  bool
+        :raises: TypeError: Wrong argument type
+        """
         if is_point2(other_point):
             return self.x < other_point.x and self.y < other_point.y
         raise TypeError("Less than comparison of a Point2 object must be done with another object of Point2")
 
     def __gt__(self, other_point):
+        """
+        Compares if the point is greater than another 2D point in a 2D space
+
+        :param   other_point: the other 2D point
+        :type    other_point: Point2
+        :return: the point greater than or equal to comparison
+        :rtype:  bool
+        :raises: TypeError: Wrong argument type
+        """
         if is_point2(other_point):
             return self.x > other_point.x and self.y > other_point.y
         raise TypeError("Greater than comparison must be done with another object of Point2")
+
+    def equal(self, other_point, tol=0.01):
+        """
+        Compares the equality of the vector and another 2D point with tolerance input
+
+        :param  other_point: the other 2D point
+        :param  tol: equality tolerance
+        :type   other_point: Point2
+        :type   tol: float
+        :return:the vector equality
+        :rtype: bool
+        :raises:TypeError: Wrong argument type
+        """
+        if is_point2(other_point):
+            return abs(self.x - other_point.x) <= tol and abs(self.y - other_point.y) <= tol
+        raise TypeError("Equality comparison must be done with another object of Point2")
 
     def to_vector2(self):
         """
@@ -176,7 +233,7 @@ class Point2:
 
     def mirror_y(self):
         """
-        Mirrors the 2D point about the y-coordinate
+        Mirrors the 2D point about the y axis
 
         """
         self.x = -self.x
@@ -184,13 +241,17 @@ class Point2:
 
     def mirror_x(self):
         """
-        Mirrors the 2D point about the x-coordinate
+        Mirrors the 2D point about the x axis
 
         """
         self.y = -self.y
         return self
 
     def mirror_origin(self):
+        """
+        Mirrors the 2D point about the origin
+
+        """
         self.x = -self.x
         self.y = -self.y
         return self
@@ -211,12 +272,17 @@ class Point2:
         Converts the 2D point to a 3D point
 
         :return: a Point3 object
+        :rtype: Point3
         """
         point_3d = geometry_utils.three_d.point3.Point3(self.x, self.y, 0.0, self.w)
         point_3d.name = self.name
         return point_3d
 
     def accuracy_fix(self):
+        """
+        Converts the 2D point coordinates with very low values to 0.0
+
+        """
         if -EPSILON < self.x < EPSILON:
             self.x = 0.0
         if -EPSILON < self.y < EPSILON:
@@ -225,4 +291,10 @@ class Point2:
 
 
 def is_point2(input_variable):
+    """
+    Checks if the input variable is an object of Point2
+
+    :param input_variable: the input variable to be checked
+    :return: bool
+    """
     return isinstance(input_variable, Point2)
