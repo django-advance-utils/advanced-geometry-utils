@@ -74,3 +74,9 @@ def test_intersection_on_collinear_edge3_lines(test_edge3_2, test_edge3_5, test_
     assert intersection.on_second_segment
     assert intersection.collinear
     assert not intersection.end_of_line
+
+
+def test_intersection_on_floats():
+    intersection = Intersection()
+    with pytest.raises(TypeError):
+        return intersection.intersect(9.0, 9.0)
