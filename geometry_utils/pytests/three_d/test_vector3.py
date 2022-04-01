@@ -177,13 +177,17 @@ Vector Reverse Tests
 '''
 
 
-def test_reversed_vector3_return_type(test_vector3_1):
-    assert isinstance(test_vector3_1, Vector3)
+def test_inverted_vector3_return_type(test_vector3_1):
+    assert isinstance(test_vector3_1.inverted(), Vector3)
 
 
-def test_reversed_vector3_arithmetic(test_vector3_1, test_vector3_4):
-    assert test_vector3_1.reverse() == Vector3(-1.0, -1.0, -1.0)
-    assert test_vector3_4.reverse() == test_vector3_4
+def test_inverted_vector3_arithmetic(test_vector3_1, test_vector3_4):
+    assert test_vector3_1.inverted() == Vector3(-1.0, -1.0, -1.0)
+    assert test_vector3_4.inverted() == test_vector3_4
+
+
+def test_invert_vector3_arithmetic():
+    assert Vector3(1.0, 1.0, 1.0) == Vector3(-1.0, -1.0, -1.0)
 
 
 def test_vector3_get_perpendicular_arithmetic(test_vector3_2, test_vector3_4, test_vector3_5):
