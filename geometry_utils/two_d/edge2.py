@@ -724,15 +724,16 @@ class Edge2:
 
         :param transformation_matrix: 3x3 matrix to transform the edge
         """
+        midpoint = self.point_parametric(0.5)
         self.p1 = transformation_matrix * self.p1
         self.p2 = transformation_matrix * self.p2
         transformed_centre = transformation_matrix * self.centre
         self.centre = self.calculate_centre()
-        transformed_midpoint = transformation_matrix * self.point_parametric(0.5)
-        self.via = self.get_via()
+        transformed_midpoint = transformation_matrix * midpoint
+        self_midpoint = self.point_parametric(0.5)
 
         if self.is_arc():
-            if self.centre != transformed_centre or self.via != transformed_midpoint:
+            if self.centre != transformed_centre or self_midpoint != transformed_midpoint:
                 self.clockwise = not self.clockwise
                 self.centre = self.calculate_centre()
         return self
