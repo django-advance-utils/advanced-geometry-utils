@@ -24,16 +24,16 @@ def test_path_field_add_field_circle(path2_6):
 def test_path_field_load_path_closed_line(path2_1):
     test_path_field_interpreter = PathFieldInterpreter()
     path = test_path_field_interpreter.load_path(';1:1;2:2;#')
-    assert path == path2_1
+    assert path[0] == path2_1
 
 
 def test_path_field_load_path_curved_head(path2_8):
     test_path_field_interpreter = PathFieldInterpreter()
     path = test_path_field_interpreter.load_path(';1;:1;0)0.5;#')
-    assert path == path2_8
+    assert path[0] == path2_8
 
 
 def test_path_field_load_path_circle(path2_6):
     test_path_field_interpreter = PathFieldInterpreter()
     path = test_path_field_interpreter.load_path('1:1)1')
-    assert path == path2_6
+    assert path[0] == path2_6

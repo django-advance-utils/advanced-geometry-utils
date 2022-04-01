@@ -39,7 +39,6 @@ class PathFieldInterpreter(Path2, object):
         self.write_buffer = ''
         self.read_buffer = ''
         self.variables = {}
-        self.paths = []
 
     def clear_path(self):
         self.write_buffer = ''
@@ -325,6 +324,7 @@ class PathFieldInterpreter(Path2, object):
 
             # State variables
             last_edge = Edge2()
+            last_r = 0.0
 
             is_closed = False
             is_mirrored = False
@@ -350,13 +350,13 @@ class PathFieldInterpreter(Path2, object):
                     path_field_functions.process(point, path)
 
                 elif is_closed and point is points[len(points) - 1]:  # last point of a closed path
-                    self.process_closed_point(point, path, last_edge, edit_mode)
+                    self.process_closed_point(point, path, last_edge, last_r, edit_mode)
                     break
 
                 elif is_mirrored:  # mirrored point
                     if point is points[len(points) - 1]:
                         self.process_mirrored_points(point, edge_d, path,
-                                                     last_edge, mirrored_point, edit_mode, default_point_name,
+                                                     last_edge, last_r, mirrored_point, edit_mode, default_point_name,
                                                      round_value=round_value)
                         break
 
@@ -366,17 +366,22 @@ class PathFieldInterpreter(Path2, object):
                             point = point[1:]
                             # if edit_mode:
                             # path.points[-1]['mirror'] = self.MIRRORED_PATH_POINT_INDICATOR
-                        self.process_normal_point(point, edge_d, path, last_edge,
+                        self.process_normal_point(point, edge_d, path, last_edge, last_r,
                                                   edit_mode, default_point_name,
                                                   round_value=round_value)
                 else:  # Normal point
-                    self.process_normal_point(point, edge_d, path, last_edge,
+                    self.process_normal_point(point, edge_d, path, last_edge, last_r,
                                               edit_mode, default_point_name,
                                               round_value=round_value)
-
+                if last_edge.is_arc():
+                    last_r = last_edge.radius
                 last_edge = path.list_of_edges[-1]
 
-            path.make_continuous()
+            if not is_closed and path.path_length > 1:
+                del path.list_of_edges[-1]
+
+            if path.is_incomplete_circle():
+                path.complete_circle()
 
             if return_single is not None and path.name == return_single:
                 return path
@@ -435,9 +440,9 @@ class PathFieldInterpreter(Path2, object):
             path.list_of_edges.append(Edge2(Point2(offset_vector.x, offset_vector.y), Point2()))
             return True
 
-    def process_mirrored_points(self, point, edge_d, path, last_edge, mirrored_point, edit_mode, default_point_name,
+    def process_mirrored_points(self, point, edge_d, path, last_edge, last_r, mirrored_point, edit_mode, default_point_name,
                                 round_value):
-        self.process_normal_point(point[:-1], edge_d, path, last_edge, edit_mode, default_point_name, round_value)
+        self.process_normal_point(point[:-1], edge_d, path, last_edge, last_r, edit_mode, default_point_name, round_value)
         if edit_mode:
             # path.list_of_edges.append('mirror')
             return
@@ -490,7 +495,7 @@ class PathFieldInterpreter(Path2, object):
             else:
                 return
 
-    def process_closed_point(self, point, path, last_edge, edit_mode):
+    def process_closed_point(self, point, path, last_edge, last_r, edit_mode):
         """
         Closed path, last point xyz is same as first point
         @param point:
@@ -524,14 +529,13 @@ class PathFieldInterpreter(Path2, object):
             edge_d.large = large
 
             if radius == -1:
-                edge_d.radius = last_edge.radius
+                edge_d.radius = last_r
 
             else:
                 edge_d.radius = radius
-                last_edge.radius = edge_d.radius
 
             if len(point) == 0:
-                path.list_of_edges.append(edge_d)
+                #path.list_of_edges.append(edge_d)
                 return
 
         if point[0] == ',':
@@ -601,7 +605,7 @@ class PathFieldInterpreter(Path2, object):
             paths.append(path)
         return paths
 
-    def process_normal_point(self, point, edge_d, path, last_edge, edit_mode, default_point_name, round_value):
+    def process_normal_point(self, point, edge_d, path, last_edge, last_r, edit_mode, default_point_name, round_value):
         idx1 = point.find(self.CURVE_SMALL_CLOCK)
         if idx1 == -1:
             idx1 = point.find(self.CURVE_SMALL_ANTICLOCK)
@@ -627,13 +631,14 @@ class PathFieldInterpreter(Path2, object):
 
         edge_d.p1.x = self.get_value(xyz[0], last_edge.p1.x, round_value)
         edge_d.p1.y = self.get_value(xyz[1], last_edge.p1.y, round_value)
-        if is_path3(path):
-            edge_d.p1.z = self.get_value(xyz[2], last_edge.p1.z, round_value)
+        # if is_path3(path):
+            # edge_d.p1.z = self.get_value(xyz[2], last_edge.p1.z, round_value)
 
         # Now process the curve definition if there is one
         if len(point) == 0:
             edge_d.p1.name = default_point_name
             path.list_of_edges.append(edge_d)
+            path.make_continuous()
             return
 
         # Look for a curve definition, it should be terminated either by a comma or be the whole string
@@ -655,7 +660,7 @@ class PathFieldInterpreter(Path2, object):
             edge_d.clockwise = clock
             edge_d.large = large
             if radius == -1:
-                edge_d.radius = last_edge.radius
+                edge_d.radius = last_r
             else:
                 edge_d.radius = radius
 
@@ -664,6 +669,7 @@ class PathFieldInterpreter(Path2, object):
         if len(point) == 0:
             path.list_of_edges.append(edge_d)
             edge_d.p1.name = default_point_name
+            path.make_continuous()
             return
 
         # Look for a point name and edge def if given
@@ -687,6 +693,7 @@ class PathFieldInterpreter(Path2, object):
             edge_d.right_name = parts[3]
 
         path.list_of_edges.append(edge_d)
+        path.make_continuous()
 
     def get_value(self, in_value, last_value, round_value):
         if in_value == '':
