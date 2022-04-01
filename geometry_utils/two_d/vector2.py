@@ -20,6 +20,8 @@ class Vector2:
 
     Methods:
     ________
+    __str__(): string
+        Returns the attributes of the 2D vector in string format
     __add__(Vector2): Vector2
         Returns the addition of the vector with another 2D vector
     __sub__(Vector2): Vector2
@@ -32,12 +34,16 @@ class Vector2:
         Returns the equality comparison of the vector with another 2D vector
     __ne__(Vector2): bool
         Returns the inequality comparison of the vector with another 2D vector
-    reverse(): Vector2
-        Returns the reverse of the vector
-    normalise(): Vector2
+    equal(Vector2, float): bool
+        Returns the equality comparison of the vector with another 2D vector with specified tolerance
+    normalised(): Vector2
         Returns the normal of the vector
+    normalise(): Vector2
+        Converts the 2D vector into a normal of itself
     length(): int/float
         Returns the pythagorean length of the vector
+    square_length(): int/float
+        Returns the square of the pythagorean length of the vector
     dot(Vector2): int/float
         Returns the dot product of vector with another 2D vector
     cross(Vector2): Vector2
@@ -45,9 +51,23 @@ class Vector2:
     get_perpendicular(): Vector2
         Returns the perpendicular of the vector
     invert(): Vector2
+        Converts the 2D vector into an inverse of itself
+    inverted(): Vector2
         Returns the inverse of the vector
     rotate(Vector2, int/float): Vector2
         Returns the rotation of the vector at angle theta with respect to 2D vector origin
+    angle_to(Vector2, bool): float
+        Returns the angle of the vector to another vector in radians or degrees
+    signed_angle_to(Vector2, bool): float
+        Returns the signed angle of the vector to another vector in radians or degrees
+    angle_to_x_axis(bool): float
+        Returns the angle of the vector the x-axis in radians or degrees
+    from_comma_string(str): Vector2
+        Returns a 2D vector from a string input
+    to_vector3(): Vector3
+        Returns a 3D vector from the 2D vector with a z coordinate value of 0.0
+    accuracy_fix(): Vector2
+        Converts the 2D vector coordinates with very low values to 0.0
     """
     def __init__(self, x=0.0, y=0.0, w=0):
         if are_ints_or_floats([x, y, w]):
@@ -59,7 +79,7 @@ class Vector2:
 
     def __str__(self):
         """
-        Prints the attributes of the vector
+        Prints the attributes of the 2D vector
 
         :return: the string of the vector
         :rtype: str
@@ -139,19 +159,6 @@ class Vector2:
             return floats_are_close(self.x, other_vector.x) and floats_are_close(self.y, other_vector.y)
         raise TypeError("Comparison must be with another object of Vector2")
 
-    def equal(self, other, tol=0.01):
-        """
-        Compares the equality of the vector and another 2D vector with tolerance input
-
-        :param  other_vector: the other 2D vector
-        :type   other_vector: Vector2
-        :return:the vector equality
-        :rtype: bool
-        :raises:TypeError: Wrong argument type
-        """
-        return abs(self.x - other.x) <= tol and abs(self.y - other.y) <= tol
-
-
     def __ne__(self, other_vector):
         """
         Compares the inequality of the vector and another 2D vector
@@ -166,6 +173,20 @@ class Vector2:
             return (not floats_are_close(self.x, other_vector.x)) or (not floats_are_close(self.y, other_vector.y))
         raise TypeError("Comparison must be with another object of Vector2")
 
+    def equal(self, other, tol=0.01):
+        """
+        Compares the equality of the vector and another 2D vector with tolerance input
+
+        :param  other_vector: the other 2D vector
+        :param  tol: equality tolerance
+        :type   other_vector: Vector2
+        :type   tol: float
+        :return:the vector equality
+        :rtype: bool
+        :raises:TypeError: Wrong argument type
+        """
+        return abs(self.x - other.x) <= tol and abs(self.y - other.y) <= tol
+
     def normalised(self):
         """
         Calculates the normal vector of the vector
@@ -179,6 +200,10 @@ class Vector2:
         return self / vector_length
 
     def normalise(self):
+        """
+        Converts the 2D vector into a normal of itself
+
+        """
         vector_length = self.length()
         if floats_are_close(vector_length, 0.0):
             return self
@@ -196,6 +221,12 @@ class Vector2:
         return math.sqrt(self.square_length())
 
     def square_length(self):
+        """
+        Caclulates the square of the pythagorean length of the vector
+
+        :return: the squared vector length
+        :rtype: int/float
+        """
         return self.dot(self)
 
     def dot(self, other_vector):
@@ -238,16 +269,20 @@ class Vector2:
 
     def invert(self):
         """
-        Calculates the 2D vector inverse to the vector
+        Converts the 2D vector into an inverse of itself
 
-        :return:the inverse vector
-        :rtype: Vector2
         """
         self.x *= -1
         self.y *= -1
         return self
 
     def inverted(self):
+        """
+        Calculates the 2D vector inverse to the vector
+
+        :return:the inverse vector
+        :rtype: Vector2
+        """
         return Vector2(-self.x, -self.y)
 
     def rotate(self, origin, theta):
@@ -255,9 +290,9 @@ class Vector2:
         Calculates the vector rotation of self
 
         :param: origin: the origin vector of rotation
-                theta:  the angle of rotation
+        :param: theta:  the angle of rotation
         :type:  origin: Vector2
-                theta:  int/float
+        :type:  theta:  int/float
         :return:the cross product
         :rtype: Vector2
         :raises:TypeError: Wrong argument type
@@ -280,6 +315,15 @@ class Vector2:
             raise TypeError("Angle of rotation must be a float or int")
 
     def angle_to(self, other_vector, rad=False):
+        """
+        Calculates the angle of the 2D vector to another 2D vector
+
+        :param: other_vector: the other 2D vector
+        :param: rad: check if the angle should be in radians
+        :type: other_vector: Vector2
+        :type: rad: Bool
+        :return: float
+        """
         if is_vector2(other_vector):
             self_unit_vector = self.normalised()
             other_unit_vector = other_vector.normalised()
@@ -294,11 +338,27 @@ class Vector2:
             return angle
 
     def signed_angle_to(self, other_vector, rad=False):
+        """
+        Calculates the signed angle of the 2D vector to another 2D vector
+
+        :param: other_vector: the other 2D vector
+        :param: rad: check if the angle should be in radians
+        :type: other_vector: Vector2
+        :type: rad: Bool
+        :return: float
+        """
         if is_vector2(other_vector):
             angle = other_vector.angle_to_x_axis(rad) - self.angle_to_x_axis(rad)
             return angle
 
     def angle_to_x_axis(self, rad=False):
+        """
+        Calculates the angle of the 2D vector to the x_axis
+
+        :param: rad: check if the angle should be in radians
+        :type:  rad: Bool
+        :return: float
+        """
         angle = math.atan2(self.y, self.x)
         if not rad:
             angle = radians_to_degrees(angle)
@@ -306,40 +366,41 @@ class Vector2:
 
     @classmethod
     def from_comma_string(cls, string):
+        """
+        Creates a 2D vector from a string input
+
+        :param string: the 2D vector in string format
+        :return: str
+        """
         v = string.split(',')
         return cls(float(v[0]), float(v[1]))
 
     def to_vector3(self):
+        """
+        Creates a 3D vector of the 2D vector with a z coordinate value of 0.0
+
+        :return: the 3D vector
+        """
         vector_3d = geometry_utils.three_d.vector3.Vector3(self.x, self.y, 0.0, self.w)
         return vector_3d
 
     def accuracy_fix(self):
+        """
+        Converts the 2D vector coordinates with very low values to 0.0
+
+        """
         if -EPSILON < self.x < EPSILON:
             self.x = 0.0
         if -EPSILON < self.y < EPSILON:
             self.y = 0.0
         return self
 
-    def compute_angle(self, other_vector):
-        if is_vector2(other_vector):
-            x_diff = self.x - other_vector.x  # -6.5
-            y_diff = self.y - other_vector.y # 0
-
-            if x_diff == 0:
-                if y_diff < 0:
-                    angle = 0
-                else:
-                    angle = PI
-            elif y_diff == 0:
-                if x_diff < 0:
-                    angle = PI
-                else:
-                    angle = 0
-            else:
-                angle = PI + math.atan2(xdif, ydif)
-
-            return angle
-
 
 def is_vector2(input_variable):
+    """
+    Checks if the input variable is an object of Vector2
+
+    :param input_variable: the input variable to be checked
+    :return: bool
+    """
     return isinstance(input_variable, Vector2)

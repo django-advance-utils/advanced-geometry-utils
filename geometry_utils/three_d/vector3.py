@@ -23,6 +23,8 @@ class Vector3:
 
     Methods:
     ________
+    __str__(): string
+        Returns the attributes of the 3D vector in string format
     __add__(Vector3): Vector3
         Returns the addition of the vector with another 3D vector
     __sub__(Vector3): Vector3
@@ -31,20 +33,42 @@ class Vector3:
         Returns the multiplication of the vector with an int or float scalar
     __div__(int/float): Vector3
         Returns the division of the vector by an int or float scalar
-    __eq__(Vector2): bool
+    __eq__(Vector3): bool
         Returns the equality comparison of the vector with another 3D vector
-    __ne__(Vector2): bool
+    __ne__(Vector3): bool
         Returns the inequality comparison of the vector with another 3D vector
-    reverse(): Vector3
-        Returns the reverse of the vector
-    normalise(): Vector3
+    equal(Vector3, float): bool
+        Returns the equality comparison of the vector with another 3D vector with specified tolerance level
+    normalised(): Vector3
         Returns the normal of the vector
+    normalise(): Vector3
+        Converts the 3D vector into a normal of itself
     length(): int/float
         Returns the pythagorean length of the vector
+    square_length(): int/float
+        Returns the square of the pythagorean length of the vector
     dot(Vector3): int/float
         Returns the dot product of vector with another 3D vector
     cross(Vector3): Vector3
         Returns the cross product of vector with another 3D vector
+    get_perpendicular(): Vector3, Vector3
+        Returns the two possible perpendicular 3D vectors of the vector
+    invert(): Vector2
+        Converts the 2D vector into an inverse of itself
+    inverted(): Vector2
+        Returns the inverse of the vector
+    angle_to(Vector3, bool): float
+        Returns the angle of the vector to another vector in radians or degrees
+    signed_angle_to(Vector3, bool): float
+        Returns the signed angle of the vector to another vector in radians or degrees
+    angle_to_x_axis(bool): float
+        Returns the angle of the vector the x-axis in radians or degrees
+    from_comma_string(str): Vector3
+        Returns a 3D vector from a string input
+    to_vector2(): Vector2
+        Returns a 3D vector from the 2D vector with a z coordinate value of 0.0
+    accuracy_fix(): Vector3
+        Converts the 3D vector coordinates with very low values to 0.0
     """
     def __init__(self, x=0.0, y=0.0, z=0.0, w=0):
         if are_ints_or_floats([x, y, w]):
@@ -56,6 +80,12 @@ class Vector3:
             raise TypeError("Vector3 argument must be an int or float")
 
     def __str__(self):
+        """
+        Prints the attributes of the 3D vector
+
+        :return: the string of the vector
+        :rtype: str
+        """
         return ("Vector3(x:" + str("{:.2f}".format(self.x)) +
                 ", y:" + str("{:.2f}".format(self.y)) +
                 ", z:" + str("{:.2f}".format(self.z)) + ")")
@@ -135,9 +165,6 @@ class Vector3:
                     floats_are_close(self.y, other_vector.y))
         raise TypeError("Comparison must be with another object of Vector3")
 
-    def equal(self, other, tol=0.01):
-        return abs(self.x - other.x) <= tol and abs(self.y - other.y) <= tol and abs(self.z - other.z) <= tol
-
     def __ne__(self, other_vector):
         """
         Compares the inequality of the vector and another 3D vector.
@@ -154,14 +181,19 @@ class Vector3:
                     not floats_are_close(self.y, other_vector.y))
         raise TypeError("Comparison must be with another object of Vector3")
 
-    def reverse(self):
+    def equal(self, other_vector, tol=0.01):
         """
-        Calculates the reverse vector of the vector
+        Compares the equality of the vector and another 3D vector with tolerance input
 
-        :return: the reverse vector
-        :rtype: Vector3
+        :param  other_vector: the other 3D vector
+        :param  tol: equality tolerance
+        :type   other_vector: Vector2
+        :type   tol: float
+        :return:the vector equality
+        :rtype: bool
+        :raises:TypeError: Wrong argument type
         """
-        return Vector3(-self.x, -self.y, -self.z)
+        return abs(self.x - other_vector.x) <= tol and abs(self.y - other_vector.y) <= tol and abs(self.z - other_vector.z) <= tol
 
     def normalised(self):
         """
@@ -195,7 +227,16 @@ class Vector3:
         :return: length
         :rtype: int/float
         """
-        return math.sqrt(self.dot(self))
+        return math.sqrt(self.square_length())
+
+    def square_length(self):
+        """
+        Caclulates the square of the pythagorean length of the vector
+
+        :return: the squared vector length
+        :rtype: int/float
+        """
+        return self.dot(self)
 
     def dot(self, other_vector):
         """
@@ -229,10 +270,10 @@ class Vector3:
 
     def get_perpendicular(self, vector_1, vector_2):
         """
-        Calculates the 2D vector perpendicular to the vector
+        Calculates the two possible 3D vectors perpendicular to the vector
 
         :return: the perpendicular vector
-        :rtype: Vector2
+        :rtype: Vector3
         """
         if self == Vector3():
             return vector_1, vector_2
@@ -254,6 +295,25 @@ class Vector3:
         vector_2 = self.cross(vector_1).normalised()
 
         return vector_1, vector_2
+
+    def invert(self):
+        """
+        Converts the 3D vector into an inverse of itself
+
+        """
+        self.x *= -1
+        self.y *= -1
+        self.z *= -1
+        return self
+
+    def inverted(self):
+        """
+       Calculates the 3D vector inverse to the vector
+
+       :return:the inverse vector
+       :rtype: Vector3
+       """
+        return Vector3(-self.x, -self.y, -self.z)
 
     @classmethod
     def from_comma_string(cls, string):
@@ -298,24 +358,20 @@ class Vector3:
         """
         return self.to_vector2().signed_angle_to(other_vector.to_vector2())
 
-    def invert(self):
-        """
-        Inverts the vector
-
-        """
-        self.x *= -1
-        self.y *= -1
-        self.z *= -1
-        return self
-
-    def inverted(self):
-        return Vector3(-self.x, -self.y, -self.z)
-
     def to_vector2(self):
+        """
+        Creates a 2D vector of the 3D vector discarding the coordinate value
+
+        :return: the 3D vector
+        """
         vector_2d = geometry_utils.two_d.vector2.Vector2(self.x, self.y, self.w)
         return vector_2d
 
     def accuracy_fix(self):
+        """
+        Converts the 3D vector coordinates with very low values to 0.0
+
+        """
         if -EPSILON < self.x < EPSILON:
             self.x = 0.0
         if -EPSILON < self.y < EPSILON:
@@ -326,4 +382,10 @@ class Vector3:
 
 
 def is_vector3(input_variable):
+    """
+    Checks if the input variable is an object of Vector3
+
+    :param input_variable: the input variable to be checked
+    :return: bool
+    """
     return isinstance(input_variable, Vector3)
