@@ -187,7 +187,7 @@ def test_inverted_vector3_arithmetic(test_vector3_1, test_vector3_4):
 
 
 def test_invert_vector3_arithmetic():
-    assert Vector3(1.0, 1.0, 1.0) == Vector3(-1.0, -1.0, -1.0)
+    assert Vector3(1.0, 1.0, 1.0).invert() == Vector3(-1.0, -1.0, -1.0)
 
 
 def test_vector3_get_perpendicular_arithmetic(test_vector3_2, test_vector3_4, test_vector3_5):
