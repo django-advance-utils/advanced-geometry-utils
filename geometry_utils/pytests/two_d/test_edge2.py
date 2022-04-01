@@ -160,6 +160,19 @@ def test_edge2_parametric_point_with_float_argument(test_edge2_1):
         return test_edge2_1.parametric_point(9.0)
 
 
+def test_edge2_get_line_normal_return_type(test_edge2_2):
+    assert isinstance(test_edge2_2.get_line_normal(), Vector2)
+
+
+def test_edge2_get_line_normal_arithmetic(test_edge2_2):
+    assert test_edge2_2.get_line_normal() == Vector2(-0.7071, 0.7071)
+
+
+def test_edge2_arc_get_line_normal(test_edge2_5):
+    with pytest.raises(TypeError):
+        return test_edge2_5.get_line_normal()
+
+
 def test_edge2_get_arc_normal_return_type(test_edge2_6, test_point2_1):
     assert isinstance(test_edge2_6.get_arc_normal(test_point2_1), Vector2)
 
@@ -177,10 +190,6 @@ def test_edge2_line_get_arc_normal_arithmetic(test_edge2_2):
 def test_edge2_arc_normal_arithmetic_with_float_argument(test_edge2_2):
     with pytest.raises(TypeError):
         return test_edge2_2.get_arc_normal(9.0)
-
-
-def test_edge2_get_line_normal(test_edge2_2):
-    assert test_edge2_2.get_line_tangent() == Vector2(1.0 / math.sqrt(2.0), 1.0 / math.sqrt(2.0))
 
 
 def test_edge2_get_line_tangent_return_type(test_edge2_4):
@@ -202,6 +211,7 @@ def test_edge2_get_arc_tangent_return_type(test_edge2_5):
 
 def test_edge2_get_arc_tangent_arithmetic(test_edge2_5, test_edge2_2):
     assert test_edge2_5.get_arc_tangent(Point2(0, 1)) == Vector2(1.0 / math.sqrt(2.0), 1.0 / math.sqrt(2.0))
+    assert Edge2(Point2(2, 0), Point2(0, 0), 1).get_arc_tangent(Point2(0, 1)) == Vector2(-1.0 / math.sqrt(2.0), -1.0 / math.sqrt(2.0))
 
 
 def test_edge2_line_get_arc_tangent(test_edge2_2, test_point2_3):
@@ -323,8 +333,9 @@ def test_edge2_get_slope_arc(test_edge2_5):
         return test_edge2_5.get_slope()
 
 
-def test_edge2_edge_length(test_edge2_2):
+def test_edge2_edge_length(test_edge2_2, test_edge2_5):
     assert floats_are_close(test_edge2_2.edge_length(), 2.828427)
+    assert test_edge2_5.edge_length() == PI
 
 
 def test_edge2_angle_to_x_axis(test_edge2_2):
@@ -370,6 +381,16 @@ def test_edge2_vector_within_arc(test_edge2_6):
     assert test_edge2_6.vector_within_arc(Vector2(5.0, 0.0))
 
 
+def test_edge2_line_vector_within_arc(test_edge2_5):
+    with pytest.raises(TypeError):
+        test_edge2_5.vector_within_arc(Vector2(0.0, 0.0))
+
+
+def test_edge2_vector_within_arc_float_argument(test_edge2_5):
+    with pytest.raises(TypeError):
+        test_edge2_5.vector_within_arc(9.0)
+
+
 def test_edge2_transform():
     edge_to_be_transformed = Edge2(Point2(0, 0), Point2(1, 0))
     transformation_matrix = Matrix3.translation(Vector2(0.0, -1.0))
@@ -382,6 +403,10 @@ def test_edge2_transform():
 
 def test_edge2_calculate_arc_centre(test_edge2_2):
     assert test_edge2_2.calculate_centre() == Point2(1.0, 1.0)
+
+
+def test_edge2_is_clockwise_arc(test_edge2_5):
+    assert test_edge2_5.is_clockwise_arc()
 
 
 def test_edge2_get_edge_bounds(test_edge2_2):
