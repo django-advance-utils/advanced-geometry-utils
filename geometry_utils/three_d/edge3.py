@@ -50,8 +50,6 @@ class Edge3:
         returns the midpoint of the 3D edge
     get_via(): Point3
         returns the point between the start and end points on the edge
-    update_via(): Point3
-        returns the updated edge via point
     is_clockwise_arc(): bool
         tests if the arc edge is clockwise
     point_parametric(int/float): Point2
@@ -116,8 +114,6 @@ class Edge3:
         returns the maximum x coordinate of the edge
     flatten_arc(): list
         returns a list of line edges about the arc circumference
-    is_clockwise_arc(): bool
-        tests if the arc edge is clockwise
     get_arc_centre_with_start_end_radius(bool): Point3
         returns the arc centre from specified edge direction, start point, end point and radius
     """
@@ -227,20 +223,6 @@ class Edge3:
                                                    self.radius, self.clockwise, self.large)
         edge_2d_midpoint = edge_2d.point_parametric(0.5)
         return Point3(edge_2d_midpoint.x, edge_2d_midpoint.y, self.p1.z)
-
-    def update_via(self):
-        """
-        Updates the via value of the edge
-
-        :return: the new via value
-        :rtype: Point3
-        """
-        a = self.p1 - self.centre
-        b = self.p2 - self.centre
-
-        m = a + b
-        m = m.normalise() * self.radius
-        self.via = self.centre + m
 
     def is_clockwise(self):
         """
@@ -397,7 +379,8 @@ class Edge3:
                 if self.clockwise:
                     return self.get_arc_normal(point).get_perpendicular(Vector3(), Vector3)
                 else:
-                    return self.get_arc_normal(point).get_perpendicular(Vector3(), Vector3()).invert()
+                    return [self.get_arc_normal(point).get_perpendicular(Vector3(), Vector3())[0].invert(),
+                            self.get_arc_normal(point).get_perpendicular(Vector3(), Vector3())[1].invert()]
             raise TypeError("Arc tangent can not be derived for a line")
         raise TypeError("Input argument must be an object of Point3")
 

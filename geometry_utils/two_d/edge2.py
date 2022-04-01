@@ -105,8 +105,6 @@ class Edge2:
         tests if the specified vector is within the arc edge
     transform(Matrix3): Edge2
         returns the edge transformed with the specified 3x3 matrix
-    is_clockwise_arc(): bool
-        tests if the arc edge is clockwise
     to_edge3(): Edge3
         returns a 3D edge from the 2D edge
     """
