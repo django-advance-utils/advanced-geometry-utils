@@ -162,7 +162,7 @@ class Intersection:
                                                           intersect_point_to_point4_distance, length_of_side2)
             return self
         else:
-            raise TypeError("Arguments must be objects of Point2")
+            raise TypeError("Arguments must be objects of Edge2")
 
     def intersect_line_circle(self, line_edge, circle_edge):
         if is_edge2(line_edge) and is_edge2(circle_edge):
