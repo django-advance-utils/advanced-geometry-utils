@@ -17,10 +17,16 @@ class Path3:
     ___________
     list_of_edges: list
         the list of 3D edges to establish a path
-    first_edge: Edge3
-        the first 3D edge on the path
-    last_edge: Edge3
-        the last 3D edge on the path
+    fill: str
+        the fill colour of the path inside
+    name: str
+        the name of the path
+    type: str
+        the type name of the path
+    layers: list
+        list of layers in the path
+    attributes: dict
+        dictionary of python attributes
 
     Methods:
     ________
@@ -215,17 +221,21 @@ class Path3:
                 for edge in self.list_of_edges:
                     edge.offset(vector)
                 return self
-            elif point_type.lower() == 'mm':
+            elif point_type.lower() == 'mmm':
                 for edge in self.list_of_edges:
                     edge.mirror_origin().offset(vector)
                 return self
-            elif point_type.lower() == 'pm':
+            elif point_type.lower() == 'pmp':
                 for edge in self.list_of_edges:
                     edge.mirror_y().offset(vector)
                 return self
-            elif point_type.lower() == 'mp':
+            elif point_type.lower() == 'mpp':
                 for edge in self.list_of_edges:
                     edge.mirror_x().offset(vector)
+                return self
+            elif point_type.lower() == 'ppm':
+                for edge in self.list_of_edges:
+                    edge.mirror_z().offset(vector)
                 return self
         else:
             raise TypeError("Path offset must be done with a vector")
