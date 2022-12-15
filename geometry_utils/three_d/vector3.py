@@ -181,6 +181,22 @@ class Vector3:
                     not floats_are_close(self.y, other_vector.y))
         raise TypeError("Comparison must be with another object of Vector3")
 
+    @classmethod
+    def from_point3(cls, point):
+        """
+        Constructs and returns a Vector3 from a point3
+
+        :param  cls: Vector3 class
+        :type   cls: Vector3
+        :return: Vector3 object
+        :rtype: Vector3
+        :raises:TypeError: Wrong argument type
+        """
+        try:
+            return cls(point.x, point.y, point.z)
+        except AttributeError:
+            raise TypeError("from_point3 must be passed a Point3")
+
     def equal(self, other_vector, tol=0.01):
         """
         Compares the equality of the vector and another 3D vector with tolerance input
