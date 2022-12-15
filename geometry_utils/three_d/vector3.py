@@ -187,7 +187,9 @@ class Vector3:
         Constructs and returns a Vector3 from a point3
 
         :param  cls: Vector3 class
-        :type   cls: Vector3
+        :type   cls: Vector3 class
+        :param  point: Point3 object
+        :type   point: Point3
         :return: Vector3 object
         :rtype: Vector3
         :raises:TypeError: Wrong argument type
