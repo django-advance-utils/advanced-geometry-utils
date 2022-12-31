@@ -432,3 +432,19 @@ def test_path2_get_convex_hull():
                                  Edge2(Point2(1.0, 1.0), Point2(0.0, 1.0))]
 
     assert path.get_convex_hull() == convex_hull
+
+
+def test_path2_simplify():
+    path = Path2()
+    path.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(10.0, 0.0)),
+                          Edge2(Point2(10.0, 0.0), Point2(20.0, 0.0)),
+                          Edge2(Point2(20.0, 0.0), Point2(20.0, 15.0)),
+                          Edge2(Point2(20.0, 15.0), Point2(20.0, 30.0))]
+
+    path.simplify()
+
+    simplified_edges = Path2()
+    simplified_edges.list_of_edges = [Edge2(Point2(0.0, 0.0), Point2(20.0, 0.0)),
+                                      Edge2(Point2(20.0, 0.0), Point2(20.0, 30.0))]
+
+    assert path == simplified_edges

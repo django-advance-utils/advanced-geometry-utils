@@ -83,6 +83,31 @@ class Path2:
             return self.list_of_edges[-1]
         raise IndexError("Can not find the last edge of an empty list of edges")
 
+    def simplify(self):
+        if len(self.list_of_edges) < 2:
+            return
+
+        new_edges = [self.list_of_edges[0]]
+
+        for idx, edge in self.list_of_edges:
+            if idx == 0 or new_edges[-1].p2 != edge.p1:
+                continue
+            if new_edges[-1].is_arc() != edge.is_arc():
+                new_edges.append(edge)
+                continue
+
+            if new_edges[-1].is_arc() and edge.is_arc() and new_edges[-1].radius == edge.radius and new_edges[-1].centre == edge.centre:
+                new_edges[-1].p2 = edge.p2
+                continue
+
+            if new_edges[-1].is_parallel_to(edge) and new_edges[-1].get_direction_vector() == edge.get_direction_vector():
+                new_edges[-1].p2 = edge.p2
+                continue
+            new_edges.append(edge)
+
+        self.list_of_edges = new_edges
+
+
     @property
     def path_length(self):
         """

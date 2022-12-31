@@ -179,6 +179,9 @@ class Edge2:
             return inequality
         raise TypeError("Comparison must be with another object of Edge2")
 
+    def get_direction_vector(self):
+        return (self.p2 - self.p1).normalised()
+
     def calculate_centre(self):
         """
         Calculates the centre of the arc
