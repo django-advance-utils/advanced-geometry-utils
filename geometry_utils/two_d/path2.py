@@ -98,10 +98,12 @@ class Path2:
 
             if new_edges[-1].is_arc() and edge.is_arc() and new_edges[-1].radius == edge.radius and new_edges[-1].centre == edge.centre:
                 new_edges[-1].p2 = edge.p2
+                new_edges[-1].centre = new_edges[-1].calculate_centre()
                 continue
 
             if new_edges[-1].is_parallel_to(edge) and new_edges[-1].get_direction_vector() == edge.get_direction_vector():
                 new_edges[-1].p2 = edge.p2
+                new_edges[-1].centre = new_edges[-1].calculate_centre()
                 continue
             new_edges.append(edge)
 
