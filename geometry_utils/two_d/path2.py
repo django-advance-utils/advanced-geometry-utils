@@ -89,7 +89,7 @@ class Path2:
 
         new_edges = [self.list_of_edges[0]]
 
-        for idx, edge in self.list_of_edges:
+        for idx, edge in enumerate(self.list_of_edges):
             if idx == 0 or new_edges[-1].p2 != edge.p1:
                 continue
             if new_edges[-1].is_arc() != edge.is_arc():
