@@ -77,6 +77,9 @@ class Vector2:
         else:
             raise TypeError("Vector2 argument must be an int or float")
 
+    def __neg__(self):
+        return self.inverted()
+
     def __str__(self):
         """
         Prints the attributes of the 2D vector
