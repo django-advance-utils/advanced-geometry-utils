@@ -29,18 +29,18 @@ def test_intersection_on_collinear_edge2_lines(test_edge2_2, test_edge2_3, test_
     assert not intersection.end_of_line
 
 
-def test_intersection_on_non_collinear_edge2_lines(test_point2_1):
+def test_intersection_on_non_collinear_edge2_lines(test_point2_2):
     vertical_edge = Edge2(Point2(1, 0), Point2(1, 5))
     horizontal_edge = Edge2(Point2(0, 0), Point2(5, 0))
 
     intersection = Intersection()
     intersection.intersect(vertical_edge, horizontal_edge)
-    assert intersection.point == test_point2_1
+    assert intersection.point == test_point2_2
     assert intersection.vectors_intersect
     assert intersection.on_first_segment
-    assert not intersection.on_second_segment
+    assert intersection.on_second_segment
     assert not intersection.collinear
-    assert not intersection.end_of_line
+    assert intersection.end_of_line
 
 
 def test_intersection_on_edge2_line_and_edge2_arc(test_edge2_2, test_edge2_5, test_point2_1):
