@@ -134,12 +134,28 @@ class Intersection:
 
             else:
                 self.vectors_intersect = True
-                s = float(v.x * w.y - v.y * w.x) / denominator
-                t = float(u.x * w.y - u.y * w.x) / denominator
+                # This seems to produce a more accurate intersection point than the other code below,
+                # which could have been over a mm off at times!
+                l1_a = first_edge.p1.y - first_edge.p2.y
+                l1_b = first_edge.p2.x - first_edge.p1.x
+                l1_c = -(first_edge.p1.x * first_edge.p2.y - first_edge.p2.x * first_edge.p1.y)
 
-                self.point = Point2()
-                self.point.x = first_edge.p1.x + s * u.x
-                self.point.y = first_edge.p1.y + t * u.y
+                l2_a = second_edge.p1.y - second_edge.p2.y
+                l2_b = second_edge.p2.x - second_edge.p1.x
+                l2_c = -(second_edge.p1.x * second_edge.p2.y - second_edge.p2.x * second_edge.p1.y)
+
+                d = l1_a * l2_b - l1_b * l2_a
+                dx = l1_c * l2_b - l1_b * l2_c
+                dy = l1_a * l2_c - l1_c * l2_a
+
+                self.point = Point2(dx / d, dy / d)
+
+                # s = float(v.x * w.y - v.y * w.x) / denominator
+                # t = float(u.x * w.y - u.y * w.x) / denominator
+                #
+                # self.point = Point2()
+                # self.point.x = first_edge.p1.x + s * u.x
+                # self.point.y = first_edge.p1.y + t * u.y
 
                 intersect_point_to_point1_distance = self.point.distance_to(first_edge.p1)
                 intersect_point_to_point2_distance = self.point.distance_to(first_edge.p2)
