@@ -162,7 +162,7 @@ class Vector3:
         if is_vector3(other_vector):
             return (floats_are_close(self.x, other_vector.x) and
                     floats_are_close(self.y, other_vector.y) and
-                    floats_are_close(self.y, other_vector.y))
+                    floats_are_close(self.z, other_vector.z))
         raise TypeError("Comparison must be with another object of Vector3")
 
     def __ne__(self, other_vector):
