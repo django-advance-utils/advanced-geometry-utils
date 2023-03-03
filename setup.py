@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="geometry-utils",
+    name="geometry-advanced-utils",
     version="0.0.1",
     author="Tom Turner",
     description="A collection of geometry utils for 3d and 2d",
