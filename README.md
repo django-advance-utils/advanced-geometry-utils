@@ -2,7 +2,7 @@
 
 
 
-# geometry-utils
+# advanced-geometry-utils
 ## Introduction
 A python module for working on 2D and 3D geometries.
 
