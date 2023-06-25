@@ -390,7 +390,6 @@ class Path3:
     def update_path(self):
         for edge in self.list_of_edges:
             edge.centre = edge.calculate_centre()
-            edge.via = edge.get_via()
         return self
 
     def get_oriented_bounding_box(self):

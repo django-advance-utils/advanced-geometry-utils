@@ -1,6 +1,9 @@
 import copy
 import math
-import geometry_utils.three_d.edge3
+
+from typing import Tuple
+
+from geometry_utils.three_d.edge3 import is_edge3, Edge3
 import geometry_utils.two_d.axis_aligned_box2
 
 from geometry_utils.maths_utility import (floats_are_close, DOUBLE_EPSILON, PI, TWO_PI, is_list, is_int_or_float,
@@ -195,8 +198,8 @@ class Edge2:
         if not self.is_arc():
             return Point2((self.p1.x + self.p2.x) * 0.5, (self.p1.y + self.p2.y) * 0.5)
 
-        ellipse = Ellipse(start = self.p1, end = self.p2, major_radius = self.radius, minor_radius = self.radius,
-                          clockwise = self.clockwise, large_arc = self.large, angle=0.0)
+        ellipse = Ellipse(start=self.p1, end=self.p2, major_radius=self.radius, minor_radius=self.radius,
+                          clockwise=self.clockwise, large_arc=self.large, angle=0.0)
         return ellipse.centre
 
     def is_arc(self):
@@ -388,7 +391,7 @@ class Edge2:
         if is_vector2(vector):
             self.p1 += vector
             self.p2 += vector
-            self.centre = self.calculate_centre()
+            self.centre += vector
             return self
         else:
             raise TypeError("Edge offset is done by an object of Vector2")
@@ -541,7 +544,7 @@ class Edge2:
         :param rotation_angle: the angle with which the edge rotation is done
         :raises wrong angle argument type
         """
-        if is_float(rotation_angle):
+        if is_int_or_float(rotation_angle):
             rotation_matrix = Matrix3.rotation(rotation_angle)
 
             self.p1 = rotation_matrix * self.p1
@@ -746,8 +749,9 @@ class Edge2:
         :return: the resulting Edge3 object
         :rtype: Edge3
         """
-        edge_3d = geometry_utils.three_d.edge3.Edge3(self.p1.to_point3(), self.p2.to_point3(), None,
-                                                     self.radius, self.clockwise, self.large)
+        edge_3d = geometry_utils.three_d.edge3.Edge3(self.p1.to_point3(),
+                                                     self.p2.to_point3(),
+                                                     self.point_parametric(0.5).to_point3())
 
         edge_3d.name = self.name
         edge_3d.style = self.style
@@ -756,6 +760,47 @@ class Edge2:
         edge_3d.right_name = self.right_name
 
         return edge_3d
+
+    @classmethod
+    def from_edge3(cls, edge):
+        def start_end_via_to_start_end_clock_rad_large(start, end, via):
+            # type: (Point2, Point2, Point2) -> Tuple[float, bool, bool]
+            # https://stackoverflow.com/questions/21816286/svg-arc-how-to-determine-sweep-and-larg-arc-flags-given-start-end-via-point
+            def calc_angle(_st, _vi, _en):
+                return (math.atan2(_en.y - _vi.y, _en.x - _vi.x) - math.atan2(_st.y - _vi.y,
+                                                                              _st.x - _vi.x) + 3.0 * math.pi) % (
+                                   2.0 * math.pi) - math.pi
+
+            def is_clockwise(_s, _v, _e):
+                ang = calc_angle(_e, _s, _v)
+                return False if ang > 0 else True
+
+            def is_large(_s, _v, _e):
+                # return False if math.fabs(calc_angle(_s, _v, _e)) > math.pi / 2 else True
+                return math.fabs(calc_angle(_s, _v, _e)) > math.pi / 2
+
+            def calc_rad(_st, _vi, _en):
+                _g = _vi.x - _st.x
+                _h = 2.0 * (_vi.x - _en.x) / _g
+                _i = _vi.y - _st.y
+                _j = _vi.x * _vi.x + _vi.y * _vi.y
+                _k = _j - _st.x * _st.x - _st.y * _st.y
+                _l = (_j - _en.x * _en.x - _en.y * _en.y - _h * _k / 2.0) / (2.0 * (_vi.y - _en.y) - _h * _i)
+                return math.hypot(_st.x + (_i * _l - _k / 2.0) / _g, _st.y - _l)
+
+            return calc_rad(start, via, end), is_clockwise(start, via, end), is_large(start, via, end)
+
+        if not is_edge3(edge):
+            raise TypeError("Argument must be an Edge3")
+
+        if edge.is_arc():
+            return cls(edge.p1.to_point2(), edge.p2.to_point2())
+
+        radius, clock, large = start_end_via_to_start_end_clock_rad_large(edge.p1.to_point2(),
+                                                                          edge.via.to_point2(),
+                                                                          edge.end.to_point2())
+        return cls(edge.p1.to_point2(), edge.p2.to_point2(), radius, clock, large)
+
 
 def is_edge2(input_variable):
     """

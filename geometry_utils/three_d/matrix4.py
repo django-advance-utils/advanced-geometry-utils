@@ -24,11 +24,11 @@ class Matrix4:
         Returns the equality comparison of the matrix with another 4 x 4 matrix
     make_translation(Vector2): Matrix4
         Creates a 4 x 4 translation matrix
-    make_x_rotation(int/float): Matrix4
+    x_rotation(int/float): Matrix4
         Creates a 4 x 4 rotation matrix around x-axis
-    make_y_rotation(int/float): Matrix4
+    y_rotation(int/float): Matrix4
         Creates a 4 x 4 rotation matrix around y-axis
-    make_z_rotation(int/float): Matrix4
+    z_rotation(int/float): Matrix4
         Creates a 4 x 4 rotation matrix around z-axis
     """
 
@@ -151,7 +151,7 @@ class Matrix4:
         :rtype:  Matrix4
         :raises: TypeError: Wrong argument type
         """
-        if is_float(theta):
+        if is_int_or_float(theta):
             mat = cls()
             if rad is False:
                 theta = degrees_to_radians(theta)

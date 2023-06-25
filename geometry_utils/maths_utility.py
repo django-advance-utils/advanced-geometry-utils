@@ -530,7 +530,7 @@ EPSILON = 0.00001
 
 
 def degrees_to_radians(theta_in_degrees):
-    if is_float(theta_in_degrees):
+    if is_int_or_float(theta_in_degrees):
         return theta_in_degrees * DEG_TO_RAD
 
 

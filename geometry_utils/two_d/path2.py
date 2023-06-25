@@ -109,7 +109,6 @@ class Path2:
 
         self.list_of_edges = new_edges
 
-
     @property
     def path_length(self):
         """

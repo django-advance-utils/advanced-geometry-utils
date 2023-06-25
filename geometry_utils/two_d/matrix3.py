@@ -138,7 +138,7 @@ class Matrix3:
         :raises: TypeError: Wrong argument type
         """
 
-        if is_float(theta):
+        if is_int_or_float(theta):
             mat = cls()
             if rad is False:
                 theta = degrees_to_radians(theta)

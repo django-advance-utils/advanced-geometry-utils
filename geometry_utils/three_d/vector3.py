@@ -5,7 +5,7 @@ from geometry_utils.maths_utility import is_int_or_float, are_ints_or_floats, fl
     EPSILON
 
 
-class Vector3:
+class Vector3(object):
     """
     A class to create a 3D vector
 
@@ -89,6 +89,9 @@ class Vector3:
         return ("Vector3(x:" + str("{:.2f}".format(self.x)) +
                 ", y:" + str("{:.2f}".format(self.y)) +
                 ", z:" + str("{:.2f}".format(self.z)) + ")")
+
+    def __repr__(self):
+        return repr({'x': self.x, 'y': self.y, 'z': self.z})
 
     def __add__(self, other_vector):
         """
