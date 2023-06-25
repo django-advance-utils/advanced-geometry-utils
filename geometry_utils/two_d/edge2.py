@@ -802,7 +802,7 @@ class Edge2:
 
         radius, clock, large = start_end_via_to_start_end_clock_rad_large(edge.p1.to_point2(),
                                                                           edge.via.to_point2(),
-                                                                          edge.end.to_point2())
+                                                                          edge.p2.to_point2())
         return cls(edge.p1.to_point2(), edge.p2.to_point2(), radius, clock, large)
 
 
