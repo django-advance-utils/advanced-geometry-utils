@@ -749,9 +749,13 @@ class Edge2:
         :return: the resulting Edge3 object
         :rtype: Edge3
         """
-        edge_3d = geometry_utils.three_d.edge3.Edge3(self.p1.to_point3(),
-                                                     self.p2.to_point3(),
-                                                     self.point_parametric(0.5).to_point3())
+        if self.is_arc():
+            edge_3d = geometry_utils.three_d.edge3.Edge3(self.p1.to_point3(),
+                                                         self.p2.to_point3(),
+                                                         self.point_parametric(0.5).to_point3())
+        else:
+            edge_3d = geometry_utils.three_d.edge3.Edge3(self.p1.to_point3(),
+                                                         self.p2.to_point3())
 
         edge_3d.name = self.name
         edge_3d.style = self.style

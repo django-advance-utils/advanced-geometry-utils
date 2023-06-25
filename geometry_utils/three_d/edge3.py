@@ -161,6 +161,9 @@ class Edge3:
             return equality
         raise TypeError("Comparison must be with another object of Edge3")
 
+    def __ne__(self, other_edge):
+        return not self.__eq__(other_edge)
+
     def calculate_centre(self):
         """
         Calculates the centre of the arc
@@ -382,9 +385,12 @@ class Edge3:
         """
         if is_point3(point):
             if self.is_arc():
-                normal = self.get_arc_normal(point)
-                radial = self.centre - point
-                return normal.cross(radial).normalise()
+                v1 = self.centre - self.p1
+                v2 = self.via - self.p1
+                plane_norm = v1.cross(v2)
+                arc_normal = self.get_arc_normal(point)
+
+                return plane_norm.cross(arc_normal).normalise()
             raise TypeError("Arc tangent can not be derived for a line")
         raise TypeError("Input argument must be an object of Point3")
 
@@ -407,7 +413,8 @@ class Edge3:
         :return: if the arc edge is a circle
         :rtype bool
         """
-        return self.is_arc() and self.p1 == self.p2
+        return self.is_arc() and self.p1 == self.p2 and \
+               (self.via is not None and self.via != self.p1 and self.via.z == self.p1.z)
 
     def get_arc_start_angle(self, rad=False):
         """

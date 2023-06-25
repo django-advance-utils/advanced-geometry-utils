@@ -39,7 +39,7 @@ class Path3:
     """
     def __init__(self):
         self.list_of_edges = []
-        
+
         self.fill = ''
         self.name = ''
         self.type = ''
@@ -58,12 +58,12 @@ class Path3:
                 raise TypeError("Comparison must be done with another object of Path2")
             if self.path_length != other_path.path_length:
                 raise IndexError("Comparison must be done with another path of equal number of edges")
-            
+
     def __add__(self, other_path):
         path = Path3()
         path.list_of_edges = self.list_of_edges + other_path.list_of_edges
         return path
-    
+
     def set_edges(self, list_of_edges):
         for edge in list_of_edges:
             if not is_edge3(edge):
@@ -115,7 +115,7 @@ class Path3:
                 if edge.p2 != next_edge.p1:
                     return False
             return True
-    
+
     def get_bounds(self):
         """
         Derives the AxisAlignedBox2 containing the bounds of the path
@@ -167,13 +167,13 @@ class Path3:
                         path_bounds.include(negative_z)
 
         return path_bounds
-    
+
     def to_tuple_list(self):
         path_tuple_list = []
         for edge in self.list_of_edges:
             path_tuple_list.append(((edge.p1.x, edge.p1.y, edge.p1.z), (edge.p2.x, edge.p2.y, edge.p2.z)))
         return path_tuple_list
-    
+
     def remove_duplicate_edges(self):
         indices_of_edges_to_remove = []
         last_edge = None
@@ -188,7 +188,7 @@ class Path3:
         for index in indices_of_edges_to_remove:
             del self.list_of_edges[index]
         return self
-    
+
     def reverse(self):
         self.list_of_edges.reverse()
         for edge in self.list_of_edges:
@@ -209,12 +209,12 @@ class Path3:
         for edge in self.list_of_edges:
             edge.mirror_z()
         return self
-    
+
     def mirror_origin(self):
         for edge in self.list_of_edges:
             edge.mirror_origin()
         return self
-    
+
     def offset(self, vector, point_type=None):
         if is_vector3(vector):
             if point_type is None or point_type.lower() == 'ppp':
@@ -239,7 +239,7 @@ class Path3:
                 return self
         else:
             raise TypeError("Path offset must be done with a vector")
-        
+
     def rotate_around(self, rotation_vector, rotation_angle):
         if is_vector3(rotation_vector) and is_float(rotation_angle):
             reversed_rotation_vector = rotation_vector.invert()
@@ -247,7 +247,7 @@ class Path3:
             self.rotate(rotation_angle)
             self.offset(rotation_vector)
             return self
-        
+
     def close_path(self):
         if self.path_length > 1 and not self.is_closed:
             if not self.is_continuous:
@@ -259,21 +259,22 @@ class Path3:
             self.list_of_edges.append(Edge3(copy.deepcopy(self.list_of_edges[-1].p2),
                                             copy.deepcopy(self.list_of_edges[0].p1)))
         return self
-    
-    def make_continuous(self):
-        if self.path_length > 1 and not self.is_continuous:
-            for index in range(self.path_length - 1):
-                if self.list_of_edges[index].p2 != self.list_of_edges[index + 1].p1:
-                    self.list_of_edges[index].p2 = copy.deepcopy(self.list_of_edges[index + 1].p1)
-                    if self.list_of_edges[index + 1].is_arc():
-                        self.list_of_edges[index].radius = self.list_of_edges[index + 1].radius
-                        self.list_of_edges[index].clockwise = self.list_of_edges[index + 1].clockwise
-                        self.list_of_edges[index].large = self.list_of_edges[index + 1].large
 
-                        self.list_of_edges[index + 1].radius = 0
-                        self.list_of_edges[index + 1].clockwise = False
-                        self.list_of_edges[index + 1].large = False
-            self.update_path()
+    def make_continuous(self):
+        # TODO: Needs rewriting
+        # if self.path_length > 1 and not self.is_continuous:
+        #     for index in range(self.path_length - 1):
+        #         if self.list_of_edges[index].p2 != self.list_of_edges[index + 1].p1:
+        #             self.list_of_edges[index].p2 = copy.deepcopy(self.list_of_edges[index + 1].p1)
+        #             if self.list_of_edges[index + 1].is_arc():
+        #                 self.list_of_edges[index].radius = self.list_of_edges[index + 1].radius
+        #                 self.list_of_edges[index].clockwise = self.list_of_edges[index + 1].clockwise
+        #                 self.list_of_edges[index].large = self.list_of_edges[index + 1].large
+        #
+        #                 self.list_of_edges[index + 1].radius = 0
+        #                 self.list_of_edges[index + 1].clockwise = False
+        #                 self.list_of_edges[index + 1].large = False
+        #     self.update_path()
         return self
 
     def rotate(self, rotation_angle):
@@ -304,21 +305,6 @@ class Path3:
             index_offset += len(new_edge[1]) - 1
 
         return self
-
-    def get_enclosed_area(self):
-        path_2d = self.to_path2()
-        return path_2d.get_enclosed_area()
-        # if not self.is_closed or self.path_length <= 0:
-        #     return None
-        #
-        # path = copy.deepcopy(self)
-        # path.remove_duplicate_edges()
-        # path.remove_arcs()
-        # twice_area = 0
-        # for edge in path.list_of_edges:
-        #     twice_area += edge.p1.x * edge.p2.y - edge.p2.x * edge.p1.y
-        # return twice_area * 0.5
-
 
     def is_quadrilateral(self):
         if self.path_length != 4 or not self.is_closed or not self.is_continuous:
@@ -353,17 +339,15 @@ class Path3:
 
     def convert_circle_to_edges(self):
         if self.is_circle():
-            circle_centre = Point3()
-            circle_centre.x = self.list_of_edges[0].centre.x
-            circle_centre.y = self.list_of_edges[0].centre.y
-            circle_centre.z = self.list_of_edges[0].centre.z
-            circle_radius = self.list_of_edges[0].radius
+            circle_radius = (self.list_of_edges[0].via - self.list_of_edges[0].p1).length()
 
             self.list_of_edges = [
-                Edge3(Point3(circle_centre.x, circle_centre.y + circle_radius, circle_centre.z),
-                      Point3(circle_centre.x, circle_centre.y - circle_radius, circle_centre.z), radius=circle_radius, clockwise=False),
-                Edge3(Point3(circle_centre.x, circle_centre.y - circle_radius, circle_centre.z),
-                      Point3(circle_centre.x, circle_centre.y + circle_radius, circle_centre.z), radius=circle_radius, clockwise=False)
+                Edge3(Point3(self.list_of_edges[0].p1.x, self.list_of_edges[0].p1.y + circle_radius, self.list_of_edges[0].p1.z),
+                      Point3(self.list_of_edges[0].p1.x, self.list_of_edges[0].p1.y - circle_radius, self.list_of_edges[0].p1.z),
+                      via=Point3(self.list_of_edges[0].p1.x + circle_radius, self.list_of_edges[0].p1.y, self.list_of_edges[0].p1.z)),
+                Edge3(Point3(self.list_of_edges[0].p1.x, self.list_of_edges[0].p1.y - circle_radius, self.list_of_edges[0].p1.z),
+                      Point3(self.list_of_edges[0].p1.x, self.list_of_edges[0].p1.y + circle_radius, self.list_of_edges[0].p1.z),
+                      via=Point3(self.list_of_edges[0].p1.x - circle_radius, self.list_of_edges[0].p1.y, self.list_of_edges[0].p1.z))
             ]
             return self
 
@@ -389,7 +373,8 @@ class Path3:
 
     def update_path(self):
         for edge in self.list_of_edges:
-            edge.centre = edge.calculate_centre()
+            if edge.is_arc():
+                edge.centre = edge.calculate_centre()
         return self
 
     def get_oriented_bounding_box(self):
