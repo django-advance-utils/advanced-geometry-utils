@@ -797,7 +797,7 @@ class Edge2:
         if not is_edge3(edge):
             raise TypeError("Argument must be an Edge3")
 
-        if edge.is_arc():
+        if not edge.is_arc():
             return cls(edge.p1.to_point2(), edge.p2.to_point2())
 
         radius, clock, large = start_end_via_to_start_end_clock_rad_large(edge.p1.to_point2(),
