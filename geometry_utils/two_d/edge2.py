@@ -88,8 +88,8 @@ class Edge2:
         returns the parallel comparison of the edge with another 2D edge
     is_perpendicular_to(Edge2): bool
         returns the perpendicular comparison of the edge with another 2D edge
-    get_slope(): float/str
-        returns the slope of the edge and 'vertical' if the edge is vertical
+    get_slope(): float/None
+        returns the slope of the edge and None if the edge is vertical
     edge_length(): float
         returns the length of the edge
     angle_to_x_axis(): flaot
@@ -564,6 +564,10 @@ class Edge2:
         :raises: wrong argument type
         """
         if is_edge2(other_edge):
+            self_slope = self.get_slope()
+            other_slope = other_edge.get_slope()
+            if self_slope is None or other_slope is None:
+                return self_slope == other_slope
             return floats_are_close(self.get_slope(), other_edge.get_slope())
         raise TypeError("Parallel check must be with an Edge2 object")
 
@@ -594,7 +598,7 @@ class Edge2:
         numerator = self.p2.y - self.p1.y
         denominator = self.p2.x - self.p1.x
         if denominator == 0:
-            return "Vertical"
+            return None
         return numerator / denominator
 
     def edge_length(self):
