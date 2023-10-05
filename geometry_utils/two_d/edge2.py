@@ -564,7 +564,7 @@ class Edge2:
         :raises: wrong argument type
         """
         if is_edge2(other_edge):
-            return self.get_slope() == other_edge.get_slope()
+            return floats_are_close(self.get_slope(), other_edge.get_slope())
         raise TypeError("Parallel check must be with an Edge2 object")
 
     def is_perpendicular_to(self, other_edge):
