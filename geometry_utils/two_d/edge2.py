@@ -568,7 +568,7 @@ class Edge2:
             other_slope = other_edge.get_slope()
             if self_slope is None or other_slope is None:
                 return self_slope == other_slope
-            return floats_are_close(self.get_slope(), other_edge.get_slope())
+            return floats_are_close(self_slope, other_slope)
         raise TypeError("Parallel check must be with an Edge2 object")
 
     def is_perpendicular_to(self, other_edge):

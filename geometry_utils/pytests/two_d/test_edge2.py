@@ -325,7 +325,7 @@ def test_edge2_get_slope(test_edge2_4):
 
 
 def test_edge2_get_slope_vertical():
-    assert Edge2(Point2(1, 1), Point2(1, 2)).get_slope() == "Vertical"
+    assert Edge2(Point2(1, 1), Point2(1, 2)).get_slope() is None
 
 
 def test_edge2_get_slope_arc(test_edge2_5):
