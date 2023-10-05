@@ -36,7 +36,7 @@ class Path2:
         Returns the result of the tests if the path is closed
     is_continuous(): bool
         Returns the result of the tests if the path is continuous
-    get_path_bounds(): AxisAlignedBox2()
+    get_bounds(): AxisAlignedBox2()
         Returns 2D box containing the edges of the path
     """
 
@@ -101,7 +101,7 @@ class Path2:
                 new_edges[-1].centre = new_edges[-1].calculate_centre()
                 continue
 
-            if new_edges[-1].is_parallel_to(edge) and new_edges[-1].get_direction_vector() == edge.get_direction_vector():
+            if not new_edges[-1].is_arc() and not edge.is_arc() and new_edges[-1].is_parallel_to(edge) and new_edges[-1].get_direction_vector() == edge.get_direction_vector():
                 new_edges[-1].p2 = edge.p2
                 new_edges[-1].centre = new_edges[-1].calculate_centre()
                 continue
