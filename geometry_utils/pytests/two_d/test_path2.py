@@ -37,8 +37,7 @@ def test_path2_float_equality(path2_1):
 
 
 def test_path2_unequal_path_length(path2_1, path2_5):
-    with pytest.raises(IndexError):
-        return path2_1 == path2_5
+    assert not path2_1 == path2_5
 
 
 def test_path2_path2_addition(path2_1):
