@@ -117,7 +117,8 @@ class Edge2:
                  p2=Point2(),
                  radius=0.0,
                  clockwise=False,
-                 large=False):
+                 large=False,
+                 name=''):
         if is_point2(p1) and is_point2(p2) and is_int_or_float(radius):
             self.p1 = p1
             self.p2 = p2
@@ -126,7 +127,7 @@ class Edge2:
             self.large = large
             self.centre = self.calculate_centre()
 
-            self.name = ''
+            self.name = name
             self.style = ''
             self.type = ''
             self.left_name = ''
@@ -158,12 +159,13 @@ class Edge2:
         :rtype:  bool
         :raises: TypeError: Wrong argument type
         """
-        if is_edge2(other_edge):
-            equality =  (self.p1 == other_edge.p1 and self.p2 == other_edge.p2 and
-                         self.radius == other_edge.radius and self.large == other_edge.large and
-                         self.centre == other_edge.centre and self.clockwise == other_edge.clockwise)
-            return equality
-        raise TypeError("Comparison must be with another object of Edge2")
+        if not is_edge2(other_edge):
+            raise TypeError("Comparison must be with another object of Edge2")
+        equality = (self.p1 == other_edge.p1 and self.p2 == other_edge.p2 and
+                    self.radius == other_edge.radius and self.large == other_edge.large and
+                    self.centre == other_edge.centre and self.clockwise == other_edge.clockwise)
+        equality = equality and self.name == other_edge.name and self.style == other_edge.style
+        return equality
 
     def __ne__(self, other_edge):
         """

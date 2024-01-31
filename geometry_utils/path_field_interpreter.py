@@ -159,7 +159,7 @@ class PathFieldInterpreter(Path2, object):
             else:
                 if index == 0 or edge.p1 != path.list_of_edges[index - 1].p2:
                     last = add_point(index, edge.p1, last)
-                    if index != last_index:
+                    if index != last_index or (len(path.list_of_edges) == 1 and not edge.is_circle()):
                         self.write_buffer += self.POINT_SEPARATOR
                 last = add_point(index, edge.p2, last)
 

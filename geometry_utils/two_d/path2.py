@@ -51,16 +51,17 @@ class Path2:
         self.attributes = {}
 
     def __eq__(self, other_path):
-        if is_path2(other_path) and self.path_length == other_path.path_length:
+        if is_path2(other_path):
+            if self.name != other_path.name:
+                return False
+            if self.path_length != other_path.path_length:
+                return False
             for index in range(self.path_length):
                 if self.list_of_edges[index] != other_path.list_of_edges[index]:
                     return False
             return True
         else:
-            if not is_path2(other_path):
-                raise TypeError("Comparison must be done with another object of Path2")
-            if self.path_length != other_path.path_length:
-                raise IndexError("Comparison must be done with another path of equal number of edges")
+            raise TypeError("Comparison must be done with another object of Path2")
 
     def __add__(self, other_path):
         path = Path2()

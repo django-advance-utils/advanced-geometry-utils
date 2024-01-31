@@ -58,12 +58,12 @@ class Point2:
         Converts the 2D point coordinates with very low values to 0.0
     """
 
-    def __init__(self, x=0.0, y=0.0, w=1):
+    def __init__(self, x=0.0, y=0.0, w=1, name=''):
         if are_ints_or_floats([x, y, w]):
             self.x = x
             self.y = y
             self.w = w
-            self.name = ''
+            self.name = name
         else:
             raise TypeError("Point2 argument must be an int or float")
 
@@ -116,9 +116,11 @@ class Point2:
         :rtype:  bool
         :raises: TypeError: Wrong argument type
         """
-        if is_point2(other_point):
-            return floats_are_close(self.x, other_point.x) and floats_are_close(self.y, other_point.y)
-        raise TypeError("Equality comparison of a Point2 object must be done with another object of Point2")
+        if not is_point2(other_point):
+            raise TypeError("Equality comparison of a Point2 object must be done with another object of Point2")
+        if self.name != other_point.name:
+            return False
+        return floats_are_close(self.x, other_point.x) and floats_are_close(self.y, other_point.y)
 
     def __ne__(self, other_point):
         """

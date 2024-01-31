@@ -433,6 +433,66 @@ def path2_8():
     return path
 
 
+@pytest.fixture(scope="session")
+def path2_9():
+    path = Path2()
+    path.list_of_edges = [Edge2(Point2(0.0, 950.0), Point2(1000.0, 950.0))]
+    return path
+
+
+@pytest.fixture(scope="session")
+def path2_10():
+    path = Path2()
+    path.name = 'Path1'
+    path.list_of_edges = [Edge2(Point2(0.0, 950.0), Point2(1000.0, 950.0))]
+    return path
+
+
+@pytest.fixture(scope="session")
+def path2_11():
+    path = Path2()
+    path.list_of_edges = [Edge2(Point2(0.0, 950.0, name='P1'), Point2(1000.0, 950.0, name='P2'))]
+    return path
+
+
+@pytest.fixture(scope="session")
+def path2_12():
+    path = Path2()
+    path.list_of_edges = [Edge2(Point2(0.0, 950.0), Point2(1000.0, 950.0), name='E1')]
+    return path
+
+
+@pytest.fixture(scope="session")
+def path2_13():
+    path = Path2()
+    path.list_of_edges = [Edge2(Point2(0.0, 950.0), Point2(1000.0, 950.0))]
+    path.list_of_edges[0].style = 'Bold'
+    return path
+
+
+@pytest.fixture(scope="session")
+def path2_14():
+    path = Path2()
+    path.list_of_edges = [Edge2(Point2(0.0, 950.0, name='P1'), Point2(1000.0, 950.0, name='P2'))]
+    path.list_of_edges[0].style = 'Bold'
+    return path
+
+
+@pytest.fixture(scope="session")
+def path2_15():
+    path = Path2()
+    path.list_of_edges = [Edge2(Point2(0.0, 950.0, name='P1'), Point2(1000.0, 950.0, name='P2'), name='E1')]
+    path.list_of_edges[0].style = 'Bold'
+    return path
+
+
+@pytest.fixture(scope="session")
+def path2_16():
+    path = Path2()
+    path.list_of_edges = [Edge2(Point2(0.0, 950.003), Point2(1000.0, 950.004))]
+    return path
+
+
 '''
 Path3
 '''
