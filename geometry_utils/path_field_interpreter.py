@@ -159,6 +159,8 @@ class PathFieldInterpreter(Path2, object):
             else:
                 if index == 0 or edge.p1 != path.list_of_edges[index - 1].p2:
                     last = add_point(index, edge.p1, last)
+                    if edge.p1.name:
+                        self.write_buffer += ',' + edge.p1.name
                     if index != last_index or (len(path.list_of_edges) == 1 and not edge.is_circle()):
                         self.write_buffer += self.POINT_SEPARATOR
                 last = add_point(index, edge.p2, last)
@@ -176,11 +178,9 @@ class PathFieldInterpreter(Path2, object):
             # and extra comma not needed
             if not (index == last_index and path.is_closed):
                 indicator_buffer += ','
-                if edge.p1.name:
-                    self.write_buffer += indicator_buffer + edge.p1.name
-                elif edge.p2.name:
+                if edge.p2.name:
                     self.write_buffer += indicator_buffer + edge.p2.name
-                indicator_buffer = ''
+                    indicator_buffer = ''
 
             # Add edge name if given
             indicator_buffer += ','
